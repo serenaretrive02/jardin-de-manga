@@ -328,7 +328,21 @@ El primer intento para celular ponía **2 plantas por fila**. Al probarlo en una
 | Celular (390 px) | ✅ Sin desplazamiento horizontal y con todo legible |
 | Errores en la consola del navegador | ✅ Ninguno |
 
+### Publicación y verificación en Vercel
+1. Se revisó la lista de cambios antes del commit (aprendizaje de la v0.1): no había archivos borrados ni `.env`.
+2. Se subió a GitHub con la etiqueta **`v0.2`**.
+3. **Vercel publicó la versión solo**, sin tocar nada: el deploy apareció como *Ready* a los 6 segundos.
+4. Se repitieron **todas las pruebas sobre la URL pública** (validaciones, plantar, regar, estados, recargar, confirmar borrado y celular): todas pasaron y no hubo errores en la consola.
+
+![v0.2 publicada](capturas/v0.2-08-vercel-compu.png)
+*Captura: la v0.2 funcionando en https://jardin-de-manga.vercel.app*
+
+![v0.2 publicada en celular](capturas/v0.2-09-vercel-celular.png)
+*Captura: la v0.2 publicada, vista en celular.*
+
 ### Mejoras pendientes para la v0.3
+- La fuente de títulos (*Press Start 2P*) no tiene la letra **"Í" mayúscula**, por eso el título se ve "JARDíN". Hay que resolverlo.
+- Hoy se puede marcar "Terminado" con 0 capítulos leídos (por ejemplo, *Your Lie in April*: 0/22 y en flor). Habría que ofrecer completar los capítulos.
 - Buscar mangas y animes reales con una **API** (portada, sinopsis y cantidad de capítulos automática), usando `fetch` como en la guía de APIs.
 - Poder **editar** el título, el género o el total de capítulos de una planta ya plantada.
 - Marcar automáticamente "Terminado" al llegar al último capítulo.
