@@ -1,10 +1,31 @@
 rules_version = '2';
 
 // Reglas de seguridad de Cloud Firestore - Nana, tu jardín de manga
-// Cada visitante (usuario anónimo) solo puede leer y modificar SU propio jardín.
+// - Jardín (plantas): privado, solo lo ve y lo cambia su dueña.
+// - Perfil (apodo): lo puede ver cualquier visitante identificado, lo cambia solo su dueña.
+// - Clubes: solo los ven sus miembros. La administradora (quien lo creó) es el único rol
+//   que puede editar el club, quitar miembros y CREAR/ASIGNAR/EDITAR/BORRAR misiones.
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    // ---------------- Perfil público ----------------
+    match /users/{userId} {
+      function perfilValido() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['apodo', 'flor', 'creadoEn'])
+          && d.apodo is string && d.apodo.size() >= 2 && d.apodo.size() <= 24
+          && d.flor in ['romance', 'accion', 'fantasia', 'comedia', 'drama', 'misterio'];
+      }
+      allow read: if autenticado();
+      allow create, update: if autenticado() && request.auth.uid == userId && perfilValido();
+      allow delete: if autenticado() && request.auth.uid == userId;
+    }
+
+    // ---------------- Jardín privado ----------------
     match /users/{userId}/plantas/{plantaId} {
 
       // ¿La persona que pide los datos es la dueña del jardín?
@@ -37,6 +58,134 @@ service cloud.firestore {
 
       allow read, delete: if esDueno();
       allow create, update: if esDueno() && datosValidos();
+    }
+
+    // ---------------- Clubes de lectura ----------------
+    match /clubes/{clubId} {
+      function esMiembro() {
+        return request.auth.uid in resource.data.miembros;
+      }
+      function esAdmin() {
+        return request.auth.uid == resource.data.adminUid;
+      }
+      function clubValido() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['nombre', 'descripcion', 'adminUid', 'miembros', 'creadoEn'])
+          && d.nombre is string && d.nombre.size() >= 3 && d.nombre.size() <= 40
+          && d.descripcion is string && d.descripcion.size() <= 200
+          && d.miembros is list && d.miembros.size() <= 30
+          && d.adminUid in d.miembros;
+      }
+      function soloCambiaMiembros() {
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['miembros']);
+      }
+      // Unirse: la lista nueva es la anterior + yo (y nadie más).
+      function unirse() {
+        let antes = resource.data.miembros;
+        let despues = request.resource.data.miembros;
+        return soloCambiaMiembros()
+          && !(request.auth.uid in antes)
+          && despues.hasAll(antes)
+          && despues.removeAll(antes).hasOnly([request.auth.uid])
+          && despues.size() == antes.size() + 1
+          && despues.size() <= 30;
+      }
+      // Salir: la lista nueva es la anterior sin mí. La administradora no puede irse (debe borrar el club).
+      function salir() {
+        let antes = resource.data.miembros;
+        let despues = request.resource.data.miembros;
+        return soloCambiaMiembros()
+          && esMiembro() && !esAdmin()
+          && antes.hasAll(despues)
+          && antes.removeAll(despues).hasOnly([request.auth.uid])
+          && despues.size() == antes.size() - 1;
+      }
+
+      allow read: if autenticado() && esMiembro();
+      allow create: if autenticado()
+        && request.resource.data.adminUid == request.auth.uid
+        && request.resource.data.miembros == [request.auth.uid]
+        && clubValido();
+      allow update: if autenticado() && (
+        (esAdmin() && clubValido() && request.resource.data.adminUid == resource.data.adminUid)
+        || unirse()
+        || salir()
+      );
+      allow delete: if autenticado() && esAdmin();
+
+      // Datos del club al que pertenece la misión o el evento.
+      function club() {
+        return get(/databases/$(database)/documents/clubes/$(clubId)).data;
+      }
+      function soyMiembro() {
+        return request.auth.uid in club().miembros;
+      }
+      function soyAdmin() {
+        return request.auth.uid == club().adminUid;
+      }
+
+      // ------------ Misiones (tareas): solo la administradora asigna ------------
+      match /misiones/{misionId} {
+        function misionValida() {
+          let d = request.resource.data;
+          return d.keys().hasOnly(['titulo', 'tipo', 'descripcion', 'asignadaA', 'estado',
+                                   'fechaLimite', 'creadoPor', 'creadoEn'])
+            && d.titulo is string && d.titulo.size() >= 3 && d.titulo.size() <= 80
+            && d.tipo in ['lectura', 'episodios', 'resena', 'fanart', 'teoria', 'recomendar']
+            && d.descripcion is string && d.descripcion.size() <= 300
+            && d.estado in ['pendiente', 'en-curso', 'hecha']
+            && d.fechaLimite is string && d.fechaLimite.size() <= 10
+            && d.asignadaA in club().miembros;
+        }
+
+        allow read: if autenticado() && soyMiembro();
+        allow create: if autenticado() && soyAdmin() && misionValida()
+          && request.resource.data.creadoPor == request.auth.uid;
+        allow update: if autenticado() && (
+          (soyAdmin() && misionValida())
+          // la persona asignada solo puede mover su misión de columna
+          || (request.auth.uid == resource.data.asignadaA
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['estado'])
+              && request.resource.data.estado in ['pendiente', 'en-curso', 'hecha'])
+        );
+        allow delete: if autenticado() && soyAdmin();
+      }
+
+      // ------------ Eventos: cualquier miembro crea; editan quien lo creó o la admin ------------
+      match /eventos/{eventoId} {
+        function eventoValido() {
+          let d = request.resource.data;
+          return d.keys().hasOnly(['titulo', 'tipo', 'fecha', 'lugar', 'descripcion',
+                                   'asistentes', 'creadoPor', 'creadoEn'])
+            && d.titulo is string && d.titulo.size() >= 3 && d.titulo.size() <= 80
+            && d.tipo in ['lectura', 'watch-party', 'debate', 'intercambio']
+            && d.fecha is string && d.fecha.size() == 16
+            && d.lugar is string && d.lugar.size() <= 120
+            && d.descripcion is string && d.descripcion.size() <= 300
+            && d.asistentes is list && d.asistentes.size() <= 30;
+        }
+        function puedeEditar() {
+          return request.auth.uid == resource.data.creadoPor || soyAdmin();
+        }
+        // Anotarse o borrarse: solo cambia la lista de asistentes y solo con mi propio uid.
+        function cambiaSoloMiAsistencia() {
+          let antes = resource.data.asistentes;
+          let despues = request.resource.data.asistentes;
+          return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['asistentes'])
+            && despues.removeAll(antes).hasOnly([request.auth.uid])
+            && antes.removeAll(despues).hasOnly([request.auth.uid]);
+        }
+
+        allow read: if autenticado() && soyMiembro();
+        allow create: if autenticado() && soyMiembro() && eventoValido()
+          && request.resource.data.creadoPor == request.auth.uid;
+        allow update: if autenticado() && soyMiembro() && (
+          (puedeEditar() && eventoValido()
+             && request.resource.data.creadoPor == resource.data.creadoPor)
+          || cambiaSoloMiAsistencia()
+        );
+        allow delete: if autenticado() && soyMiembro() && puedeEditar();
+      }
     }
 
     // Cualquier otra ruta queda cerrada.

@@ -1,6 +1,6 @@
 # 🌸 Nana · tu jardín de manga
 
-Aplicación web donde cada manga o anime que seguís se convierte en una **flor de tu jardín**.
+Aplicación web donde cada manga o anime que seguís se convierte en una **flor de tu jardín**, y donde podés armar **clubes de lectura** con tus amigas: la administradora reparte misiones y todas organizan eventos.
 La flor depende del género y crece a medida que avanzás capítulos: semilla → brote → creciendo → en flor.
 Si lo abandonás, se marchita.
 
@@ -10,6 +10,8 @@ Trabajo Práctico 2 · Desarrollo Frontend II · UADE · Prof. Joaquín Cerviño
 - **Repositorio (GitHub):** https://github.com/serenaretrive02/jardin-de-manga
 - **Bitácora del proceso:** [docs/bitacora.md](docs/bitacora.md)
 - **Informe:** [docs/informe.md](docs/informe.md)
+- **Especificación (requisitos, casos de uso, sprints):** [docs/especificacion.md](docs/especificacion.md)
+- **Resumen de la entrega:** [docs/entrega.md](docs/entrega.md)
 
 ## Tecnologías
 
@@ -69,26 +71,35 @@ Abrir `http://localhost:5173/`. Si se cambia el `.env`, reiniciar el comando.
 ```
 src/
 ├── main.jsx                  Punto de entrada: monta <App />
-├── App.jsx                   Componente principal: sesión anónima, estados y operaciones
-├── App.css / index.css       Estilos (paleta pixel art, diseño adaptable a celular)
+├── App.jsx                   Sesión anónima, pestañas (Mi jardín / Comunidad) y jardín
+├── App.css / Comunidad.css   Estilos pixel art y diseño adaptable
+├── index.css                 Colores, tipografías y estilos generales
 ├── firebase.js               Conexión con Firebase (lee el .env)
-├── services/plantas.js       Consultar, agregar, modificar y eliminar en Firestore
-├── services/kitsu.js         Búsqueda en la API de Kitsu con fetch
-├── data/flores.js            Géneros, flores, estados y etapas de crecimiento
-├── data/sprites.js           Dibujos pixel art como arrays de texto (flores, maceta, íconos)
-├── data/validaciones.js      Validaciones compartidas (plantar y editar)
+├── services/
+│   ├── plantas.js            CRUD del jardín privado
+│   ├── kitsu.js              Búsqueda en la API de Kitsu con fetch
+│   ├── perfiles.js           Perfil público (apodo y flor)
+│   ├── clubes.js             CRUD de clubes, unirse, salir, quitar miembros
+│   ├── misiones.js           CRUD de misiones (tareas)
+│   ├── eventos.js            CRUD de eventos y asistencia
+│   └── compartir.js          Compartir (menú del celular o portapapeles)
+├── data/
+│   ├── flores.js             Géneros, flores, estados y etapas
+│   ├── sprites.js            Dibujos pixel art como arrays de texto
+│   ├── validaciones.js       Validaciones del jardín
+│   └── comunidad.js          Tipos de misión y evento, validaciones de la comunidad
 └── components/
-    ├── FormularioPlanta.jsx  Formulario con validaciones y vista previa de la flor
-    ├── BuscadorObras.jsx     Buscador de obras reales (API Kitsu)
-    ├── EditarPlanta.jsx      Ventana emergente para editar una planta
-    ├── ListaJardin.jsx       Lista de plantas (usa map) y estado vacío
-    ├── TarjetaPlanta.jsx     Tarjeta de cada planta: dibujo, avance y acciones
-    ├── PixelSprite.jsx       Dibuja un pixel art recorriendo el array con map
-    ├── Ventana.jsx           Marco de "ventana retro" reutilizable
-    ├── Aviso.jsx             Mensaje flotante de éxito o error
-    └── BarraCarga.jsx        Indicador de carga por bloques
-firestore.rules               Reglas de seguridad de la base de datos
-docs/                         Bitácora, informe, capturas y referencias visuales
+    ├── FormularioPlanta.jsx, BuscadorObras.jsx, ListaJardin.jsx, TarjetaPlanta.jsx, EditarPlanta.jsx
+    ├── PixelSprite.jsx, Ventana.jsx, Modal.jsx, Aviso.jsx, BarraCarga.jsx
+    └── comunidad/
+        ├── Comunidad.jsx       Coordina perfil, clubes, misiones y eventos
+        ├── DetalleClub.jsx     Club: código, miembros, pestañas
+        ├── TableroMisiones.jsx Tablero Kanban de misiones
+        ├── ListaEventos.jsx    Próximos y pasados
+        ├── FormPerfil.jsx, FormClub.jsx, FormMision.jsx, FormEvento.jsx
+        └── Avatar.jsx, BotonEliminar.jsx, IconoEditar.jsx
+firestore.rules               Reglas de seguridad (jardín privado + roles de la comunidad)
+docs/                         Bitácora, informe, especificación, entrega, capturas y referencias
 ```
 
 ## Datos guardados en Firestore
@@ -107,6 +118,15 @@ Ruta: `users/{uid}/plantas/{plantaId}`
 | `portada` | "https://media.kitsu.app/…" | Tapa de la obra (opcional, de Kitsu) |
 | `kitsuId` | "45398" | Número de la obra en Kitsu (opcional) |
 
+**Comunidad (v0.4):**
+
+| Ruta | Campos | Quién lo ve / lo cambia |
+|---|---|---|
+| `users/{uid}` | `apodo`, `flor` | Lo ve cualquiera identificada. Lo cambia solo su dueña |
+| `clubes/{CÓDIGO}` | `nombre`, `descripcion`, `adminUid`, `miembros[]` | Solo sus miembros. Edita la administradora. Cada una puede unirse o salir sola |
+| `clubes/{CÓDIGO}/misiones/{id}` | `titulo`, `tipo`, `descripcion`, `asignadaA`, `estado`, `fechaLimite` | Miembros. **Crea, asigna, edita y borra solo la administradora.** La asignada cambia el `estado` |
+| `clubes/{CÓDIGO}/eventos/{id}` | `titulo`, `tipo`, `fecha`, `lugar`, `descripcion`, `asistentes[]` | Miembros. Crea cualquiera. Editan quien lo creó o la administradora |
+
 ## Versiones
 
 | Versión | Contenido |
@@ -114,3 +134,4 @@ Ruta: `users/{uid}/plantas/{plantaId}`
 | v0.1 | MVP funcional: agregar, listar, cambiar estado, sumar capítulos y eliminar con Firestore |
 | v0.2 | Identidad pixel art (flores dibujadas con código, ventanas retro), validaciones, avisos, confirmación de borrado, diseño para celular |
 | v0.3 | Nombre **Nana**, búsqueda en la API de Kitsu (portadas y datos automáticos), edición de plantas, estados coherentes con los capítulos, reglas más estrictas |
+| v0.4 | **Comunidad**: perfiles, CRUD de clubes, misiones de 6 tipos con rol de administradora (tablero Kanban), CRUD de eventos, compartir, invitación por enlace |

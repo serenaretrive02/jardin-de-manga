@@ -1,0 +1,499 @@
+/* =========================================================
+   v0.4 · Pestañas de navegación
+   ========================================================= */
+.pestanas {
+  display: flex;
+  gap: 6px;
+  margin-bottom: -3px; /* la pestaña activa se "pega" a la línea de abajo */
+  position: relative;
+  z-index: 1;
+}
+
+.pestana {
+  min-height: 44px;
+  padding: 8px 18px;
+  font-family: var(--fuente-titulo);
+  font-size: 12px;
+  background: var(--blanco);
+  border: var(--borde);
+  cursor: pointer;
+}
+
+.pestana[aria-selected='true'] {
+  background: var(--lima);
+  border-bottom-color: var(--lima);
+}
+
+.pestanas + main {
+  padding-top: 18px;
+  border-top: var(--borde);
+}
+
+.pestanas--chicas {
+  margin: 18px 0 12px;
+}
+
+.pestanas--chicas .pestana {
+  font-family: var(--fuente);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   v0.4 · Comunidad
+   ========================================================= */
+.comunidad {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.comunidad__lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bienvenida {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.bienvenida__texto {
+  margin-bottom: 14px;
+}
+
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  padding: 2px;
+  background: var(--lima);
+  border: 2px solid var(--tinta);
+}
+
+.perfil {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.perfil > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.perfil__apodo {
+  font-size: 22px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.selector-flor {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.selector-flor legend {
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.selector-flor__opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.selector-flor__opcion {
+  position: relative;
+}
+
+.selector-flor__opcion input {
+  position: absolute;
+  opacity: 0;
+}
+
+.selector-flor__opcion .avatar {
+  background: var(--blanco);
+  cursor: pointer;
+}
+
+.selector-flor__opcion input:checked + .avatar {
+  background: var(--lima);
+  box-shadow: 0 0 0 3px var(--rosa-oscuro);
+}
+
+.selector-flor__opcion input:focus-visible + .avatar {
+  outline: 3px dashed var(--rosa-oscuro);
+  outline-offset: 3px;
+}
+
+.lista-clubes {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.club-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 8px 10px;
+  text-align: left;
+  background: var(--crema);
+  border: 2px solid var(--tinta);
+  cursor: pointer;
+}
+
+.club-item span {
+  font-size: 15px;
+  color: var(--texto-suave);
+}
+
+.club-item[aria-current='true'] {
+  background: var(--rosa);
+  box-shadow: var(--sombra-chica);
+}
+
+.crear-club {
+  width: 100%;
+}
+
+.unirse {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 2px dashed var(--tinta);
+  font-weight: 600;
+}
+
+.unirse input {
+  font-family: var(--fuente-titulo);
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+/* ----- Detalle del club ----- */
+.club__cabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.club__nombre {
+  font-size: 26px;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.club__descripcion {
+  margin-top: 4px;
+  color: var(--texto-suave);
+}
+
+.club__codigo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--crema);
+  border: 2px dashed var(--tinta);
+}
+
+.club__codigo span {
+  font-size: 14px;
+}
+
+.club__codigo strong {
+  font-family: var(--fuente-titulo);
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.club__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.insignia {
+  padding: 2px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--blanco);
+  border: 2px solid var(--tinta);
+}
+
+.insignia--admin {
+  background: #ffe58a;
+}
+
+.miembros {
+  margin-top: 16px;
+}
+
+.miembros__titulo {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.miembros__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.miembro {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: var(--crema);
+  border: 2px solid var(--tinta);
+}
+
+/* ----- Botones chicos y confirmación ----- */
+.boton--icono-chico {
+  background: var(--rosa);
+}
+
+.confirmar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 4px 10px;
+  font-size: 15px;
+  background: var(--blanco);
+  border: 2px solid var(--tinta);
+  cursor: pointer;
+}
+
+.chip[aria-checked='true'] {
+  background: var(--chip);
+  box-shadow: var(--sombra-chica);
+  font-weight: 600;
+}
+
+.campo__etiqueta {
+  font-weight: 600;
+}
+
+.campo textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+/* ----- Tablero de misiones (Kanban) ----- */
+.tablero__barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.interruptor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.interruptor input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--verde);
+}
+
+.tablero__columnas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.columna {
+  min-height: 140px;
+  padding: 8px;
+  background: var(--crema);
+  border: var(--borde);
+}
+
+.columna--en-curso {
+  background: #eef8ff;
+}
+
+.columna--hecha {
+  background: #f1fbe4;
+}
+
+.columna__titulo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-family: var(--fuente-titulo);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.columna__vacia {
+  font-size: 15px;
+  color: var(--texto-suave);
+}
+
+.columna__lista,
+.eventos__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mision {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  background: var(--blanco);
+  border: 2px solid var(--tinta);
+  box-shadow: var(--sombra-chica);
+}
+
+.mision--mia {
+  border-left-width: 6px;
+  border-left-color: var(--rosa-oscuro);
+}
+
+.mision__tipo,
+.evento__tipo {
+  align-self: flex-start;
+  padding: 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--chip, var(--lima));
+  border: 2px solid var(--tinta);
+}
+
+.mision__titulo,
+.evento__titulo {
+  font-size: 17px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.mision__detalle,
+.mision__dato,
+.evento__dato {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.mision__dato--vencida {
+  font-weight: 600;
+  color: var(--error);
+}
+
+.mision__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+/* ----- Eventos ----- */
+.eventos__subtitulo {
+  margin: 12px 0 8px;
+  font-family: var(--fuente-titulo);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.evento {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  background: var(--blanco);
+  border: 2px solid var(--tinta);
+  box-shadow: var(--sombra-chica);
+}
+
+.evento--pasado {
+  opacity: 0.6;
+}
+
+.evento__fecha {
+  padding: 8px;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: var(--rosa);
+  border-right: 2px solid var(--tinta);
+}
+
+.evento__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+}
+
+/* Press Start 2P no tiene vocales con tilde en mayúscula (MISIÓN, PRÓXIMOS):
+   en esos textos se usa Pixelify Sans */
+.boton--principal.boton--chico,
+.columna__titulo,
+.eventos__subtitulo {
+  font-family: var(--fuente);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+/* ----- Comunidad en pantallas medianas y celular ----- */
+@media (max-width: 820px) {
+  .comunidad,
+  .tablero__columnas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .pestana {
+    flex: 1;
+    padding: 8px;
+    font-size: 11px;
+  }
+
+  .evento {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .evento__fecha {
+    border-right: 0;
+    border-bottom: 2px solid var(--tinta);
+  }
+}

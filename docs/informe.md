@@ -10,6 +10,8 @@ Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026
 - **Repositorio (GitHub):** https://github.com/serenaretrive02/jardin-de-manga
 - **Bitácora:** [bitacora.md](bitacora.md)
 - **Video de demostración:** _pendiente_
+- **Especificación (requisitos y casos de uso):** [especificacion.md](especificacion.md)
+- **Resumen de la entrega:** [entrega.md](entrega.md)
 
 ---
 
@@ -26,6 +28,9 @@ Así, el progreso de lectura se ve de un vistazo y registrarlo se vuelve algo m�
 ### ¿Qué necesidad resuelve?
 Quienes leen manga o miran anime suelen seguir muchas series a la vez y se olvidan en qué capítulo quedaron, qué tenían pendiente o qué dejaron a medias. La app guarda esa información y la muestra de forma visual.
 
+### Y además: una comunidad de lectura (desde la v0.4)
+Leer es más lindo en grupo. Nana permite armar **clubes de lectura** con amigas: la creadora del club es su **administradora** y **reparte misiones** (leer capítulos, escribir una reseña, hacer un fan art…), y cualquier miembro puede **proponer eventos** (lecturas conjuntas, watch parties, debates).
+
 ### ¿Para quién es?
 Para lectoras y lectores de manga y espectadores de anime, sobre todo jóvenes, que quieren organizar lo que consumen sin tener que crear una cuenta ni completar formularios largos.
 
@@ -39,6 +44,20 @@ Para lectoras y lectores de manga y espectadores de anime, sobre todo jóvenes, 
 | Regar +1 | Suma un capítulo y la planta crece. La primera vez pasa a "Leyendo" y en el último capítulo florece sola | Modificar | v0.1 (automático: v0.3) |
 | Cambiar estado | Pendiente / Leyendo / Terminado (florece y completa los capítulos) / Abandonado (se marchita) | Modificar | v0.1 |
 | Editar | Cambia título, género, capítulos vistos y total, con validaciones | Modificar | v0.3 |
+
+**Comunidad (v0.4):**
+
+| Acción | Quién | Operación |
+|---|---|---|
+| Crear / editar perfil (apodo y flor) | Cualquiera | Agregar / Modificar |
+| Crear, ver, editar y eliminar un club | Crear: cualquiera. Editar y eliminar: la administradora | **CRUD de grupos** |
+| Unirse con código o enlace, salir del club | Cualquiera / miembro | Modificar |
+| Quitar a un miembro | Administradora | Modificar |
+| Crear, asignar, editar y eliminar misiones de 6 tipos | **Solo la administradora** | **CRUD de tareas** |
+| Mover mi misión: Por hacer → Haciendo → Hecha | La persona asignada | Modificar |
+| Crear, editar y eliminar eventos | Crear: cualquier miembro. Editar y eliminar: quien lo creó o la administradora | **CRUD de eventos** |
+| Anotarse o borrarse de un evento | Miembro | Modificar |
+| Compartir club, misión o evento | Miembro | — (menú de compartir o portapapeles) |
 | Compostar | Elimina la planta, después de pedir confirmación | Eliminar | v0.1 (confirmación: v0.2) |
 
 **Experiencia de uso (consigna, punto 6):**
@@ -76,6 +95,14 @@ Cada planta guarda: título, tipo (manga o anime), género, capítulos leídos, 
 ### Seguridad
 - Las **reglas de Firestore** (archivo `firestore.rules`) hacen que cada persona **solo pueda leer y modificar su propio jardín**. Además, controlan que los datos tengan la forma correcta: que el título no esté vacío, que el estado sea uno de los permitidos, etc. Cualquier otra parte de la base queda cerrada. Desde la v0.3 además solo se aceptan los campos conocidos, la portada tiene que ser un enlace `https://` y los capítulos leídos no pueden superar el total.
 - Las **llaves de conexión** de Firebase se guardan en un archivo `.env` que **no se sube a GitHub**. En el repositorio solo está `.env.example`, con los nombres de las variables y sin sus valores. En Vercel, las llaves se cargan como variables de entorno.
+
+### Comunidad: qué se guarda y quién lo puede ver (v0.4)
+- `users/(uid)`: **perfil público** (apodo y flor). Lo ven los demás para mostrar los nombres en los clubes.
+- `clubes/(código)`: nombre, descripción, administradora y lista de miembros. **Solo lo ven sus miembros.**
+- `clubes/(código)/misiones`: título, tipo, a quién está asignada, estado y fecha límite.
+- `clubes/(código)/eventos`: título, tipo, fecha, lugar y lista de asistentes.
+
+**Roles en las reglas de Firestore:** solo la administradora puede crear, asignar, editar o borrar misiones. La persona asignada solo puede cambiar el estado de la suya. Cada persona solo puede agregarse o sacarse a sí misma de un club o de un evento. Se probó llamando directamente a Firebase como miembro: **respuesta 403 (rechazado)**.
 
 ### ¿Qué pasa si abro la app en otro dispositivo?
 Como el ingreso es anónimo, cada navegador tiene su propio jardín. Abrir la app en el celular muestra un jardín distinto al de la computadora. La consigna menciona esta limitación y deja el inicio de sesión permanente como ampliación opcional.
@@ -121,6 +148,8 @@ Se usó **Claude Code**, un asistente de IA de Anthropic que trabaja directament
 
 4. *"Sí. Cambiemos el título a Nana."* Con esta instrucción se encaró la v0.3. Cuando la API planeada (Jikan) no respondió, la IA investigó el problema, comparó dos alternativas y propuso Kitsu. Las capturas de la prueba automática permitieron encontrar 4 errores de diseño y de lógica antes de publicar.
 
+5. *"Chequeá que todo lo que pide la consigna se esté cumpliendo […]. Me gustaría sumar más acciones: una comunidad, añadir amigos o hacer grupos de lectura […], crear, modificar, eliminar y compartir tareas, CRUD de evento, CRUD de grupos […]. El administrador es el único rol que puede asignar tareas."* La IA primero auditó el proyecto contra la rúbrica y después diseñó la comunidad con roles. Las pruebas con dos usuarias simultáneas y la revisión de capturas permitieron corregir 7 problemas antes de publicar.
+
 *(Se agregan más ejemplos en cada versión.)*
 
 **Cómo verifiqué lo que hizo la IA:** probando la app en el navegador, revisando en la consola de Firebase que los datos realmente se guarden y comparando el código con los ejemplos de las guías de la materia.
@@ -133,6 +162,9 @@ Ver el detalle en la [bitácora](bitacora.md). Resumen:
 - En el celular, 2 tarjetas por fila cortaban los textos. Se rediseñó con tarjetas horizontales.
 - La API Jikan estaba caída: se investigó y se cambió por Kitsu. La búsqueda quedó como ayuda opcional.
 - En el celular, el formulario nuevo se salía de la pantalla: se corrigió la grilla con `minmax(0, 1fr)`.
+- Para unirse a un club que todavía no se puede ver, el código de invitación es el identificador del club, y las reglas solo permiten agregarse a una misma.
+- Los avisos aparecían antes de que se viera el cambio: ahora primero se vuelve a consultar y después se avisa.
+- La hora de los eventos se calculaba en UTC (3 horas adelantada): se usa la hora local.
 - Abrir `index.html` con doble clic muestra una página en blanco: una app de Vite se abre con `npm run dev`.
 - En la versión publicada el jardín empezó vacío: por el acceso anónimo, cada sitio (local o Vercel) y cada navegador tiene su propio jardín.
 
@@ -143,6 +175,10 @@ Ver el detalle en la [bitácora](bitacora.md). Resumen:
 - **`useEffect`:** código que se ejecuta al abrir la app para conectarse con algo externo, como Firebase.
 - **`map`:** recorre el array de plantas y arma una tarjeta por cada una. También dibuja las flores: recorre las filas y las letras de cada dibujo y pinta un píxel por letra.
 - **`children`:** lo que se escribe entre la etiqueta de apertura y la de cierre de un componente. El componente `Ventana` lo usa para envolver cualquier contenido con el marco retro.
+- **Rol:** el permiso que tiene cada persona. En Nana: miembro o administradora del club.
+- **CRUD:** las cuatro operaciones básicas con datos: *Create* (crear), *Read* (leer), *Update* (modificar) y *Delete* (eliminar).
+- **Kanban:** un tablero con columnas (Por hacer, Haciendo, Hecha) para seguir tareas. Se usa en las misiones del club y para organizar el propio proyecto.
+- **MVP:** producto mínimo viable. Es la primera versión que funciona (la v0.1), que después se mejora en iteraciones.
 - **API:** un servicio de otra página al que la app le pide datos. Kitsu es la API de mangas y animes que usa Nana.
 - **`fetch` / `async` / `await`:** `fetch` hace el pedido y `await` espera la respuesta sin trabar la página.
 - **JSON:** el formato de texto en que llegan los datos de la API.

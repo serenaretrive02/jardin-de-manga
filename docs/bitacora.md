@@ -481,3 +481,121 @@ Se actualizaron las **reglas de Firestore** y se publicaron de nuevo en la conso
 - **"Mi ramo"**: estadísticas del jardín (cuántas flores, capítulos leídos en total, género favorito).
 - **Significado de cada flor** según el *hanakotoba* (el lenguaje japonés de las flores).
 - Ordenar el jardín (más recientes, por avance, por nombre).
+
+---
+
+## Versión 0.4 — Comunidad: clubes, misiones con roles y eventos (10/11/2026)
+
+### Revisión previa: ¿cumplimos la consigna y la rúbrica?
+Antes de empezar se revisó el proyecto contra cada punto de la consigna y de la rúbrica:
+
+| Criterio | Estado |
+|---|---|
+| A · React + Vite con interacciones | ✅ |
+| A · Firebase: consultar, agregar, modificar, eliminar y persistir | ✅ |
+| A · GitHub con los archivos para ejecutar | ✅ 31 archivos. `.gitignore` excluye `.env`, `node_modules` y `dist`. Ninguna llave en el código |
+| A · Vercel con conexión a Firebase | ✅ |
+| B · README, `.env.example`, reglas, informe con IA y dificultades | ✅ |
+| B · Entrega organizada con enlaces | ⚠️ Faltaba un documento de entrega → se creó [`entrega.md`](entrega.md) |
+| C · Originalidad y complejidad | Se refuerza en esta versión con la comunidad |
+| Al menos 3 versiones | ✅ v0.1, v0.2, v0.3 (con etiquetas en GitHub) |
+| Mini video de demostración | ⏳ Pendiente (lo graba la autora) |
+
+### Objetivo de esta versión
+La app era solo un registro personal: plantar, regar y nada más. Para darle una **vuelta de tuerca** y **sumar acciones con sentido**, Nana pasa a ser también una **comunidad de lectura**. Siguiendo lo trabajado en clase (diagrama de casos de uso y requisitos), se definieron:
+- **CRUD de grupos:** clubes de lectura.
+- **CRUD de tareas de distintos tipos:** misiones (leer, ver episodios, reseña, fan art, teoría, recomendar).
+- **Requisito de rol:** la administradora es el único rol que puede asignar tareas.
+- **CRUD de eventos:** lecturas conjuntas, watch parties, debates, intercambios.
+- **Compartir** tareas, eventos e invitaciones.
+
+El detalle (requisitos, criterios de aceptación y diagrama de casos de uso) está en [`especificacion.md`](especificacion.md).
+
+### Cómo funciona (explicado simple)
+1. **Perfil:** la primera vez que se entra a **Comunidad**, se elige un **apodo** y una **flor-avatar**.
+2. **Crear un club:** quien lo crea es su **administradora**. Cada club tiene un **código de 6 letras** (por ejemplo `DAAUN4`).
+3. **Invitar:** el botón *Invitar ↗* abre el menú de compartir del celular (o copia el texto en la compu) con un enlace como `…vercel.app/?club=DAAUN4`. Al abrirlo, la app va directo a Comunidad con el código ya escrito.
+4. **Misiones (tareas):** la administradora crea una misión, elige el **tipo**, se la **asigna** a un miembro y puede ponerle fecha límite. Se ven en un **tablero Kanban** con tres columnas: *Por hacer · Haciendo · Hecha*. Cada persona mueve **solo sus** misiones. Las vencidas se marcan en rojo.
+5. **Eventos:** cualquier miembro propone uno (fecha, lugar o enlace, descripción). Los demás tocan **¡Voy!** y se ve quiénes van. Los eventos pasados se muestran aparte y atenuados.
+6. **Salir o eliminar:** un miembro puede salir del club. La administradora puede quitar miembros o eliminar el club entero, junto con sus misiones y eventos.
+
+### El requisito más importante: solo la administradora asigna tareas
+No alcanza con **esconder el botón**: alguien con conocimientos podría mandar el pedido directo a Firebase. Por eso la regla se aplica **en dos lugares**:
+- **En la interfaz:** los miembros no ven "+ Nueva misión", y en su lugar dice "Solo la administradora asigna misiones".
+- **En las reglas de Firestore:** solo quien figura como `adminUid` del club puede crear, editar o borrar misiones. La persona asignada solo puede cambiar el campo `estado` de **su** misión.
+
+**Prueba de seguridad:** se simuló a una usuaria (Bea, miembro) que intenta crear una misión y cambiar el nombre del club **llamando directamente a la API de Firestore**, sin pasar por la app. Firebase respondió **403 (prohibido)** en los dos casos ✅.
+
+Las reglas también controlan que:
+- para unirse, solo se pueda **agregar el propio** usuario a la lista de miembros, y para salir, solo **sacarse a una misma**;
+- para anotarse a un evento, solo se pueda tocar **el propio nombre** en la lista de asistentes;
+- los clubes solo los puedan ver **sus miembros** (máximo 30), y todos los datos tengan la forma correcta.
+
+![Reglas de la comunidad](capturas/v0.4-01-reglas-comunidad.jpg)
+*Captura: reglas publicadas en Firebase (versión de las 13:10).*
+
+### Capturas
+
+![Bienvenida](capturas/v0.4-02-bienvenida-perfil.png)
+*La primera vez se elige un apodo y una flor-avatar.*
+
+![Club visto por la administradora](capturas/v0.4-03-club-admin.png)
+*El club visto por la administradora: código e invitación, miembros con su insignia y tablero de misiones de distintos tipos.*
+
+![Tablero visto por un miembro](capturas/v0.4-04-tablero-bea.png)
+*El mismo club visto por Bea (miembro): no puede asignar misiones, pero mueve las suyas (marcadas con un borde rosa).*
+
+![Eventos](capturas/v0.4-05-eventos.png)
+*Eventos: Bea propuso una watch party y Ana se anotó.*
+
+![Celular](capturas/v0.4-06-celular.png)
+*La comunidad en el celular: todo en una columna y el tablero apilado.*
+
+### Uso de IA en esta etapa
+- **Instrucción dada (resumen):** *"Chequeá que se cumpla todo lo que pide la consigna y la rúbrica para sacarnos un 10. Quiero sumar más acciones: una comunidad, añadir amigos o grupos de lectura. Que el usuario pueda crear, modificar, eliminar y compartir tareas; CRUD de eventos y de grupos; tareas de distintos tipos; el administrador es el único rol que puede asignar tareas; distintos tipos de iteraciones ágiles."*
+- **Qué hizo la IA:** auditó el repositorio contra la rúbrica, diseñó el modelo de datos y las reglas por rol, programó 4 servicios y 12 componentes nuevos, y armó una prueba automática con **dos usuarias simultáneas**.
+- **Qué se revisó y se corrigió** a partir de las capturas y las pruebas: los 7 problemas de la tabla siguiente.
+- **Decisión propia:** en lugar de una lista de "amigos" sueltos, la comunidad se organiza en **clubes**. Cumple la misma necesidad (leer con amigas), es más fácil de entender y permite roles claros.
+
+### Dificultades y cómo se resolvieron
+| Problema | Cómo se detectó | Solución |
+|---|---|---|
+| **Cómo unirse a un club sin poder verlo antes.** Las reglas solo dejan ver un club a sus miembros | Al diseñar las reglas | El **código es el id del documento**: para unirse alcanza con conocerlo. Las reglas permiten un solo cambio: agregarse a una misma |
+| El aviso "Misión actualizada" aparecía **antes** de que el tablero mostrara el cambio | La prueba automática leía el tablero viejo | Ahora primero se vuelven a consultar las misiones y eventos, y **recién después** se avisa |
+| Un evento de esta noche podía figurar como "pasado" 3 horas antes | Revisando el código de fechas | `toISOString()` da la hora UTC (Londres). Se calcula la hora **local** de Argentina |
+| "+ NUEVA MISIÓN" y "PRÓXIMOS" se veían con la Ó minúscula | Captura del primer diseño | La fuente arcade no tiene vocales con tilde en mayúscula. Esos textos usan Pixelify Sans |
+| Mucho espacio vacío dentro de cada misión | Captura del primer diseño | Los subtítulos `h4` y `h5` traían márgenes por defecto. Se quitaron |
+| El lápiz "✎" se veía como una barra "\" | Captura | Se reemplazó por el lápiz pixelado del jardín |
+| El navegador de pruebas (Edge) dejó de abrir después de una actualización | Error "Failed to launch the browser" | Se usó Chrome. Para simular dos usuarias se usaron **dos ventanas de incógnito**, que Firebase ve como dos visitantes distintos |
+
+| Primer diseño | Diseño corregido |
+|---|---|
+| ![Antes](capturas/v0.4-03a-club-primer-diseno.png) | ![Después](capturas/v0.4-03-club-admin.png) |
+
+### Pruebas realizadas (dos usuarias a la vez: Ana y Bea)
+| Prueba | Resultado |
+|---|---|
+| Ana crea su perfil y un club, y queda como administradora | ✅ |
+| Una misión vacía muestra errores de validación | ✅ |
+| Bea abre el enlace de invitación y el código se completa solo | ✅ |
+| Bea se une y ve "Sos miembro" | ✅ |
+| Bea **no** ve el botón "Nueva misión" | ✅ |
+| Ana ve a Bea en la lista de miembros | ✅ |
+| Ana asigna 3 misiones de distintos tipos y edita una | ✅ |
+| Bea ve sus 2 misiones marcadas y las mueve: Por hacer → Haciendo → Hecha | ✅ |
+| **Firebase rechaza (403)** que Bea cree una misión | ✅ |
+| **Firebase rechaza (403)** que Bea cambie el nombre del club | ✅ |
+| Bea crea un evento y Ana se anota (van 2) | ✅ |
+| Celular sin desplazamiento horizontal | ✅ |
+| Bea sale del club | ✅ |
+| Ana elimina el club con sus misiones y eventos | ✅ |
+| Errores en la consola | ✅ Ninguno |
+
+**Resultado: 19/19 pruebas correctas.**
+
+### Ideas para la versión final (v1.0)
+- **"Mi ramo":** estadísticas del jardín (flores, capítulos leídos, género favorito).
+- **Filtros y buscador** dentro del jardín.
+- **Significado de cada flor** (*hanakotoba*).
+- **(Opcional)** Guardar la cuenta con Google para recuperar el jardín y los clubes en otro dispositivo, que es la "ampliación opcional" que menciona la consigna.
+- Grabar el **video de demostración**.

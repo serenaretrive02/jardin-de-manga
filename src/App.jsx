@@ -11,12 +11,17 @@ import { FLORES } from './data/flores';
 import { PALETA_BASE, spriteDeEtapa } from './data/sprites';
 import Aviso from './components/Aviso';
 import BarraCarga from './components/BarraCarga';
+import Comunidad from './components/comunidad/Comunidad';
 import EditarPlanta from './components/EditarPlanta';
 import FormularioPlanta from './components/FormularioPlanta';
 import ListaJardin from './components/ListaJardin';
 import PixelSprite from './components/PixelSprite';
 import Ventana from './components/Ventana';
 import './App.css';
+import './Comunidad.css';
+
+// Si se abrió un enlace de invitación (…/?club=ABC123), se guarda el código.
+const codigoInvitacion = new URLSearchParams(window.location.search).get('club');
 
 // Consulta las plantas en Firestore y actualiza los estados de la interfaz.
 async function cargarPlantas(uid, setPlantas, setCargando, setAviso) {
@@ -40,6 +45,8 @@ export default function App() {
   const [idOcupada, setIdOcupada] = useState(null); // planta que se está guardando
   const [aviso, setAviso] = useState(null); // { tipo: 'exito' | 'error', texto }
   const [editando, setEditando] = useState(null); // planta abierta en la ventana de edición
+  // Sección visible: 'jardin' o 'comunidad'. Con una invitación, se abre directo la comunidad.
+  const [seccion, setSeccion] = useState(codigoInvitacion ? 'comunidad' : 'jardin');
 
   // 1) Al abrir la app: iniciar sesión anónima (sin registro).
   useEffect(() => {
@@ -155,23 +162,44 @@ export default function App() {
         </div>
       </header>
 
-      <main className="contenido">
-        <FormularioPlanta onAgregar={manejarAgregar} guardando={guardando} />
+      <nav className="pestanas" role="tablist" aria-label="Secciones">
+        <button role="tab" aria-selected={seccion === 'jardin'} className="pestana" onClick={() => setSeccion('jardin')}>
+          Mi jardín
+        </button>
+        <button role="tab" aria-selected={seccion === 'comunidad'} className="pestana" onClick={() => setSeccion('comunidad')}>
+          Comunidad
+        </button>
+      </nav>
 
-        <Ventana titulo={`mi_jardin.exe (${plantas.length})`} className="ventana--jardin">
-          {cargando ? (
-            <BarraCarga texto="Cargando jardín..." />
+      {seccion === 'jardin' ? (
+        <main className="contenido">
+          <FormularioPlanta onAgregar={manejarAgregar} guardando={guardando} />
+
+          <Ventana titulo={`mi_jardin.exe (${plantas.length})`} className="ventana--jardin">
+            {cargando ? (
+              <BarraCarga texto="Cargando jardín..." />
+            ) : (
+              <ListaJardin
+                plantas={plantas}
+                idOcupada={idOcupada}
+                onActualizar={manejarActualizar}
+                onEliminar={manejarEliminar}
+                onEditar={setEditando}
+              />
+            )}
+          </Ventana>
+        </main>
+      ) : (
+        <main>
+          {usuario ? (
+            <Comunidad usuario={usuario} codigoInicial={codigoInvitacion} onAviso={setAviso} />
           ) : (
-            <ListaJardin
-              plantas={plantas}
-              idOcupada={idOcupada}
-              onActualizar={manejarActualizar}
-              onEliminar={manejarEliminar}
-              onEditar={setEditando}
-            />
+            <Ventana titulo="comunidad.exe">
+              <BarraCarga texto="Conectando..." />
+            </Ventana>
           )}
-        </Ventana>
-      </main>
+        </main>
+      )}
 
       <footer className="pie">
         {usuario && <p>Jardinera anónima #{usuario.uid.slice(0, 5).toUpperCase()}</p>}
