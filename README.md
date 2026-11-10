@@ -12,6 +12,7 @@ Trabajo Práctico 2 · Desarrollo Frontend II · UADE · Prof. Joaquín Cerviño
 - **Informe:** [docs/informe.md](docs/informe.md)
 - **Especificación (requisitos, casos de uso, sprints):** [docs/especificacion.md](docs/especificacion.md)
 - **Resumen de la entrega:** [docs/entrega.md](docs/entrega.md)
+- **Guion del mini video:** [docs/guion-video.md](docs/guion-video.md)
 - **Guía para el oral:** [docs/guia-oral.md](docs/guia-oral.md)
 
 ## Tecnologías

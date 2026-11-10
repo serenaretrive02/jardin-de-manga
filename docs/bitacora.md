@@ -906,6 +906,13 @@ Es un cambio solo de diseño: **no se tocó Firestore ni las reglas**, por eso n
 ![Versión publicada en compu](capturas/v1.1-09-vercel-jardin.png)
 ![Versión publicada en celular](capturas/v1.1-10-vercel-celular.png)
 
+### Preparación de la entrega (10/11/2026)
+- **Guion del mini video:** se escribió [docs/guion-video.md](guion-video.md), con 10 escenas. Cada escena dice qué mostrar en pantalla y qué decir. Cubre lo que pide la consigna: la demostración, dónde se configura Firebase y cómo se guarda y se modifica un registro (en la app, en la consola de Firestore y en el código). Avisa además que **no hay que mostrar el archivo `.env`** en el video.
+- **"La app debe estar operativa":**
+  - Se volvió a probar la URL pública y la prueba del jardín dio **17/17**.
+  - Se confirmó que las reglas de Firestore no tienen fecha de vencimiento.
+  - Se armó un checklist para el día de la entrega en [docs/entrega.md](entrega.md).
+
 ---
 
 ## Conclusión del proceso
