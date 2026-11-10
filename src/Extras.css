@@ -372,3 +372,202 @@
     bottom: 76px;
   }
 }
+
+/* =========================================================
+   v1.0 · Botón de sonido, Mi ramo, filtros y herbario
+   ========================================================= */
+.encabezado {
+  position: relative;
+}
+
+.encabezado__extra {
+  margin-left: auto;
+  align-self: flex-start;
+}
+
+.boton-sonido {
+  gap: 6px;
+  background: var(--blanco);
+}
+
+.boton-sonido[aria-pressed='true'] {
+  background: var(--lima);
+}
+
+/* ----- Mi ramo ----- */
+.ramo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  background: var(--crema);
+  border: var(--borde);
+}
+
+.ramo__datos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  font-size: 16px;
+}
+
+.ramo__datos strong {
+  font-size: 20px;
+}
+
+.ramo__favorito {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ramo__favorito strong {
+  font-size: 16px;
+}
+
+.ramo__flores {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 2px;
+  min-height: 40px;
+  padding: 4px 8px;
+  background: #e9f8c9;
+  border: 2px dashed var(--tinta);
+}
+
+.ramo__titulo {
+  margin-right: 6px;
+  align-self: center;
+  font-weight: 600;
+}
+
+/* ----- Filtros ----- */
+.filtros {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filtros input,
+.filtros select {
+  width: 100%;
+  min-height: 40px;
+  padding: 6px 10px;
+  background: var(--blanco);
+  border: var(--borde);
+  border-radius: 0;
+}
+
+.filtros .chip[aria-pressed='true'] {
+  background: var(--lima);
+  box-shadow: var(--sombra-chica);
+  font-weight: 600;
+}
+
+.filtros__selects {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.filtros__resumen {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: var(--texto-suave);
+}
+
+/* ----- Herbario ----- */
+.ventana--herbario .ventana__barra {
+  background: #e5d4ff;
+}
+
+.herbario__intro {
+  margin-bottom: 16px;
+}
+
+.herbario {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr));
+  gap: 16px;
+}
+
+.herbario__flor {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: var(--crema);
+  border: var(--borde);
+  box-shadow: var(--sombra);
+}
+
+.herbario__dibujo {
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding: 4px;
+  background: #e9f8c9;
+  border: 2px solid var(--tinta);
+}
+
+.herbario__datos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.herbario__datos h3 {
+  font-size: 21px;
+  line-height: 1.1;
+}
+
+.herbario__datos .insignia {
+  align-self: flex-start;
+}
+
+.herbario__japones {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--texto-suave);
+}
+
+.herbario__etapas {
+  display: flex;
+  gap: 4px;
+}
+
+@media (max-width: 640px) {
+  .filtros__selects {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .boton-sonido span {
+    display: none;
+  }
+
+  .herbario__dibujo .pixel-sprite {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+/* El aviso flotante no debe bloquear los botones que quedan debajo:
+   deja pasar los clics (pointer-events: none), salvo en su botón de cerrar. */
+.aviso {
+  pointer-events: none;
+}
+
+.aviso__cerrar {
+  pointer-events: auto;
+}

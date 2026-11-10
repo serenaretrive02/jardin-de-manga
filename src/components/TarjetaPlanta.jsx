@@ -22,18 +22,21 @@ export default function TarjetaPlanta({ planta, ocupada, onActualizar, onElimina
     const leidos = planta.capitulosLeidos + 1;
     const cambios = { capitulosLeidos: leidos };
     let mensaje = `Regaste "${planta.titulo}" (${leidos} ${palabraCapitulo})`;
+    let sonido = 'regar';
 
     if (planta.estado === 'pendiente') cambios.estado = 'leyendo';
     // Una planta marchita (abandonada) revive si la volvés a regar.
     if (planta.estado === 'abandonado') {
       cambios.estado = 'leyendo';
       mensaje = `¡"${planta.titulo}" revivió! (${leidos} ${palabraCapitulo})`;
+      sonido = 'florecer';
     }
     if (planta.capitulosTotales > 0 && leidos === planta.capitulosTotales) {
       cambios.estado = 'terminado';
       mensaje = `¡"${planta.titulo}" floreció! Lo terminaste`;
+      sonido = 'florecer';
     }
-    onActualizar(planta.id, cambios, mensaje);
+    onActualizar(planta.id, cambios, mensaje, sonido);
   }
 
   // Si se marca "Terminado" y faltaban capítulos, se completan automáticamente.
@@ -43,13 +46,14 @@ export default function TarjetaPlanta({ planta, ocupada, onActualizar, onElimina
     if (nuevo.valor === 'terminado' && planta.capitulosTotales > planta.capitulosLeidos) {
       cambios.capitulosLeidos = planta.capitulosTotales;
     }
-    onActualizar(planta.id, cambios, `"${planta.titulo}": ${nuevo.etiqueta}`);
+    const sonido = { terminado: 'florecer', abandonado: 'compostar' }[nuevo.valor];
+    onActualizar(planta.id, cambios, `"${planta.titulo}": ${nuevo.etiqueta}`, sonido);
   }
 
   return (
     <li className={`tarjeta tarjeta--${etapa.clave}`} aria-busy={ocupada}>
       <div className="tarjeta__barra">
-        <span>{flor.nombre}</span>
+        <span title={`${flor.nombre} (${flor.japones}): ${flor.significado}`}>{flor.nombre}</span>
         <span className="tarjeta__etapa">{etapa.texto}</span>
       </div>
 

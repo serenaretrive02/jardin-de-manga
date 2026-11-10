@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { SUGERENCIAS } from '../data/conocimiento';
 import { responder } from '../services/asistente';
+import { reproducir } from '../services/sonidos';
 import Abeja from './Abeja';
 
 const BIENVENIDA = {
@@ -32,6 +33,7 @@ export default function NanaIA({ plantas }) {
       const respuesta = responder(pregunta, { plantas });
       setMensajes((anteriores) => [...anteriores, { de: 'nana', ...respuesta }]);
       setPensando(false);
+      reproducir('burbuja');
     }, 550);
   }
 
@@ -112,7 +114,10 @@ export default function NanaIA({ plantas }) {
 
       <button
         className="boton-flotante boton-flotante--nana"
-        onClick={() => setAbierta(!abierta)}
+        onClick={() => {
+          if (!abierta) reproducir('abeja');
+          setAbierta(!abierta);
+        }}
         aria-expanded={abierta}
         aria-controls="nana-ia-panel"
         title="Preguntale a Nana IA"

@@ -1,188 +1,103 @@
 # Informe — Nana, tu jardín de manga
 
 **Trabajo Práctico 2 · Desarrollo Frontend II · UADE**
-Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026
+Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026 · Versión final: **v1.0**
 
-> Documento en construcción: se completa a medida que avanzan las versiones.
-
-## Enlaces de la entrega
-- **App publicada (Vercel):** https://jardin-de-manga.vercel.app
-- **Repositorio (GitHub):** https://github.com/serenaretrive02/jardin-de-manga
-- **Bitácora:** [bitacora.md](bitacora.md)
-- **Video de demostración:** _pendiente_
-- **Especificación (requisitos y casos de uso):** [especificacion.md](especificacion.md)
-- **Resumen de la entrega:** [entrega.md](entrega.md)
+| Entrega | Enlace |
+|---|---|
+| App publicada (Vercel) | https://jardin-de-manga.vercel.app |
+| Repositorio (GitHub) | https://github.com/serenaretrive02/jardin-de-manga |
+| Bitácora del proceso (6 versiones, con capturas) | [bitacora.md](bitacora.md) |
+| Especificación (requisitos, casos de uso, sprints) | [especificacion.md](especificacion.md) |
+| Guía para el oral (dónde está cada tema en el código) | [guia-oral.md](guia-oral.md) |
+| Video de demostración | _pendiente: agregar el enlace_ |
 
 ---
 
-## 1. La idea
+## 1. La idea y su público
+**Nana** es una app para llevar el registro de los mangas y animes que seguís. **Cada título es una flor**: la especie depende del género (romance → rosa, acción → girasol, fantasía → tulipán…) y la planta **crece a medida que avanzás capítulos** (semilla → brote → creciendo → en flor). Si la abandonás, se marchita. Además, Nana es una **comunidad**: permite armar clubes de lectura con amigas, repartirse misiones y organizar eventos.
 
-**Nana** (antes llamada *Jardín de Manga*) es una aplicación web para llevar el registro de los mangas y animes que estás siguiendo. En lugar de una lista común, **cada título es una flor**:
+**Necesidad que resuelve:** quienes leen manga o miran anime siguen muchas series a la vez y se olvidan por dónde iban. Nana lo guarda y lo muestra de forma visual y motivadora, y suma la experiencia de leer en grupo.
 
-- La **especie** depende del género. Por ejemplo, el romance es una rosa y la acción un girasol.
-- La planta **crece** a medida que avanzás capítulos: semilla → brote → creciendo → en flor.
-- Si dejás de leerla, la flor **se marchita**.
+**Público:** lectoras y lectores de manga y espectadores de anime, sobre todo jóvenes, que no quieren crear una cuenta ni completar formularios largos (el ingreso es anónimo).
 
-Así, el progreso de lectura se ve de un vistazo y registrarlo se vuelve algo más lindo y motivador que tachar una lista.
+**Por qué se ve así:** estética **pixel art** de videojuego retro (ventanas tipo "programa", paleta lima y rosa, sombras duras), porque conecta con un público gamer y otaku y refuerza la idea de "cuidar un jardín" como en un juego. Las 9 flores y la abeja están **dibujadas con código**: son arrays de texto que React convierte en píxeles. El diseño se refinó en varias iteraciones a partir de referencias visuales y de las capturas de cada prueba (ver la bitácora).
 
-### ¿Qué necesidad resuelve?
-Quienes leen manga o miran anime suelen seguir muchas series a la vez y se olvidan en qué capítulo quedaron, qué tenían pendiente o qué dejaron a medias. La app guarda esa información y la muestra de forma visual.
+## 2. Funciones implementadas (todas con CRUD)
 
-### Y además: una comunidad de lectura (desde la v0.4)
-Leer es más lindo en grupo. Nana permite armar **clubes de lectura** con amigas: la creadora del club es su **administradora** y **reparte misiones** (leer capítulos, escribir una reseña, hacer un fan art…), y cualquier miembro puede **proponer eventos** (lecturas conjuntas, watch parties, debates).
+| Módulo | Crear | Consultar | Modificar | Eliminar |
+|---|---|---|---|---|
+| **Jardín** (plantas) | Plantar, a mano o buscando en la API | Ver el jardín con filtros, buscador, orden y "Mi ramo" | Regar +1, cambiar el estado, editar | Compostar (con confirmación) |
+| **Perfil** | Apodo y flor-avatar (9 flores) | Ver el perfil y el de los miembros | Editar | Eliminar perfil |
+| **Clubes** (grupos) | Crear club (con código e invitación) | Mis clubes, miembros | Editar club; unirse, salir o quitar miembros | Eliminar club (borra sus misiones y eventos) |
+| **Misiones** (tareas de 6 tipos) | Crear y **asignar: solo la administradora** | Tablero Kanban, "solo mis misiones" | Mover de columna (la persona asignada); editar (la administradora) | Eliminar (la administradora) |
+| **Eventos** | Cualquier miembro | Próximos y pasados | Editar (quien lo creó o la administradora); anotarse o borrarse | Eliminar (quien lo creó o la administradora) |
 
-### ¿Para quién es?
-Para lectoras y lectores de manga y espectadores de anime, sobre todo jóvenes, que quieren organizar lo que consumen sin tener que crear una cuenta ni completar formularios largos.
-
-## 2. Funciones implementadas
-
-| Acción | Qué hace | Operación en la base de datos | Desde |
-|---|---|---|---|
-| Ver mi jardín | Muestra todas las plantas guardadas, con su dibujo, portada y barra de avance | Consultar | v0.1 (portadas: v0.3) |
-| Buscar en internet | Busca el manga o anime en la API de Kitsu y completa título, capítulos y género | — (API externa) | v0.3 |
-| Plantar | Agrega un manga o anime. Antes valida los datos y muestra una vista previa de la flor | Agregar | v0.1 (validaciones y vista previa: v0.2) |
-| Regar +1 | Suma un capítulo y la planta crece. La primera vez pasa a "Leyendo" y en el último capítulo florece sola | Modificar | v0.1 (automático: v0.3) |
-| Cambiar estado | Pendiente / Leyendo / Terminado (florece y completa los capítulos) / Abandonado (se marchita) | Modificar | v0.1 |
-| Editar | Cambia título, género, capítulos vistos y total, con validaciones | Modificar | v0.3 |
-
-**Comunidad (v0.4):**
-
-| Acción | Quién | Operación |
-|---|---|---|
-| Crear / editar perfil (apodo y flor) | Cualquiera | Agregar / Modificar |
-| Crear, ver, editar y eliminar un club | Crear: cualquiera. Editar y eliminar: la administradora | **CRUD de grupos** |
-| Unirse con código o enlace, salir del club | Cualquiera / miembro | Modificar |
-| Quitar a un miembro | Administradora | Modificar |
-| Crear, asignar, editar y eliminar misiones de 6 tipos | **Solo la administradora** | **CRUD de tareas** |
-| Mover mi misión: Por hacer → Haciendo → Hecha | La persona asignada | Modificar |
-| Crear, editar y eliminar eventos | Crear: cualquier miembro. Editar y eliminar: quien lo creó o la administradora | **CRUD de eventos** |
-| Anotarse o borrarse de un evento | Miembro | Modificar |
-| Compartir club, misión o evento | Miembro | — (menú de compartir o portapapeles) |
-| Compostar | Elimina la planta, después de pedir confirmación | Eliminar | v0.1 (confirmación: v0.2) |
+**Además:**
+- **Compartir** clubes, misiones y eventos (menú del celular o portapapeles), con un enlace de invitación que completa el código solo.
+- **Herbario** con las 9 flores, su significado (*hanakotoba*) y cuántas tenés.
+- **Guía flotante** de cómo crece la flor.
+- **Nana IA**, una asistente con forma de abeja que responde paso a paso sobre la app.
+- **Sonidos** retro que se pueden apagar.
+- **Cerrar sesión**, que empieza un jardín nuevo y avisa antes.
 
 **Experiencia de uso (consigna, punto 6):**
-- **Validaciones:** el título es obligatorio y tiene un máximo de 120 caracteres. Los capítulos tienen que ser un número entero entre 0 y 5000. Los errores se muestran debajo de cada campo.
-- **Información de carga:** una barra pixelada mientras se trae el jardín. Los botones dicen "Plantando..." y las tarjetas se atenúan mientras se guardan.
-- **Mensajes de éxito o error:** aviso flotante después de cada operación. Si Firebase falla, el aviso es rojo y explica qué pasó.
-- **Celular y compu:** en la compu, el formulario y el jardín van lado a lado. En el celular, todo en una columna, con tarjetas horizontales y botones de al menos 44 px.
-
-## 2.b Diseño: por qué se ve así
-
-El diseño **no es el primer resultado de la IA**: se construyó en iteraciones (ver la bitácora).
-- **v0.1:** a propósito, sin diseño. Era un formulario y tarjetas grises, para priorizar que funcione.
-- **v0.2:** **estética pixel art**, inspirada en tres referencias visuales:
-  - una tienda de plantas en pixel art (paleta lima y rosa),
-  - íconos pixelados,
-  - un escritorio de computadora retro (ventanas con barra de título).
-
-**Justificación:**
-- El pixel art conecta con el público (lectores de manga y anime, cercanos a los videojuegos) y refuerza la idea de "cuidar un jardín" como en un juego.
-- Las flores se dibujaron a mano como grillas de colores, así cada género tiene su propia flor y cada etapa (semilla → brote → creciendo → flor, o marchita) se reconoce de un vistazo.
-- La tipografía arcade (*Press Start 2P*) se usa solo en títulos porque cuesta leerla en textos largos. Los textos usan *Pixelify Sans*, que mantiene el estilo pero se lee mejor.
-- Los bordes oscuros y las sombras sólidas mantienen buen contraste y dan coherencia: todo parece hecho de píxeles.
+- validaciones con mensajes debajo de cada campo;
+- barras de carga pixeladas;
+- avisos de éxito y de error en cada operación;
+- diseño probado en compu y en celular (390 px), con botones de al menos 44 px.
 
 ## 3. Información guardada en Firebase
+- **Authentication (anónimo):** identifica a cada visitante sin pedirle registro.
+- **Cloud Firestore:**
 
-La app usa dos servicios de Firebase:
+| Ruta | Qué guarda | Quién lo ve |
+|---|---|---|
+| `users/{uid}/plantas/{id}` | título, tipo, género, estado, capítulos leídos y totales, portada y número de Kitsu (opcionales), fecha | Solo su dueña |
+| `users/{uid}` | apodo y flor-avatar | Cualquier visitante identificado (para mostrar nombres en los clubes) |
+| `clubes/{CÓDIGO}` | nombre, descripción, administradora, miembros | Solo sus miembros |
+| `clubes/{CÓDIGO}/misiones/{id}` | título, tipo, a quién está asignada, estado, fecha límite | Miembros del club |
+| `clubes/{CÓDIGO}/eventos/{id}` | título, tipo, fecha, lugar, asistentes | Miembros del club |
 
-- **Authentication (modo anónimo):** reconoce a cada visitante sin pedirle registro. Cada navegador recibe un código de identidad propio (`uid`).
-- **Cloud Firestore:** la base de datos donde se guarda el jardín de cada persona.
+**Seguridad:**
+- Las **reglas de Firestore** (`firestore.rules`) controlan quién puede hacer qué y que cada dato tenga la forma correcta, y solo aceptan campos conocidos.
+- **Solo la administradora puede crear o asignar misiones.** Se probó llamando directo a Firebase como miembro: la respuesta fue **403 (rechazado)**.
+- Las **llaves de conexión** están en `.env`, que **no está en GitHub**. En Vercel se cargaron como variables de entorno.
 
-Los datos se ordenan como carpetas: `users / (código del usuario) / plantas / (cada planta)`.
-
-Cada planta guarda: título, tipo (manga o anime), género, capítulos leídos, capítulos totales, estado y fecha de creación. Si se eligió desde la búsqueda, también guarda la **portada** (dirección de la imagen) y el **número de la obra en Kitsu** (desde la v0.3).
-
-### Seguridad
-- Las **reglas de Firestore** (archivo `firestore.rules`) hacen que cada persona **solo pueda leer y modificar su propio jardín**. Además, controlan que los datos tengan la forma correcta: que el título no esté vacío, que el estado sea uno de los permitidos, etc. Cualquier otra parte de la base queda cerrada. Desde la v0.3 además solo se aceptan los campos conocidos, la portada tiene que ser un enlace `https://` y los capítulos leídos no pueden superar el total.
-- Las **llaves de conexión** de Firebase se guardan en un archivo `.env` que **no se sube a GitHub**. En el repositorio solo está `.env.example`, con los nombres de las variables y sin sus valores. En Vercel, las llaves se cargan como variables de entorno.
-
-### Comunidad: qué se guarda y quién lo puede ver (v0.4)
-- `users/(uid)`: **perfil público** (apodo y flor). Lo ven los demás para mostrar los nombres en los clubes.
-- `clubes/(código)`: nombre, descripción, administradora y lista de miembros. **Solo lo ven sus miembros.**
-- `clubes/(código)/misiones`: título, tipo, a quién está asignada, estado y fecha límite.
-- `clubes/(código)/eventos`: título, tipo, fecha, lugar y lista de asistentes.
-
-**Roles en las reglas de Firestore:** solo la administradora puede crear, asignar, editar o borrar misiones. La persona asignada solo puede cambiar el estado de la suya. Cada persona solo puede agregarse o sacarse a sí misma de un club o de un evento. Se probó llamando directamente a Firebase como miembro: **respuesta 403 (rechazado)**.
-
-### ¿Qué pasa si abro la app en otro dispositivo?
-Como el ingreso es anónimo, cada navegador tiene su propio jardín. Abrir la app en el celular muestra un jardín distinto al de la computadora. La consigna menciona esta limitación y deja el inicio de sesión permanente como ampliación opcional.
-
-## 3.b API externa: Kitsu
-
-Para no tener que escribir todo a mano, desde la v0.3 la app consulta la **API pública de Kitsu** (https://kitsu.io), una base de datos de anime y manga gratuita que no necesita clave.
-- **Qué se pide:** `fetch` a `https://kitsu.io/api/edge/manga?filter[text]=<lo que se escribió>` (o `/anime`).
-- **Qué devuelve:** un JSON con la lista en `data` (título, capítulos o episodios, fecha, portada) y los géneros en `included`.
-- **Qué se hace con eso:** se transforma con `map`, `filter`, `forEach` y `find` en objetos simples, y se sugiere la flor según el género.
-- **Si falla:** se muestra un aviso y se puede seguir completando a mano. Un error 429 ("demasiadas consultas") pide esperar.
-- **Por qué Kitsu:** primero se intentó usar Jikan (MyAnimeList), pero estaba caída. Se compararon Kitsu y AniList y se eligió Kitsu porque funciona igual que lo visto en clase (GET y JSON).
+**Dónde se configura Firebase:** en `src/firebase.js`, que lee las variables `VITE_FIREBASE_…` del `.env` con `import.meta.env`. Las operaciones están en `src/services/` (`plantas.js`, `perfiles.js`, `clubes.js`, `misiones.js`, `eventos.js`).
 
 ## 4. Herramientas utilizadas
-
-| Herramienta | Uso |
-|---|---|
-| Visual Studio Code | Editor de código y terminal |
-| Node.js + npm | Instalar las librerías y ejecutar el proyecto |
-| React + Vite | Construir la interfaz con componentes |
-| Firebase | Identificación anónima y base de datos |
-| Git + GitHub | Control de versiones y repositorio |
-| Vercel | Publicación del sitio |
-| API de Kitsu | Búsqueda de mangas y animes reales (portadas, capítulos, géneros) |
-| Claude Code (IA) | Ideas, generación y revisión de código, documentación |
+Visual Studio Code · Node.js + npm · React + Vite · Firebase (Authentication y Cloud Firestore) · Git + GitHub · Vercel · API pública de **Kitsu** (búsqueda de obras, sin clave) · **Claude Code** (asistente de IA de Anthropic) · Google Chrome con navegador automático (para pruebas y capturas).
 
 ## 5. Uso de inteligencia artificial
+Se usó **Claude Code**, que trabaja directamente sobre la carpeta del proyecto, para:
+- pensar y comparar ideas;
+- generar código siguiendo las guías de clase;
+- revisar la consigna y la rúbrica;
+- configurar Firebase y Vercel desde el navegador;
+- probar la app con un navegador automático;
+- redactar la documentación.
 
-Se usó **Claude Code**, un asistente de IA de Anthropic que trabaja directamente sobre la carpeta del proyecto.
+**Cómo se verificó lo que hizo la IA:** cada versión se probó con **pruebas automáticas** (de 17 a 26 pasos por versión, incluida una con dos usuarias a la vez), se revisaron las **capturas** en compu y en celular, se comprobaron los datos en la **consola de Firestore** y se repitieron las pruebas **sobre la URL de Vercel**. Gracias a eso se encontraron y corrigieron más de 25 problemas (ver la bitácora). Los pasos que implicaban confirmar algo público o cargar llaves los hizo la autora.
 
-**Para qué se usó:**
-- Pensar y comparar ideas de aplicación a partir de mis gustos.
-- Generar la estructura inicial del código, siguiendo los ejemplos de las guías de clase.
-- Revisar que se cumpla cada punto de la consigna. Por ejemplo, así se detectó que el `.gitignore` no protegía el `.env`.
-- Redactar la documentación (README, bitácora y este informe).
-
-**Ejemplos de instrucciones dadas a la IA:**
-0. *"Manejá con control remoto el paso por paso de la primera versión, siguiendo la consigna y las notas de clase."* (La IA configuró Firebase y Vercel desde el navegador. Los pasos que implican confirmar algo público o cargar llaves los hice yo.)
-1. *"Antes de crear cualquier aplicación, pensá ideas sumamente creativas y originales según las cosas que me gustan, que permitan hacer cada acción que pide la consigna, pero que no sea una típica."*
+**Ejemplos representativos de instrucciones dadas a la IA:**
+1. *"Antes de crear cualquier aplicación, pensá ideas sumamente creativas y originales según las cosas que me gustan (Minecraft, LoL, manga, anime, flores), que permitan hacer cada acción que pide la consigna, pero que no sea una típica."*
 2. *"Todo lo que hagamos tiene que ser lo que vimos en clase (Visual Studio Code, GitHub y lo de los PDF)."*
+3. *"Vayamos con la 0.2. Me gustaría que el diseño sea tipo pixel art"*, con tres imágenes de referencia.
+4. *"Cambiemos el título a Nana."* (v0.3: la IA investigó por qué la API planeada no respondía y propuso otra).
+5. *"Chequeá que se cumpla todo lo que pide la consigna y la rúbrica […]. Quiero sumar una comunidad, grupos de lectura, CRUD de tareas, eventos y grupos […]. El administrador es el único rol que puede asignar tareas."*
+6. *"Me gustaría que los avatares sean distintos tipos de flores, una leyenda de cómo crece la flor, una abeja revoloteando y una asistente Nana IA […]. Para la versión final: filtros, significado de cada flor, sonidos […]. Si ves algo que no cumple la consigna, eliminalo."*
 
-3. *"Vayamos con la 0.2. Me gustaría que el diseño sea tipo pixel art si se puede"*, junto con tres imágenes de referencia. La IA propuso dibujar las flores como grillas de texto recorridas con `map`. Al revisar las capturas pedí corregir la flor, el diseño para celular y un problema de la tipografía.
+**Decisión sobre Nana IA:** conectar un modelo de IA externo exige una clave privada, y la consigna prohíbe incluir claves privadas en el código del navegador. Por eso Nana IA responde con una **base de conocimiento propia** de la app (`src/data/conocimiento.js`). No expone claves, no tiene costo y responde solo sobre Nana.
 
-4. *"Sí. Cambiemos el título a Nana."* Con esta instrucción se encaró la v0.3. Cuando la API planeada (Jikan) no respondió, la IA investigó el problema, comparó dos alternativas y propuso Kitsu. Las capturas de la prueba automática permitieron encontrar 4 errores de diseño y de lógica antes de publicar.
-
-5. *"Chequeá que todo lo que pide la consigna se esté cumpliendo […]. Me gustaría sumar más acciones: una comunidad, añadir amigos o hacer grupos de lectura […], crear, modificar, eliminar y compartir tareas, CRUD de evento, CRUD de grupos […]. El administrador es el único rol que puede asignar tareas."* La IA primero auditó el proyecto contra la rúbrica y después diseñó la comunidad con roles. Las pruebas con dos usuarias simultáneas y la revisión de capturas permitieron corregir 7 problemas antes de publicar.
-
-*(Se agregan más ejemplos en cada versión.)*
-
-**Cómo verifiqué lo que hizo la IA:** probando la app en el navegador, revisando en la consola de Firebase que los datos realmente se guarden y comparando el código con los ejemplos de las guías de la materia.
-
-## 6. Dificultades y soluciones
-Ver el detalle en la [bitácora](bitacora.md). Resumen:
-- El `.gitignore` original no excluía el `.env`, por lo que las llaves se habrían publicado en GitHub. Se corrigió agregándolo.
-- PowerShell bloqueaba `npm run dev` por seguridad. Se resolvió con el comando indicado por el profesor (`Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`).
-- La fuente pixelada mostraba "flor" como "Aor" (unía la "f" y la "l"). Se desactivaron las ligaduras tipográficas.
-- En el celular, 2 tarjetas por fila cortaban los textos. Se rediseñó con tarjetas horizontales.
-- La API Jikan estaba caída: se investigó y se cambió por Kitsu. La búsqueda quedó como ayuda opcional.
-- En el celular, el formulario nuevo se salía de la pantalla: se corrigió la grilla con `minmax(0, 1fr)`.
-- Para unirse a un club que todavía no se puede ver, el código de invitación es el identificador del club, y las reglas solo permiten agregarse a una misma.
-- Los avisos aparecían antes de que se viera el cambio: ahora primero se vuelve a consultar y después se avisa.
-- La hora de los eventos se calculaba en UTC (3 horas adelantada): se usa la hora local.
-- Abrir `index.html` con doble clic muestra una página en blanco: una app de Vite se abre con `npm run dev`.
-- En la versión publicada el jardín empezó vacío: por el acceso anónimo, cada sitio (local o Vercel) y cada navegador tiene su propio jardín.
-
-## 7. Glosario (para explicar con mis palabras)
-- **Componente:** una pieza de la interfaz, como la tarjeta de una planta. Es una función que devuelve lo que se ve.
-- **Props:** datos que un componente le pasa a otro. Por ejemplo, la lista le pasa a cada tarjeta su planta.
-- **Estado (`useState`):** datos que la app recuerda y que, al cambiar, actualizan la pantalla.
-- **`useEffect`:** código que se ejecuta al abrir la app para conectarse con algo externo, como Firebase.
-- **`map`:** recorre el array de plantas y arma una tarjeta por cada una. También dibuja las flores: recorre las filas y las letras de cada dibujo y pinta un píxel por letra.
-- **`children`:** lo que se escribe entre la etiqueta de apertura y la de cierre de un componente. El componente `Ventana` lo usa para envolver cualquier contenido con el marco retro.
-- **Rol:** el permiso que tiene cada persona. En Nana: miembro o administradora del club.
-- **CRUD:** las cuatro operaciones básicas con datos: *Create* (crear), *Read* (leer), *Update* (modificar) y *Delete* (eliminar).
-- **Kanban:** un tablero con columnas (Por hacer, Haciendo, Hecha) para seguir tareas. Se usa en las misiones del club y para organizar el propio proyecto.
-- **MVP:** producto mínimo viable. Es la primera versión que funciona (la v0.1), que después se mejora en iteraciones.
-- **API:** un servicio de otra página al que la app le pide datos. Kitsu es la API de mangas y animes que usa Nana.
-- **`fetch` / `async` / `await`:** `fetch` hace el pedido y `await` espera la respuesta sin trabar la página.
-- **JSON:** el formato de texto en que llegan los datos de la API.
-- **Limpieza de un efecto:** función que devuelve `useEffect` para "deshacer" lo que hizo. El aviso la usa para cancelar su temporizador.
-- **Serverless:** no administro un servidor propio. Firebase y Vercel se encargan de eso.
-- **Variables de entorno (`.env`):** archivo con las llaves de conexión, que queda fuera del repositorio.
-- **Reglas de Firestore:** permisos que dicen quién puede leer o escribir cada dato.
+## 6. Dificultades principales y cómo se resolvieron
+(El detalle de cada una, con capturas, está en la [bitácora](bitacora.md).)
+- El `.gitignore` de Vite **no protegía el `.env`**: se agregó antes del primer commit.
+- Windows bloqueaba `npm` (*ExecutionPolicy*): se usó el comando que indicó el profesor.
+- Se borró `.env.example` por error: se restauró, y desde entonces se revisa la lista de cambios antes de cada commit.
+- La API planeada (Jikan) estaba **caída**: se investigó y se cambió por Kitsu, y la búsqueda quedó como ayuda opcional.
+- Diseño en celular: textos cortados y formularios que se salían de la pantalla. Se corrigió con tarjetas horizontales y `minmax(0, 1fr)`.
+- **Roles:** para que nadie pueda saltearse la interfaz, el permiso de la administradora se controla en las reglas de Firestore.
+- Tipografía: la fuente pixelada no tenía "Í"/"Ó" en mayúscula y leía "flor" como "Aor": se ajustaron las fuentes.
+- Fechas: los eventos se calculaban en hora UTC: se pasó a hora local.
+- El aviso flotante **tapaba botones** que quedaban debajo: ahora deja pasar los clics.

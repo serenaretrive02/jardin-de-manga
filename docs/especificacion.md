@@ -81,6 +81,10 @@ flowchart LR
 | RF15 | **CRUD de perfil** (incluye eliminar) y cerrar sesión | Eliminar vuelve a la bienvenida. Cerrar sesión crea una identidad nueva con el jardín vacío, avisando antes | v0.4.1 |
 | RF16 | Guía de crecimiento siempre disponible | El botón "?" muestra las etapas y la flor de cada género | v0.4.1 |
 | RF17 | **Asistente Nana IA** | Responde paso a paso **solo sobre la app**. Ante preguntas ajenas, lo aclara y sugiere preguntas | v0.4.1 |
+| RF18 | Filtros y orden del jardín | Buscador, estado, género, tipo y 4 órdenes, combinables, con "Limpiar filtros" | v1.0 |
+| RF19 | "Mi ramo" | Muestra plantas, cuántas en flor, capítulos regados, género favorito y una flor por manga terminado | v1.0 |
+| RF20 | Herbario | Las 9 flores con su significado, el género que las hace florecer y cuántas hay en el jardín | v1.0 |
+| RF21 | Sonidos | Sonido distinto por acción. Se pueden apagar y la preferencia se recuerda | v1.0 |
 
 ## 5. Requisitos no funcionales
 
@@ -128,17 +132,19 @@ flowchart LR
 | v0.2 | Mejorar la experiencia | Identidad pixel art, validaciones, avisos, celular | Iteración de diseño y UX |
 | v0.3 | Nuevas funciones | API Kitsu, edición, estados coherentes, nombre "Nana" | Iteración funcional |
 | v0.4 | Comunidad | Perfiles, CRUD de clubes, misiones con roles, eventos, compartir | Incremento grande (nuevo módulo) |
-| v1.0 | Versión final | Pulido, estadísticas, pruebas finales y entrega | Estabilización |
+| v0.4.1 | Ajustes de la v0.4 | 9 flores con forma propia, guía, abeja, Nana IA, CRUD del perfil | Iteración de diseño y ayuda |
+| v1.0 | Versión final | Mi ramo, filtros, herbario, sonidos, auditoría y documentación | Estabilización |
 
-### Backlog (tablero Kanban del proyecto)
+### Backlog final (tablero Kanban del proyecto)
 
-| Por hacer | Haciendo | Hecho |
+| Por hacer (ideas para después de la entrega) | Haciendo | Hecho |
 |---|---|---|
-| Estadísticas "Mi ramo" | v0.4 · Comunidad | CRUD de plantas (v0.1) |
-| Filtros y buscador del jardín | | Reglas de seguridad (v0.1) |
-| Significado de cada flor (hanakotoba) | | Publicación en Vercel (v0.1) |
-| Video de demostración | | Pixel art y celular (v0.2) |
-| (Opcional) Guardar la cuenta con Google para usarla en otro dispositivo | | API Kitsu y edición (v0.3) |
+| Iniciar sesión con Google para usar el jardín en varios dispositivos | Video de demostración | CRUD de plantas, reglas, Vercel (v0.1) |
+| Nana IA con un modelo de lenguaje real a través de un servidor | | Pixel art, validaciones, celular (v0.2) |
+| Notificaciones al recibir una misión | | API Kitsu, edición, estados (v0.3) |
+| | | Comunidad con roles (v0.4) |
+| | | Flores únicas, guía, Nana IA, CRUD del perfil (v0.4.1) |
+| | | Ramo, filtros, herbario, sonidos (v1.0) |
 
 > La app aplica la misma idea dentro de cada club: las **misiones** se organizan en un **tablero Kanban** (Por hacer / Haciendo / Hecha).
 
@@ -146,7 +152,8 @@ flowchart LR
 
 | Tipo de prueba (vista en clase) | Cómo se hizo en Nana |
 |---|---|
-| **Funcional**: ¿cumple lo pedido? | Pruebas automáticas que recorren cada requisito: 17 pasos en la v0.3 y 19 en la v0.4 |
+| **Funcional**: ¿cumple lo pedido? | Pruebas automáticas que recorren cada requisito: 17 pasos (v0.3), 19 (v0.4), 21 (v0.4.1) y 26 (v1.0) |
+| **Regresión**: ¿se rompió algo viejo? | En la v1.0 se volvieron a correr las pruebas de todas las versiones anteriores |
 | **Integración**: ¿se comunican bien React, Firebase y la API? | Se verificaron los datos en la consola de Firestore. Las pruebas recargan la página y comprueban que todo siga |
 | **Seguridad**: ¿las reglas protegen? | Una usuaria que no es administradora intenta crear una misión y editar el club **llamando directamente a Firebase**: responde **403 (rechazado)** |
 | **Usabilidad**: ¿se entiende? | Revisión de capturas en compu y celular. A partir de eso se corrigieron textos cortados, botones fuera de lugar y la tipografía |

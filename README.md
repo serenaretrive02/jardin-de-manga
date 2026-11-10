@@ -12,6 +12,7 @@ Trabajo Práctico 2 · Desarrollo Frontend II · UADE · Prof. Joaquín Cerviño
 - **Informe:** [docs/informe.md](docs/informe.md)
 - **Especificación (requisitos, casos de uso, sprints):** [docs/especificacion.md](docs/especificacion.md)
 - **Resumen de la entrega:** [docs/entrega.md](docs/entrega.md)
+- **Guía para el oral:** [docs/guia-oral.md](docs/guia-oral.md)
 
 ## Tecnologías
 
@@ -71,8 +72,8 @@ Abrir `http://localhost:5173/`. Si se cambia el `.env`, reiniciar el comando.
 ```
 src/
 ├── main.jsx                  Punto de entrada: monta <App />
-├── App.jsx                   Sesión anónima, pestañas (Mi jardín / Comunidad) y jardín
-├── App.css / Comunidad.css   Estilos pixel art y diseño adaptable
+├── App.jsx                   Sesión anónima, pestañas (Mi jardín / Comunidad / Herbario), avisos y sonido
+├── App.css / Comunidad.css / Extras.css   Estilos pixel art y diseño adaptable
 ├── index.css                 Colores, tipografías y estilos generales
 ├── firebase.js               Conexión con Firebase (lee el .env)
 ├── services/
@@ -82,14 +83,19 @@ src/
 │   ├── clubes.js             CRUD de clubes, unirse, salir, quitar miembros
 │   ├── misiones.js           CRUD de misiones (tareas)
 │   ├── eventos.js            CRUD de eventos y asistencia
-│   └── compartir.js          Compartir (menú del celular o portapapeles)
+│   ├── compartir.js          Compartir (menú del celular o portapapeles)
+│   ├── asistente.js          "Cerebro" de Nana IA (busca en la base de conocimiento)
+│   └── sonidos.js            Sonidos retro con la Web Audio API
 ├── data/
 │   ├── flores.js             Géneros, flores, estados y etapas
 │   ├── sprites.js            Dibujos pixel art como arrays de texto
 │   ├── validaciones.js       Validaciones del jardín
-│   └── comunidad.js          Tipos de misión y evento, validaciones de la comunidad
+│   ├── comunidad.js          Tipos de misión y evento, validaciones de la comunidad
+│   └── conocimiento.js       Base de conocimiento de Nana IA
 └── components/
-    ├── FormularioPlanta.jsx, BuscadorObras.jsx, ListaJardin.jsx, TarjetaPlanta.jsx, EditarPlanta.jsx
+    ├── FormularioPlanta.jsx, BuscadorObras.jsx, JardinFiltrado.jsx (ramo + filtros), ListaJardin.jsx, TarjetaPlanta.jsx, EditarPlanta.jsx
+    ├── Herbario.jsx, GuiaCrecimiento.jsx, NanaIA.jsx, BotonSonido.jsx
+    ├── SpriteFlor.jsx, Abeja.jsx, AbejaVoladora.jsx
     ├── PixelSprite.jsx, Ventana.jsx, Modal.jsx, Aviso.jsx, BarraCarga.jsx
     └── comunidad/
         ├── Comunidad.jsx       Coordina perfil, clubes, misiones y eventos
@@ -136,3 +142,4 @@ Ruta: `users/{uid}/plantas/{plantaId}`
 | v0.3 | Nombre **Nana**, búsqueda en la API de Kitsu (portadas y datos automáticos), edición de plantas, estados coherentes con los capítulos, reglas más estrictas |
 | v0.4 | **Comunidad**: perfiles, CRUD de clubes, misiones de 6 tipos con rol de administradora (tablero Kanban), CRUD de eventos, compartir, invitación por enlace |
 | v0.4.1 | 9 flores con formas distintas (y significado), guía flotante de crecimiento, abeja decorativa, **Nana IA** (asistente con base de conocimiento propia), eliminar perfil y cerrar sesión |
+| **v1.0** | **Final:** "Mi ramo", filtros y orden del jardín, herbario de 9 flores, sonidos retro con opción de silencio, Nana IA ampliada, informe breve, guía para el oral |

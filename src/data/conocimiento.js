@@ -12,6 +12,8 @@ export const SUGERENCIAS = [
   '¿Qué flores hay?',
   '¿Cómo creo un club?',
   '¿Quién asigna las misiones?',
+  '¿Cómo filtro mi jardín?',
+  '¿Qué es el herbario?',
   '¿Cómo cierro sesión?',
 ];
 
@@ -118,7 +120,7 @@ export const TEMAS = [
   },
   {
     id: 'flores',
-    claves: ['flores hay', 'que flores', 'cuantas flores', 'tipos de flor', 'herbario', 'catalogo', 'lista de flores'],
+    claves: ['flores hay', 'que flores', 'cuantas flores hay', 'tipos de flor', 'lista de flores'],
     dinamico: 'flores',
   },
   {
@@ -128,7 +130,7 @@ export const TEMAS = [
   },
   {
     id: 'mi-jardin',
-    claves: ['cuantas plantas', 'mi jardin', 'cuantos mangas', 'estadistica', 'cuantas flores tengo', 'resumen'],
+    claves: ['cuantas plantas', 'cuantos mangas', 'cuantos animes', 'estadistica', 'cuantas flores tengo', 'resumen de mi jardin', 'como va mi jardin'],
     dinamico: 'jardin',
   },
   {
@@ -202,6 +204,35 @@ export const TEMAS = [
     claves: ['abeja', 'quien sos', 'nana ia', 'como te llamas', 'sos una ia', 'inteligencia'],
     respuesta:
       '¡Soy Nana IA, la abeja jardinera! Respondo preguntas sobre esta app usando una base de conocimiento propia. No me conecto a servicios externos, así no hace falta guardar claves secretas en el navegador.',
+  },
+  {
+    id: 'filtros',
+    claves: ['filtr', 'ordenar', 'orden', 'buscar en mi jardin', 'encontrar', 'solo los terminados', 'solo anime', 'solo manga'],
+    respuesta: 'Arriba de tu jardín hay filtros para encontrar rápido lo que buscás.',
+    pasos: [
+      'Escribí parte del título en "Buscar en mi jardín...".',
+      'Tocá un estado (Todas, Pendiente, Leyendo, Terminado, Abandonado): cada uno muestra cuántas hay.',
+      'Elegí un género, manga o anime, y cómo ordenar (recientes, A-Z, más avanzadas, más regadas).',
+      'Con "Limpiar filtros" volvés a ver todo.',
+    ],
+  },
+  {
+    id: 'herbario',
+    claves: ['herbario', 'catalogo', 'coleccion', 'todas las flores', 'conseguir una flor', 'como consigo'],
+    respuesta:
+      'El Herbario es la tercera pestaña: muestra las 9 flores de Nana con su dibujo, su nombre en japonés, su significado, con qué género florecen y cuántas tenés en tu jardín.',
+  },
+  {
+    id: 'ramo',
+    claves: ['ramo', 'mi ramo', 'genero favorito', 'favorito'],
+    respuesta:
+      '"Mi ramo" está arriba de tu jardín: cada manga que terminás suma su flor al ramo. También muestra cuántas plantas tenés, cuántas están en flor, cuántos capítulos regaste y tu género favorito.',
+  },
+  {
+    id: 'sonido',
+    claves: ['sonido', 'musica', 'silencio', 'mute', 'ruido', 'volumen', 'apagar el sonido'],
+    respuesta:
+      'Nana tiene sonidos estilo consola retro: al plantar, regar, florecer, compostar o cumplir una misión. Para apagarlos o prenderlos, tocá el botón del parlante arriba a la derecha.',
   },
   {
     id: 'celular',

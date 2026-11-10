@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signInAnonymously, signOut } from 'firebase/auth';
 import { auth, configCompleta } from './firebase';
+import { reproducir } from './services/sonidos';
 import {
   actualizarPlanta,
   agregarPlanta,
@@ -16,7 +17,9 @@ import Modal from './components/Modal';
 import NanaIA from './components/NanaIA';
 import EditarPlanta from './components/EditarPlanta';
 import FormularioPlanta from './components/FormularioPlanta';
-import ListaJardin from './components/ListaJardin';
+import BotonSonido from './components/BotonSonido';
+import Herbario from './components/Herbario';
+import JardinFiltrado from './components/JardinFiltrado';
 import SpriteFlor from './components/SpriteFlor';
 import Ventana from './components/Ventana';
 import './App.css';
@@ -83,7 +86,7 @@ export default function App() {
     try {
       await agregarPlanta(usuario.uid, datos);
       await cargarPlantas(usuario.uid, setPlantas, setCargando, setAviso);
-      setAviso({ tipo: 'exito', texto: `Plantaste "${datos.titulo}"` });
+      setAviso({ tipo: 'exito', texto: `Plantaste "${datos.titulo}"`, sonido: 'plantar' });
       return true;
     } catch (error) {
       console.error(error);
@@ -94,14 +97,15 @@ export default function App() {
     }
   }
 
-  async function manejarActualizar(id, cambios, mensaje) {
+  // sonido: 'regar', 'florecer'... (si no se indica, suena el de éxito)
+  async function manejarActualizar(id, cambios, mensaje, sonido) {
     setIdOcupada(id);
     try {
       await actualizarPlanta(usuario.uid, id, cambios);
       // Se vuelve a consultar para mostrar lo que realmente quedó guardado.
       const datos = await obtenerPlantas(usuario.uid);
       setPlantas(datos);
-      setAviso({ tipo: 'exito', texto: mensaje });
+      setAviso({ tipo: 'exito', texto: mensaje, sonido });
       return true;
     } catch (error) {
       console.error(error);
@@ -123,7 +127,7 @@ export default function App() {
       await eliminarPlanta(usuario.uid, id);
       const datos = await obtenerPlantas(usuario.uid);
       setPlantas(datos);
-      setAviso({ tipo: 'exito', texto: `"${titulo}" volvió a la tierra` });
+      setAviso({ tipo: 'exito', texto: `"${titulo}" volvió a la tierra`, sonido: 'compostar' });
     } catch (error) {
       console.error(error);
       setAviso({ tipo: 'error', texto: 'No se pudo compostar la planta.' });
@@ -131,6 +135,15 @@ export default function App() {
       setIdOcupada(null);
     }
   }
+
+  // Clic suave al tocar pestañas, chips y botones flotantes (un solo "escuchador" para toda la app).
+  useEffect(() => {
+    function alHacerClic(evento) {
+      if (evento.target.closest('.pestana, .chip, .selector-tipo__opcion, .boton-flotante--guia')) reproducir('click');
+    }
+    document.addEventListener('click', alHacerClic);
+    return () => document.removeEventListener('click', alHacerClic); // limpieza
+  }, []);
 
   // Cerrar sesión: al ser anónima, Firebase crea enseguida una identidad NUEVA (jardín vacío).
   async function cerrarSesion() {
@@ -173,6 +186,9 @@ export default function App() {
             Cada manga o anime que seguís es una flor. Leé, regá y mirá crecer tu jardín.
           </p>
         </div>
+        <div className="encabezado__extra">
+          <BotonSonido />
+        </div>
       </header>
 
       <nav className="pestanas" role="tablist" aria-label="Secciones">
@@ -181,6 +197,9 @@ export default function App() {
         </button>
         <button role="tab" aria-selected={seccion === 'comunidad'} className="pestana" onClick={() => setSeccion('comunidad')}>
           Comunidad
+        </button>
+        <button role="tab" aria-selected={seccion === 'herbario'} className="pestana" onClick={() => setSeccion('herbario')}>
+          Herbario
         </button>
       </nav>
 
@@ -192,7 +211,7 @@ export default function App() {
             {cargando ? (
               <BarraCarga texto="Cargando jardín..." />
             ) : (
-              <ListaJardin
+              <JardinFiltrado
                 plantas={plantas}
                 idOcupada={idOcupada}
                 onActualizar={manejarActualizar}
@@ -201,6 +220,10 @@ export default function App() {
               />
             )}
           </Ventana>
+        </main>
+      ) : seccion === 'herbario' ? (
+        <main>
+          <Herbario plantas={plantas} />
         </main>
       ) : (
         <main>

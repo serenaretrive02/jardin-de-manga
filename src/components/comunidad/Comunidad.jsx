@@ -87,7 +87,7 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
 
   // Ejecuta una operación con Firebase, vuelve a consultar lo que cambió y RECIÉN DESPUÉS avisa.
   // recargar: 'contenido' (misiones y eventos), 'club' (datos y miembros) o 'clubes' (la lista entera).
-  async function ejecutar(operacion, textoExito, textoError, recargar = 'contenido') {
+  async function ejecutar(operacion, textoExito, textoError, recargar = 'contenido', sonido) {
     setOcupado(true);
     try {
       const resultado = await operacion();
@@ -100,7 +100,7 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
         setClubes(misClubes);
         if (recargar === 'clubes') setIdClub(typeof resultado === 'string' ? resultado : misClubes[0]?.id ?? null);
       }
-      onAviso({ tipo: 'exito', texto: textoExito });
+      onAviso({ tipo: 'exito', texto: textoExito, sonido });
       setModal(null);
       return true;
     } catch (error) {
@@ -188,7 +188,7 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
         url: enlaceDeClub(club.id),
       }),
     editarClub: () => setModal({ tipo: 'club', datos: club }),
-    eliminarClub: () => ejecutar(() => eliminarClub(club.id), 'Club eliminado', 'No se pudo eliminar el club.', 'clubes'),
+    eliminarClub: () => ejecutar(() => eliminarClub(club.id), 'Club eliminado', 'No se pudo eliminar el club.', 'clubes', 'compostar'),
     salirDelClub: () => ejecutar(() => quitarMiembro(club.id, uid), 'Saliste del club', 'No se pudo salir del club.', 'clubes'),
     quitarMiembro: (miembro) =>
       ejecutar(() => quitarMiembro(club.id, miembro), `${nombreDe(perfiles, miembro)} ya no está en el club`, 'No se pudo quitar al miembro.', 'club'),
@@ -196,12 +196,14 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
     nuevaMision: () => setModal({ tipo: 'mision', datos: null }),
     editarMision: (mision) => setModal({ tipo: 'mision', datos: mision }),
     eliminarMision: (mision) =>
-      ejecutar(() => eliminarMision(club.id, mision.id), 'Misión eliminada', 'No se pudo eliminar la misión.'),
+      ejecutar(() => eliminarMision(club.id, mision.id), 'Misión eliminada', 'No se pudo eliminar la misión.', 'contenido', 'compostar'),
     moverMision: (mision, estado) =>
       ejecutar(
         () => actualizarMision(club.id, mision.id, { estado }),
         estado === 'hecha' ? `¡Misión cumplida: "${mision.titulo}"!` : 'Misión actualizada',
         'No se pudo mover la misión.',
+        'contenido',
+        estado === 'hecha' ? 'mision' : undefined,
       ),
     compartirMision: (mision) =>
       avisoCompartir({
@@ -213,12 +215,14 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
     nuevoEvento: () => setModal({ tipo: 'evento', datos: null }),
     editarEvento: (evento) => setModal({ tipo: 'evento', datos: evento }),
     eliminarEvento: (evento) =>
-      ejecutar(() => eliminarEvento(club.id, evento.id), 'Evento eliminado', 'No se pudo eliminar el evento.'),
+      ejecutar(() => eliminarEvento(club.id, evento.id), 'Evento eliminado', 'No se pudo eliminar el evento.', 'contenido', 'compostar'),
     cambiarAsistencia: (evento, voy) =>
       ejecutar(
         () => cambiarAsistencia(club.id, evento.id, uid, voy),
         voy ? `¡Te anotaste a "${evento.titulo}"!` : 'Te borraste del evento',
         'No se pudo actualizar tu asistencia.',
+        'contenido',
+        voy ? 'evento' : undefined,
       ),
     compartirEvento: (evento) =>
       avisoCompartir({
@@ -238,7 +242,7 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
     if (tipo === 'mision' && inicial)
       return ejecutar(() => actualizarMision(club.id, inicial.id, { ...datos, titulo: datos.titulo.trim(), descripcion: datos.descripcion.trim() }), 'Misión actualizada', 'No se pudo guardar la misión.');
     if (tipo === 'mision')
-      return ejecutar(() => crearMision(club.id, uid, datos), `Misión asignada a ${nombreDe(perfiles, datos.asignadaA)}`, 'No se pudo crear la misión.');
+      return ejecutar(() => crearMision(club.id, uid, datos), `Misión asignada a ${nombreDe(perfiles, datos.asignadaA)}`, 'No se pudo crear la misión.', 'contenido', 'plantar');
     if (tipo === 'evento' && inicial)
       return ejecutar(() => actualizarEvento(club.id, inicial.id, datos), 'Evento actualizado', 'No se pudo guardar el evento.');
     return ejecutar(() => crearEvento(club.id, uid, datos), `Evento "${datos.titulo.trim()}" creado`, 'No se pudo crear el evento.');

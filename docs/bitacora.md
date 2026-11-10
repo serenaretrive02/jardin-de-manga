@@ -4,6 +4,19 @@ Registro de cómo fue evolucionando la aplicación, versión por versión: qué 
 
 > La app empezó con el nombre provisorio *Jardín de Manga*. Desde la v0.3 se llama **Nana** (ver la v0.3).
 
+
+## Índice
+| Versión | Fecha | Resumen |
+|---|---|---|
+| [Etapa 0 — La idea](#etapa-0--la-idea-09112026) | 09/11 | Lluvia de ideas y elección |
+| [v0.1 — MVP](#versión-01--mvp-que-funcione-09112026) | 09/11 | CRUD con Firestore, GitHub y Vercel |
+| [v0.2 — Pixel art](#versión-02--identidad-visual-pixel-art-y-mejor-experiencia-de-uso-10112026) | 10/11 | Identidad visual y experiencia de uso |
+| [v0.3 — Nana + API](#versión-03--nombre-nuevo-búsqueda-con-api-y-edición-10112026) | 10/11 | Nombre, búsqueda en Kitsu, edición |
+| [v0.4 — Comunidad](#versión-04--comunidad-clubes-misiones-con-roles-y-eventos-10112026) | 10/11 | Clubes, misiones por rol, eventos |
+| [v0.4.1 — Ajustes](#versión-041--ajustes-de-la-versión-4-flores-únicas-guía-abeja-y-nana-ia-10112026) | 10/11 | Flores únicas, guía, abeja, Nana IA |
+| [v1.0 — Final](#versión-10--versión-final-quinta-versión-10112026) | 10/11 | Ramo, filtros, herbario, sonidos, auditoría |
+| [Conclusión](#conclusión-del-proceso) | | Qué se aprendió |
+
 ---
 
 ## Etapa 0 — La idea (09/11/2026)
@@ -702,3 +715,109 @@ Así cumple lo pedido ("que tenga información de la aplicación y el sitio úni
 La abeja aparece y es decorativa · las 6 flores distintas en el jardín · la etiqueta del "?" al pasar el mouse · la guía con etapas y géneros · 9 preguntas a Nana IA con su respuesta correcta (incluida una fuera de tema) · las sugerencias se pueden tocar · 9 avatares · el significado del avatar · perfil creado con la flor de loto (la regla nueva lo acepta) · eliminar perfil · cerrar sesión crea una identidad nueva con el jardín vacío · celular sin desplazamiento horizontal con Nana IA abierta · ningún error en la consola.
 
 ![Celular](capturas/v0.4.1-08-celular-nana.png)
+
+---
+
+## Versión 1.0 — Versión final (quinta versión) (10/11/2026)
+
+### Objetivo
+Cerrar el producto: sumar las herramientas para **encontrar y entender** lo que hay en el jardín (filtros, "Mi ramo", herbario), darle **sonido**, **revisar todo contra la consigna** y dejar la documentación lista para la entrega y para el final.
+
+### Qué se agregó
+
+**1. "Mi ramo"**, arriba del jardín
+Un resumen con cantidad de plantas, cuántas están en flor, capítulos regados en total y **género favorito**. Debajo, **el ramo**: una flor chiquita por cada manga terminado. Se calcula con `filter`, `reduce` y `map` sobre las plantas que ya están cargadas, así que no hace ninguna consulta extra a la base.
+
+**2. Filtros del jardín**
+- buscador por título (sin importar tildes ni mayúsculas);
+- chips por estado, con la cantidad de cada uno: *Todas (7) · Pendiente (2) · Terminado (3)…*;
+- género, tipo (manga o anime) y **orden** (recientes, A-Z, más avanzadas, más regadas);
+- "Mostrando X de Y" y un botón "Limpiar filtros".
+
+Siguiendo la guía de clase, los filtros **no usan `useEffect`**: se calculan durante el renderizado encadenando `filter` y `sort`.
+
+![Mi ramo y filtros](capturas/v1.0-02-ramo-y-filtros.png)
+![Filtros combinados](capturas/v1.0-03-filtros-combinados.png)
+*Filtro "Terminado" + "Solo anime": queda una sola planta.*
+
+**3. Herbario**, la tercera pestaña
+El catálogo de las 9 flores, con su dibujo, su nombre en japonés, su significado según el *hanakotoba*, con qué género florece (o si es avatar), **cuántas tenés en tu jardín** y las 4 etapas de crecimiento de esa flor. Además, en cada tarjeta del jardín, al pasar el mouse por el nombre de la flor aparece su significado.
+
+![Herbario](capturas/v1.0-04-herbario.png)
+
+**4. Sonidos retro**
+Se generan con la **Web Audio API** del navegador, como un chip de consola: no hay archivos de audio para descargar.
+
+| Acción | Sonido |
+|---|---|
+| Plantar o asignar una misión | Tres notas que suben |
+| Regar | Dos gotitas |
+| Florecer o revivir | Arpegio con brillo |
+| Compostar o eliminar | Notas que bajan |
+| Cumplir una misión | Fanfarria |
+| Anotarse a un evento | Dos notas alegres |
+| Error | Zumbido grave |
+| Abrir Nana IA | Zumbido de abeja |
+
+El botón con el **parlante pixelado** (arriba a la derecha) los apaga o prende. Esa preferencia se recuerda en `localStorage`: es una **preferencia del navegador**, no un dato de la app. Los datos siguen todos en Firebase, como pide la consigna.
+
+**5. Nana IA aprendió los temas nuevos:** filtros, herbario, "Mi ramo" y sonidos.
+
+![Nana IA](capturas/v1.0-05-nana-ia-filtros.png)
+
+### Auditoría final contra la consigna y la rúbrica
+| Requisito | Cómo se cumple | ✔ |
+|---|---|---|
+| React + Vite: componentes, eventos y estado | 30 componentes. `useState` y `useEffect` en toda la app | ✅ |
+| Firestore: consultar, agregar, modificar, eliminar | **5 CRUD completos**: plantas, perfil, clubes, misiones y eventos | ✅ |
+| Persistencia al recargar | Todo en Firestore (`localStorage` solo para la preferencia de sonido) | ✅ |
+| GitHub con instrucciones | README con pasos, `.env.example`, `firestore.rules`, 6 etiquetas de versión | ✅ |
+| Vercel con URL funcional | Despliegue automático en cada `push`, verificado en cada versión | ✅ |
+| Validaciones, carga, éxito y error; compu y celular | En todos los formularios. Pruebas a 1280 px y 390 px | ✅ |
+| Reglas que no dejen la base abierta | Reglas por dueña y por rol. Probado con 403 | ✅ |
+| `.env` fuera de GitHub | Verificado: no está publicado y no hay ninguna llave en el código | ✅ |
+| Al menos 3 versiones con cambios identificables | 6: v0.1, v0.2, v0.3, v0.4, v0.4.1 y v1.0 | ✅ |
+| Informe (idea, público, funciones, datos en Firebase, IA e instrucciones) | `docs/informe.md`, reescrito **breve** como pide la consigna | ✅ |
+| Bitácora con evolución, pruebas, IA, dificultades y capturas | Este documento | ✅ |
+| Mini video de demostración | ⏳ Lo graba la autora (guion en `entrega.md`) | ⏳ |
+| ¿Hay algo que no cumpla y haya que sacar? | Se revisó: Nana IA no usa claves privadas, los sonidos no usan archivos externos y `localStorage` no guarda datos de la app. **No hubo que quitar nada** | ✅ |
+
+### Dificultades de esta versión
+| Problema | Cómo se detectó | Solución |
+|---|---|---|
+| **El aviso flotante tapaba los botones** que quedaban debajo. Con "Mi ramo" y los filtros, la primera tarjeta bajó justo a la altura del aviso, y tocar "Regar" en esos 3,5 segundos no hacía nada | La **prueba de regresión** de la v0.3 empezó a fallar | El aviso deja pasar los clics (`pointer-events: none`), salvo su botón de cerrar |
+| Nana IA confundía "¿Qué es el herbario?" con "¿Qué flores hay?", y "¿Cómo filtro mi jardín?" con el resumen del jardín | Revisando las palabras clave antes de probar | Se separaron las claves que compartían dos temas |
+| El 7 de la fuente pixelada parece un 1 ("Todas (7)") | Captura | Se verificó con zoom que el número es correcto: es la forma del 7 en esa fuente |
+
+![Aviso que tapaba botones](capturas/v1.0-01a-aviso-tapaba-botones.png)
+*Antes de la corrección: después de tocar "Regar" en la primera tarjeta no pasaba nada, porque el clic caía sobre el aviso.*
+
+### Pruebas finales
+| Prueba automática | Resultado |
+|---|---|
+| v1.0: Mi ramo, filtros, herbario, sonidos (se cuentan las notas), silencio que se recuerda, Nana IA, celular | **26/26** ✅ |
+| Regresión v0.3: jardín, API, edición, estados | **17/17** ✅ |
+| Regresión v0.4: comunidad con dos usuarias, roles y seguridad (403) | **19/19** ✅ |
+| Regresión v0.4.1: flores, guía, Nana IA, perfil, cerrar sesión | **21/21** ✅ |
+| Errores en la consola | Ninguno |
+
+![Celular](capturas/v1.0-06-celular.png)
+
+---
+
+## Conclusión del proceso
+
+| Versión | Qué aportó | Tipo de iteración |
+|---|---|---|
+| v0.1 | MVP: CRUD con Firestore, reglas, GitHub y Vercel | Producto mínimo viable |
+| v0.2 | Pixel art, flores dibujadas con código, validaciones, avisos, celular | Diseño y experiencia de uso |
+| v0.3 | Nombre "Nana", búsqueda con la API, edición, estados coherentes | Funcionalidad |
+| v0.4 | Comunidad: clubes, misiones con rol de administradora, eventos, compartir | Módulo nuevo |
+| v0.4.1 | 9 flores con forma propia, guía, abeja, Nana IA, CRUD del perfil | Ajustes de diseño y ayuda |
+| v1.0 | Ramo, filtros, herbario, sonidos, auditoría y documentación final | Estabilización |
+
+**Lo que más se aprendió:**
+- **Probar es tan importante como programar:** casi todos los errores aparecieron en las capturas o en las pruebas, no al escribir el código.
+- **La seguridad no se resuelve escondiendo botones:** se resuelve en las reglas de la base de datos.
+- **Una app que depende de servicios externos** (una API) tiene que seguir funcionando si ese servicio falla.
+- **La IA acelera mucho el trabajo,** pero hace falta revisar, entender y decidir: varias decisiones (el nombre, el pixel art, la comunidad en clubes, Nana IA sin claves) salieron de esa revisión.
