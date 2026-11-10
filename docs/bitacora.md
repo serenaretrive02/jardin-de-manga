@@ -102,9 +102,57 @@ Se deja anotado para mejorarlo en las próximas versiones:
 ![La app corriendo en local antes de conectar Firebase](capturas/v0.1-01-local-sin-firebase.png)
 *Captura 1: la app corriendo en local antes de conectar Firebase. Avisa qué falta en lugar de mostrar una pantalla en blanco.*
 
+### Configuración de Firebase (10/11/2026)
+Se hizo desde la consola de Firebase, en el proyecto **Frontend II**, siguiendo las etapas 2 y 4 de la consigna:
+
+1. **Se registró la app web** (botón `</>`) con el nombre `jardin-de-manga`. Firebase entregó el objeto `firebaseConfig` con las llaves de conexión. No se activaron Hosting ni Analytics porque no hacen falta.
+2. **Se habilitó el acceso Anónimo** en *Authentication → Método de acceso*.
+3. **Se creó la base Cloud Firestore**: edición Standard, identificador `(default)`, región São Paulo (`southamerica-east1`) y modo producción. Las copias de seguridad programadas quedaron desactivadas porque son de pago.
+4. **Se publicaron las reglas** copiando el archivo `firestore.rules` en la pestaña *Reglas*.
+5. **Se copiaron las 4 llaves** (apiKey, authDomain, projectId, appId) al archivo `.env`, una por línea y sin comillas ni comas.
+
+![Acceso anónimo habilitado](capturas/v0.1-02-auth-anonimo.jpg)
+*Captura 2: el proveedor "Anónimo" habilitado en Authentication.*
+
+![Región de Firestore](capturas/v0.1-03b-firestore-region.jpg)
+*Captura 3: creación de Firestore con la región São Paulo.*
+
+![Reglas publicadas](capturas/v0.1-04-reglas-publicadas.jpg)
+*Captura 4: las reglas del proyecto publicadas. A la izquierda se ve el historial con la versión nueva.*
+
+### Prueba de integración en local (10/11/2026)
+Se siguió el paso 5 de la consigna ("Verificar la integración") con `npm run dev`:
+
+| Prueba | Qué se hizo | Resultado |
+|---|---|---|
+| Agregar | Se plantó "Frieren" (manga, fantasía, 4 capítulos) | ✅ Aparece como 🫘 semilla, 0/4 |
+| Ver en Firestore | Se buscó en *Firestore → Datos* | ✅ Está en `users/(uid)/plantas/` con todos sus campos |
+| Modificar | +1 capítulo dos veces y estado "Leyendo" | ✅ Pasa a 🌿 "Creciendo", 2/4 |
+| Recargar | Se recargó la página (F5) | ✅ Los cambios siguen ahí |
+| Ver el cambio en Firestore | Se abrió el documento | ✅ `capitulosLeidos: 2`, `estado: "leyendo"` |
+| Eliminar | Se plantó "Prueba para borrar" y se eliminó | ✅ Desaparece de la app y de Firestore |
+
+![Agregar](capturas/v0.1-05-agregar.jpg)
+*Captura 5: el primer manga plantado. El diseño todavía es el básico del MVP.*
+
+![Después de recargar](capturas/v0.1-06-modificado-tras-recargar.jpg)
+*Captura 6: después de recargar, Frieren sigue con 2/4 capítulos y en "Leyendo / Viendo".*
+
+![Documento en Firestore](capturas/v0.1-07-dato-en-firestore.jpg)
+*Captura 7: el mismo dato guardado en Firestore. Los valores coinciden con la pantalla.*
+
+### Más dificultades de esta etapa
+| Problema | Cómo se detectó | Solución |
+|---|---|---|
+| `npm run dev` daba el error *"la ejecución de scripts está deshabilitada en este sistema"* | Al correr el comando por primera vez en la terminal de VS Code | Es una protección de Windows (PowerShell). Se aplicó el comando que indicó el profesor: `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` |
+| Primero se escribió `run dev` en lugar de `npm run dev` | La terminal respondió que no reconocía "run" | El comando siempre empieza con `npm`, que es el programa que ejecuta los scripts del `package.json` |
+| Al abrir `index.html` con doble clic se veía una página en blanco | Probando abrir el archivo directamente | Una app de React + Vite no se abre así: Vite tiene que "traducir" el código. Se abre con `npm run dev` en `http://localhost:5173` |
+| En el `.env` los valores quedaron con un espacio después del `=` | Revisando el archivo antes de publicar | Se borraron los espacios. La consigna pide copiar solo los valores |
+| **Problema de diseño:** cuando el texto de la tarjeta pasa a dos líneas (por ejemplo, "Creciendo"), los botones se mueven de lugar y es fácil tocar el equivocado | Haciendo clics seguidos en "+1 capítulo" | Se deja anotado para la v0.2: los botones van a tener un lugar fijo en la tarjeta |
+
 ### Pendiente para cerrar la v0.1
-- [ ] Crear el proyecto en Firebase, habilitar Anónimo y crear Firestore
-- [ ] Publicar las reglas y completar el `.env`
-- [ ] Probar agregar, recargar, modificar y eliminar, y verlo en Firestore
+- [x] Crear el proyecto en Firebase, habilitar Anónimo y crear Firestore
+- [x] Publicar las reglas y completar el `.env`
+- [x] Probar agregar, recargar, modificar y eliminar, y verlo en Firestore
 - [ ] Subir a GitHub y publicar en Vercel
 - [ ] Repetir las pruebas desde la URL publicada y en el celular
