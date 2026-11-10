@@ -6,7 +6,8 @@ Si lo abandonás, se marchita.
 
 Trabajo Práctico 2 · Desarrollo Frontend II · UADE · Prof. Joaquín Cerviño.
 
-- **App publicada (Vercel):** _pendiente_
+- **App publicada (Vercel):** https://jardin-de-manga.vercel.app
+- **Repositorio (GitHub):** https://github.com/serenaretrive02/jardin-de-manga
 - **Bitácora del proceso:** [docs/bitacora.md](docs/bitacora.md)
 - **Informe:** [docs/informe.md](docs/informe.md)
 
@@ -25,7 +26,7 @@ Trabajo Práctico 2 · Desarrollo Frontend II · UADE · Prof. Joaquín Cerviño
 Requisitos: tener instalado [Node.js](https://nodejs.org/) (incluye npm) y Visual Studio Code.
 
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/serenaretrive02/jardin-de-manga.git
 cd jardin-de-manga
 npm install
 ```

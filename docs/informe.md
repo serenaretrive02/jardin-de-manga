@@ -6,8 +6,8 @@ Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026
 > Documento en construcción: se completa a medida que avanzan las versiones.
 
 ## Enlaces de la entrega
-- **App publicada (Vercel):** _pendiente_
-- **Repositorio (GitHub):** _pendiente_
+- **App publicada (Vercel):** https://jardin-de-manga.vercel.app
+- **Repositorio (GitHub):** https://github.com/serenaretrive02/jardin-de-manga
 - **Bitácora:** [bitacora.md](bitacora.md)
 - **Video de demostración:** _pendiente_
 
@@ -82,6 +82,7 @@ Se usó **Claude Code**, un asistente de IA de Anthropic que trabaja directament
 - Redactar la documentación (README, bitácora y este informe).
 
 **Ejemplos de instrucciones dadas a la IA:**
+0. *"Manejá con control remoto el paso por paso de la primera versión, siguiendo la consigna y las notas de clase."* (La IA configuró Firebase y Vercel desde el navegador. Los pasos que implican confirmar algo público o cargar llaves los hice yo.)
 1. *"Antes de crear cualquier aplicación, pensá ideas sumamente creativas y originales según las cosas que me gustan, que permitan hacer cada acción que pide la consigna, pero que no sea una típica."*
 2. *"Todo lo que hagamos tiene que ser lo que vimos en clase (Visual Studio Code, GitHub y lo de los PDF)."*
 
@@ -92,6 +93,9 @@ Se usó **Claude Code**, un asistente de IA de Anthropic que trabaja directament
 ## 6. Dificultades y soluciones
 Ver el detalle en la [bitácora](bitacora.md). Resumen:
 - El `.gitignore` original no excluía el `.env`, por lo que las llaves se habrían publicado en GitHub. Se corrigió agregándolo.
+- PowerShell bloqueaba `npm run dev` por seguridad. Se resolvió con el comando indicado por el profesor (`Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`).
+- Abrir `index.html` con doble clic muestra una página en blanco: una app de Vite se abre con `npm run dev`.
+- En la versión publicada el jardín empezó vacío: por el acceso anónimo, cada sitio (local o Vercel) y cada navegador tiene su propio jardín.
 
 ## 7. Glosario (para explicar con mis palabras)
 - **Componente:** una pieza de la interfaz, como la tarjeta de una planta. Es una función que devuelve lo que se ve.

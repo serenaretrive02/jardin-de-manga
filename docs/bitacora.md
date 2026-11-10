@@ -150,9 +150,61 @@ Se siguió el paso 5 de la consigna ("Verificar la integración") con `npm run d
 | En el `.env` los valores quedaron con un espacio después del `=` | Revisando el archivo antes de publicar | Se borraron los espacios. La consigna pide copiar solo los valores |
 | **Problema de diseño:** cuando el texto de la tarjeta pasa a dos líneas (por ejemplo, "Creciendo"), los botones se mueven de lugar y es fácil tocar el equivocado | Haciendo clics seguidos en "+1 capítulo" | Se deja anotado para la v0.2: los botones van a tener un lugar fijo en la tarjeta |
 
-### Pendiente para cerrar la v0.1
-- [x] Crear el proyecto en Firebase, habilitar Anónimo y crear Firestore
-- [x] Publicar las reglas y completar el `.env`
-- [x] Probar agregar, recargar, modificar y eliminar, y verlo en Firestore
-- [ ] Subir a GitHub y publicar en Vercel
-- [ ] Repetir las pruebas desde la URL publicada y en el celular
+### Subida a GitHub (10/11/2026)
+1. Se configuró git con el usuario de GitHub `serenaretrive02`. Como email se usó el email privado que da GitHub (`...@users.noreply.github.com`), para no publicar el email personal.
+2. **Antes de subir se revisó qué archivos entraban en el commit** con `git status`, como pide la consigna. Entraron 27 archivos. Estaba `.env.example` y **no** estaban `.env`, `node_modules` ni `dist`.
+3. Se creó el repositorio público **jardin-de-manga** en GitHub, sin README ni `.gitignore` automáticos, porque ya teníamos los nuestros.
+4. Se subió el código con `git push`.
+5. **Verificación:** se intentó abrir el `.env` directamente en GitHub y respondió "no existe" (error 404). Las llaves no quedaron publicadas ✅.
+
+Repositorio: https://github.com/serenaretrive02/jardin-de-manga
+
+### Publicación en Vercel (10/11/2026)
+1. Se inició sesión en Vercel con la cuenta de GitHub (plan Hobby, gratuito).
+2. Se importó el repositorio `jardin-de-manga`. Vercel detectó solo que es un proyecto **Vite**.
+3. Se revisó la configuración que pide la consigna: Root Directory `./` (donde está `package.json`), Build Command `npm run build` y Output Directory `dist`.
+4. Se cargaron las 4 variables `VITE_FIREBASE_...` en **Environment Variables**, para Production y Preview y **sin** marcarlas como "Sensitive", porque son la configuración pública de Firebase.
+5. Se hizo clic en **Deploy**. El build terminó en 16 segundos sin errores.
+
+![Configuración en Vercel](capturas/v0.1-08-vercel-config.jpg)
+*Captura 8: Vercel detecta Vite, `npm run build` y la carpeta `dist`.*
+
+![Deploy exitoso](capturas/v0.1-09-vercel-deploy.jpg)
+*Captura 9: "Deployed to Production". La vista previa ya muestra la app.*
+
+**URL publicada:** https://jardin-de-manga.vercel.app
+
+### Pruebas en la versión publicada (10/11/2026)
+Se repitieron las pruebas desde la URL de Vercel (paso 8 de la consigna):
+
+| Prueba | Resultado |
+|---|---|
+| La app abre y se conecta a Firebase | ✅ Muestra "Tu jardín está vacío" sin errores |
+| Agregar "Spy x Family" (anime, comedia, 12 capítulos) | ✅ Aparece como 🫘 semilla |
+| +1 capítulo y estado "Terminado" | ✅ Pasa a 🌼 "En flor" |
+| Recargar la página | ✅ Sigue en flor, 1/12, terminado |
+| Agregar y eliminar "Prueba para borrar" | ✅ Desaparece y no vuelve al recargar |
+| Pantalla de compu (1280 px) | ✅ Se usa bien (captura 10) |
+| Pantalla de celular (390 px) | ✅ Se puede usar, pero con detalles para mejorar (captura 11) |
+
+> **Algo que llamó la atención:** en la versión publicada el jardín empezó vacío, aunque en local ya había un manga plantado. No es un error: el acceso es anónimo, y Firebase toma a `localhost` y a `vercel.app` como dos visitantes distintos, así que cada uno tiene su propio jardín. La consigna lo explica en la etapa 4.
+
+![Versión publicada en compu](capturas/v0.1-10-vercel-compu.png)
+*Captura 10: la versión 0.1 publicada en Vercel, vista en compu.*
+
+![Versión publicada en celular](capturas/v0.1-10-vercel-celular.png)
+*Captura 11: la misma versión en un celular (390 px de ancho).*
+
+### Conclusión de la v0.1
+**La v0.1 cumple el mínimo de la consigna:** está hecha con React + Vite, guarda, consulta, modifica y elimina en Firestore, conserva los cambios al recargar, tiene reglas de seguridad, el código está en GitHub sin las llaves y está publicada en Vercel.
+
+### Mejoras detectadas para la v0.2
+Lo que se observó al probar esta versión y que se va a trabajar en la próxima:
+1. **Identidad visual:** hoy parece un formulario de los 2000. Hace falta una paleta, tipografía e ilustraciones que transmitan "jardín" y "manga".
+2. **Celular:** las tarjetas miden 200 px fijos y dejan espacio vacío. Los botones son muy chicos para tocar con el dedo.
+3. **Botones que se mueven:** cuando el texto pasa a dos líneas, los botones cambian de lugar.
+4. **Mensajes:** no hay confirmación de "¡Plantado!" ni de "Guardado". Solo se ven los errores.
+5. **Validaciones:** el título solo se controla como "obligatorio". Faltan avisos claros, por ejemplo para un título muy largo o capítulos negativos.
+6. **Eliminar sin confirmar:** un clic por error borra la planta.
+7. **Coherencia de datos:** se puede marcar "Terminado" con 1 de 12 capítulos, o sumar capítulos por encima del total.
+8. **Emojis:** dependen del sistema de cada dispositivo. Ilustraciones propias darían un diseño más cuidado y coherente.
