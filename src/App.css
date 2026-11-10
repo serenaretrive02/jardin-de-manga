@@ -1,0 +1,42 @@
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 320px;
+  padding: 12px;
+  border: 1px solid #cccccc;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  color: red;
+}
+
+.jardin {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tarjeta {
+  width: 200px;
+  padding: 8px;
+  border: 1px solid #cccccc;
+}
+
+.planta {
+  font-size: 40px;
+  margin: 0;
+}

@@ -1,0 +1,21 @@
+# Dependencias y build (no se suben a GitHub)
+node_modules
+dist
+dist-ssr
+
+# Variables de entorno con las llaves de Firebase: NUNCA se suben
+.env
+.env.local
+.env.*.local
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store

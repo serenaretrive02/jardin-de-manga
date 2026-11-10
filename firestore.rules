@@ -1,0 +1,34 @@
+rules_version = '2';
+
+// Reglas de seguridad de Cloud Firestore - Jardín de Manga
+// Cada visitante (usuario anónimo) solo puede leer y modificar SU propio jardín.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{userId}/plantas/{plantaId} {
+
+      // ¿La persona que pide los datos es la dueña del jardín?
+      function esDueno() {
+        return request.auth != null && request.auth.uid == userId;
+      }
+
+      // ¿Los datos que se quieren guardar tienen la forma correcta?
+      function datosValidos() {
+        let d = request.resource.data;
+        return d.titulo is string
+          && d.titulo.size() > 0
+          && d.titulo.size() <= 120
+          && d.tipo in ['manga', 'anime']
+          && d.genero in ['romance', 'accion', 'fantasia', 'comedia', 'drama', 'misterio']
+          && d.estado in ['pendiente', 'leyendo', 'terminado', 'abandonado']
+          && d.capitulosLeidos is int && d.capitulosLeidos >= 0
+          && d.capitulosTotales is int && d.capitulosTotales >= 0;
+      }
+
+      allow read, delete: if esDueno();
+      allow create, update: if esDueno() && datosValidos();
+    }
+
+    // Cualquier otra ruta queda cerrada.
+  }
+}
