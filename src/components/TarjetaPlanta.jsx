@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { ESTADOS, FLORES, avanceDePlanta, etapaDePlanta } from '../data/flores';
-import { ICONOS, PALETA_BASE, spriteDeEtapa } from '../data/sprites';
+import { ICONOS, PALETA_BASE } from '../data/sprites';
 import PixelSprite from './PixelSprite';
+import SpriteFlor from './SpriteFlor';
 
 // Muestra una planta (un manga/anime) con su dibujo, su avance y sus acciones.
 export default function TarjetaPlanta({ planta, ocupada, onActualizar, onEliminar, onEditar }) {
@@ -23,6 +24,11 @@ export default function TarjetaPlanta({ planta, ocupada, onActualizar, onElimina
     let mensaje = `Regaste "${planta.titulo}" (${leidos} ${palabraCapitulo})`;
 
     if (planta.estado === 'pendiente') cambios.estado = 'leyendo';
+    // Una planta marchita (abandonada) revive si la volvés a regar.
+    if (planta.estado === 'abandonado') {
+      cambios.estado = 'leyendo';
+      mensaje = `¡"${planta.titulo}" revivió! (${leidos} ${palabraCapitulo})`;
+    }
     if (planta.capitulosTotales > 0 && leidos === planta.capitulosTotales) {
       cambios.estado = 'terminado';
       mensaje = `¡"${planta.titulo}" floreció! Lo terminaste`;
@@ -48,9 +54,9 @@ export default function TarjetaPlanta({ planta, ocupada, onActualizar, onElimina
       </div>
 
       <div className="tarjeta__maceta">
-        <PixelSprite
-          filas={spriteDeEtapa(etapa.clave)}
-          paleta={{ ...PALETA_BASE, ...flor.colores }}
+        <SpriteFlor
+          clave={planta.genero}
+          etapa={etapa.clave}
           tamano={6}
           etiqueta={`${flor.nombre} en etapa ${etapa.texto}`}
         />

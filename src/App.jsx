@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
+import { onAuthStateChanged, signInAnonymously, signOut } from 'firebase/auth';
 import { auth, configCompleta } from './firebase';
 import {
   actualizarPlanta,
@@ -7,18 +7,21 @@ import {
   eliminarPlanta,
   obtenerPlantas,
 } from './services/plantas';
-import { FLORES } from './data/flores';
-import { PALETA_BASE, spriteDeEtapa } from './data/sprites';
 import Aviso from './components/Aviso';
 import BarraCarga from './components/BarraCarga';
 import Comunidad from './components/comunidad/Comunidad';
+import AbejaVoladora from './components/AbejaVoladora';
+import GuiaCrecimiento from './components/GuiaCrecimiento';
+import Modal from './components/Modal';
+import NanaIA from './components/NanaIA';
 import EditarPlanta from './components/EditarPlanta';
 import FormularioPlanta from './components/FormularioPlanta';
 import ListaJardin from './components/ListaJardin';
-import PixelSprite from './components/PixelSprite';
+import SpriteFlor from './components/SpriteFlor';
 import Ventana from './components/Ventana';
 import './App.css';
 import './Comunidad.css';
+import './Extras.css';
 
 // Si se abrió un enlace de invitación (…/?club=ABC123), se guarda el código.
 const codigoInvitacion = new URLSearchParams(window.location.search).get('club');
@@ -47,6 +50,7 @@ export default function App() {
   const [editando, setEditando] = useState(null); // planta abierta en la ventana de edición
   // Sección visible: 'jardin' o 'comunidad'. Con una invitación, se abre directo la comunidad.
   const [seccion, setSeccion] = useState(codigoInvitacion ? 'comunidad' : 'jardin');
+  const [confirmarSalida, setConfirmarSalida] = useState(false);
 
   // 1) Al abrir la app: iniciar sesión anónima (sin registro).
   useEffect(() => {
@@ -128,13 +132,22 @@ export default function App() {
     }
   }
 
-  const logo = (
-    <PixelSprite
-      filas={spriteDeEtapa('flor')}
-      paleta={{ ...PALETA_BASE, ...FLORES.romance.colores }}
-      tamano={4}
-    />
-  );
+  // Cerrar sesión: al ser anónima, Firebase crea enseguida una identidad NUEVA (jardín vacío).
+  async function cerrarSesion() {
+    setConfirmarSalida(false);
+    setPlantas([]);
+    setCargando(true);
+    try {
+      await signOut(auth); // onAuthStateChanged recibe null y vuelve a entrar como anónima nueva
+      setAviso({ tipo: 'exito', texto: 'Cerraste sesión. ¡Empezás un jardín nuevo!' });
+    } catch (error) {
+      console.error(error);
+      setAviso({ tipo: 'error', texto: 'No se pudo cerrar la sesión.' });
+      setCargando(false);
+    }
+  }
+
+  const logo = <SpriteFlor clave="romance" tamano={4} />;
 
   if (!configCompleta) {
     return (
@@ -192,7 +205,7 @@ export default function App() {
       ) : (
         <main>
           {usuario ? (
-            <Comunidad usuario={usuario} codigoInicial={codigoInvitacion} onAviso={setAviso} />
+            <Comunidad key={usuario.uid} usuario={usuario} codigoInicial={codigoInvitacion} onAviso={setAviso} />
           ) : (
             <Ventana titulo="comunidad.exe">
               <BarraCarga texto="Conectando..." />
@@ -202,7 +215,14 @@ export default function App() {
       )}
 
       <footer className="pie">
-        {usuario && <p>Jardinera anónima #{usuario.uid.slice(0, 5).toUpperCase()}</p>}
+        {usuario && (
+          <p className="pie__sesion">
+            Jardinera anónima #{usuario.uid.slice(0, 5).toUpperCase()}
+            <button className="boton boton--chico" onClick={() => setConfirmarSalida(true)}>
+              Cerrar sesión
+            </button>
+          </p>
+        )}
         <p>Nana · Hecho con React + Vite + Firebase · Datos de obras: Kitsu · TP2 Desarrollo Frontend II</p>
       </footer>
 
@@ -215,6 +235,30 @@ export default function App() {
         />
       )}
 
+      {confirmarSalida && (
+        <Modal titulo="cerrar_sesion.exe" onCerrar={() => setConfirmarSalida(false)}>
+          <div className="formulario">
+            <p>
+              Nana te reconoce de forma <strong>anónima</strong> (sin usuario ni contraseña). Si cerrás sesión,
+              empezás de cero con un <strong>jardín nuevo y vacío</strong>, y no vas a poder volver a este jardín
+              ni a tus clubes.
+            </p>
+            <p className="campo__ayuda">Si solo querés cambiar tu apodo o tu flor, editá tu perfil en Comunidad.</p>
+            <div className="modal__acciones">
+              <button className="boton" onClick={() => setConfirmarSalida(false)}>
+                Cancelar
+              </button>
+              <button className="boton boton--peligro" onClick={cerrarSesion}>
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      <AbejaVoladora />
+      <GuiaCrecimiento />
+      <NanaIA plantas={plantas} />
       <Aviso aviso={aviso} onCerrar={setAviso} />
     </div>
   );

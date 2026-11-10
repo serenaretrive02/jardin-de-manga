@@ -1,0 +1,374 @@
+/* =========================================================
+   v0.4.1 · Botones flotantes, guía de crecimiento, Nana IA y abeja
+   ========================================================= */
+
+/* ----- Botones flotantes (esquinas inferiores) ----- */
+.boton-flotante {
+  position: fixed;
+  bottom: 18px;
+  z-index: 15;
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  font-family: var(--fuente-titulo);
+  font-size: 22px;
+  background: var(--lima);
+  border: var(--borde);
+  box-shadow: var(--sombra);
+  cursor: pointer;
+}
+
+.boton-flotante:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--sombra-chica);
+}
+
+.boton-flotante--guia {
+  left: 18px;
+  background: var(--rosa);
+}
+
+.boton-flotante--nana {
+  right: 18px;
+  width: 68px;
+  height: 68px;
+  background: #fff3c4;
+  animation: flotar 2.4s steps(4) infinite;
+}
+
+/* Etiqueta que aparece al pasar el mouse (o al enfocar con el teclado) */
+.boton-flotante__etiqueta {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  padding: 4px 8px;
+  font-family: var(--fuente);
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--blanco);
+  border: 2px solid var(--tinta);
+  box-shadow: var(--sombra-chica);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s steps(2);
+}
+
+.boton-flotante--guia .boton-flotante__etiqueta {
+  left: 0;
+}
+
+.boton-flotante--nana .boton-flotante__etiqueta {
+  right: 0;
+}
+
+.boton-flotante:hover .boton-flotante__etiqueta,
+.boton-flotante:focus-visible .boton-flotante__etiqueta {
+  opacity: 1;
+}
+
+@keyframes flotar {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* ----- Paneles flotantes (guía y chat) ----- */
+.guia__panel,
+.nana-ia__panel {
+  position: fixed;
+  bottom: 92px;
+  z-index: 16;
+  width: min(380px, calc(100vw - 32px));
+  max-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  animation: aparecer-modal 0.2s steps(3);
+}
+
+.guia__panel {
+  left: 16px;
+}
+
+.guia__panel .ventana__cuerpo {
+  overflow-y: auto;
+}
+
+.nana-ia__panel {
+  right: 16px;
+  width: min(400px, calc(100vw - 32px));
+}
+
+.guia__cerrar {
+  width: 26px;
+  height: 26px;
+  font-size: 18px;
+  line-height: 1;
+  background: var(--blanco);
+  border: 2px solid var(--tinta);
+  cursor: pointer;
+}
+
+.guia__intro {
+  margin-bottom: 10px;
+}
+
+.guia__etapas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.guia__etapa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 2px;
+  font-size: 13px;
+  line-height: 1.15;
+  text-align: center;
+  background: #e9f8c9;
+  border: 2px solid var(--tinta);
+}
+
+.guia__etapa strong {
+  font-size: 14px;
+}
+
+.guia__marchita {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 6px 8px;
+  font-size: 15px;
+  background: #f1ece2;
+  border: 2px dashed var(--tinta);
+}
+
+.guia__subtitulo {
+  margin: 14px 0 8px;
+  font-size: 17px;
+}
+
+.guia__flores {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.guia__flores li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  font-size: 14px;
+  line-height: 1.15;
+  background: var(--crema);
+  border: 2px solid var(--tinta);
+}
+
+.guia__flores span {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ----- Chat de Nana IA ----- */
+.nana-ia__mensajes {
+  flex: 1;
+  min-height: 220px;
+  max-height: 420px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: var(--crema);
+}
+
+.burbuja {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  max-width: 92%;
+}
+
+.burbuja--yo {
+  align-self: flex-end;
+}
+
+.burbuja__avatar {
+  flex-shrink: 0;
+}
+
+.burbuja__texto {
+  padding: 8px 10px;
+  font-size: 16px;
+  background: var(--blanco);
+  border: 2px solid var(--tinta);
+  box-shadow: var(--sombra-chica);
+  overflow-wrap: anywhere;
+}
+
+.burbuja--yo .burbuja__texto {
+  background: var(--lima);
+}
+
+.burbuja__pasos {
+  margin: 6px 0 0;
+  padding-left: 22px;
+}
+
+.burbuja__pasos li + li {
+  margin-top: 3px;
+}
+
+.burbuja__sugerencias {
+  margin-top: 8px;
+}
+
+.burbuja__sugerencias .chip {
+  font-size: 14px;
+  text-align: left;
+}
+
+.burbuja__pensando span {
+  display: inline-block;
+  animation: parpadeo 1s steps(1) infinite;
+}
+
+.nana-ia__form {
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+  border-top: var(--borde);
+}
+
+.nana-ia__form input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px;
+  background: var(--blanco);
+  border: var(--borde);
+  border-radius: 0;
+}
+
+/* ----- Perfil y sesión ----- */
+.perfil__acciones {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 2px dashed var(--tinta);
+}
+
+.pie__sesion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+/* ----- Abeja que revolotea por los costados ----- */
+.abeja-voladora {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  pointer-events: none;
+  animation: recorrido 46s linear infinite;
+}
+
+.abeja-voladora__aleteo {
+  animation: aleteo 0.5s steps(2) infinite;
+}
+
+@keyframes aleteo {
+  50% {
+    transform: translateY(-5px) rotate(-6deg);
+  }
+}
+
+/* Recorre los bordes de la pantalla: arriba, derecha, abajo (por encima de los botones) e izquierda */
+@keyframes recorrido {
+  0% {
+    transform: translate(-60px, 18vh) scaleX(-1);
+  }
+  22% {
+    transform: translate(calc(100vw - 60px), 10vh) scaleX(-1);
+  }
+  25% {
+    transform: translate(calc(100vw - 60px), 10vh) scaleX(1);
+  }
+  48% {
+    transform: translate(calc(100vw - 56px), 62vh) scaleX(1);
+  }
+  72% {
+    transform: translate(12px, 70vh) scaleX(1);
+  }
+  75% {
+    transform: translate(12px, 70vh) scaleX(-1);
+  }
+  100% {
+    transform: translate(-60px, 18vh) scaleX(-1);
+  }
+}
+
+/* Si la persona pidió menos movimiento en su sistema, se respeta */
+@media (prefers-reduced-motion: reduce) {
+  .abeja-voladora,
+  .abeja-voladora__aleteo,
+  .boton-flotante--nana,
+  .carga__bloque {
+    animation: none;
+  }
+
+  .abeja-voladora {
+    display: none;
+  }
+}
+
+/* ----- Celular ----- */
+@media (max-width: 480px) {
+  .boton-flotante {
+    bottom: 12px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .boton-flotante--guia {
+    left: 12px;
+  }
+
+  .boton-flotante--nana {
+    right: 12px;
+    width: 58px;
+    height: 58px;
+  }
+
+  .guia__panel,
+  .nana-ia__panel {
+    bottom: 78px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+
+  .guia__etapas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* El aviso sube un poco para no tapar los botones flotantes */
+  .aviso {
+    bottom: 76px;
+  }
+}

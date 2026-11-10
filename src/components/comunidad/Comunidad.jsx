@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { ahoraLocal, nombreDe } from '../../data/comunidad';
-import { FLORES } from '../../data/flores';
+import { CATALOGO_FLORES } from '../../data/flores';
 import { actualizarClub, crearClub, eliminarClub, obtenerMisClubes, quitarMiembro, unirseAClub } from '../../services/clubes';
 import { compartir, enlaceDeClub } from '../../services/compartir';
 import { cambiarAsistencia, actualizarEvento, crearEvento, eliminarEvento, obtenerEventos } from '../../services/eventos';
 import { actualizarMision, crearMision, eliminarMision, obtenerMisiones } from '../../services/misiones';
-import { guardarPerfil, obtenerPerfil, obtenerPerfiles } from '../../services/perfiles';
+import { eliminarPerfil, guardarPerfil, obtenerPerfil, obtenerPerfiles } from '../../services/perfiles';
 import BarraCarga from '../BarraCarga';
 import Modal from '../Modal';
 import Ventana from '../Ventana';
 import Avatar from './Avatar';
+import BotonEliminar from './BotonEliminar';
 import DetalleClub from './DetalleClub';
 import FormClub from './FormClub';
 import FormEvento from './FormEvento';
@@ -122,6 +123,20 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
     } catch (error) {
       console.error(error);
       onAviso({ tipo: 'error', texto: 'No se pudo guardar tu perfil.' });
+    } finally {
+      setOcupado(false);
+    }
+  }
+
+  async function borrarMiPerfil() {
+    setOcupado(true);
+    try {
+      await eliminarPerfil(uid);
+      setPerfil(null);
+      onAviso({ tipo: 'exito', texto: 'Eliminaste tu perfil. Podés crear uno nuevo cuando quieras.' });
+    } catch (error) {
+      console.error(error);
+      onAviso({ tipo: 'error', texto: 'No se pudo eliminar tu perfil.' });
     } finally {
       setOcupado(false);
     }
@@ -264,7 +279,7 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
             <Avatar flor={perfil.flor} tamano={4} />
             <div>
               <p className="perfil__apodo">{perfil.apodo}</p>
-              <p className="campo__ayuda">Flor: {FLORES[perfil.flor].nombre}</p>
+              <p className="campo__ayuda">Flor: {(CATALOGO_FLORES[perfil.flor] ?? CATALOGO_FLORES.romance).nombre}</p>
             </div>
             <button
               className="boton boton--chico boton--editar"
@@ -273,6 +288,9 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
             >
               <IconoEditar />
             </button>
+          </div>
+          <div className="perfil__acciones">
+            <BotonEliminar etiqueta="tu perfil" texto="Eliminar perfil" disabled={ocupado} onConfirmar={borrarMiPerfil} />
           </div>
         </Ventana>
 

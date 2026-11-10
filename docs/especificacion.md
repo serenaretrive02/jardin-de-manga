@@ -78,6 +78,9 @@ flowchart LR
 | RF12 | **CRUD de eventos** | Cualquier miembro crea. Editan o eliminan quien lo creó o la administradora | v0.4 |
 | RF13 | Anotarse o borrarse de un evento | La lista "Van (n)" se actualiza | v0.4 |
 | RF14 | Salir de un club o quitar miembros | Un miembro sale. La administradora quita a otros | v0.4 |
+| RF15 | **CRUD de perfil** (incluye eliminar) y cerrar sesión | Eliminar vuelve a la bienvenida. Cerrar sesión crea una identidad nueva con el jardín vacío, avisando antes | v0.4.1 |
+| RF16 | Guía de crecimiento siempre disponible | El botón "?" muestra las etapas y la flor de cada género | v0.4.1 |
+| RF17 | **Asistente Nana IA** | Responde paso a paso **solo sobre la app**. Ante preguntas ajenas, lo aclara y sugiere preguntas | v0.4.1 |
 
 ## 5. Requisitos no funcionales
 
@@ -90,6 +93,7 @@ flowchart LR
 | RNF05 | Retroalimentación | Validaciones por campo, indicadores de carga y avisos de éxito o error |
 | RNF06 | Accesibilidad básica | Etiquetas en todos los campos, roles ARIA en pestañas, avisos y diálogos, foco visible, cierre con Escape |
 | RNF07 | Tolerancia a fallas | Si la API externa falla, se puede completar todo a mano |
+| RNF09 | Sin claves privadas | Nana IA usa una base de conocimiento local: no hay claves de servicios de IA en el navegador |
 | RNF08 | Costo cero | Plan gratuito de Firebase (Spark), Vercel (Hobby) y una API sin clave |
 
 ## 6. Modelo de datos (Firestore)

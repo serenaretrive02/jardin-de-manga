@@ -1,6 +1,6 @@
 // Perfil público de cada jardinera: apodo y flor favorita (se ve en los clubes).
 // Ruta: users/{uid}  (el jardín privado sigue en users/{uid}/plantas)
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 // CONSULTAR el perfil propio o el de otra persona del club.
@@ -27,4 +27,10 @@ export async function guardarPerfil(uid, { apodo, flor }, esNuevo) {
     { apodo: apodo.trim(), flor, ...(esNuevo && { creadoEn: serverTimestamp() }) },
     { merge: true },
   );
+}
+
+// ELIMINAR el perfil propio (vuelve a pedir apodo la próxima vez que entres a Comunidad).
+// No borra el jardín ni los clubes: en ellos vas a aparecer como "Jardinera #XXXX".
+export async function eliminarPerfil(uid) {
+  await deleteDoc(doc(db, 'users', uid));
 }

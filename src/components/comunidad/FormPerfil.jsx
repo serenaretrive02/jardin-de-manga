@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FLORES, GENEROS } from '../../data/flores';
+import { CATALOGO_FLORES, FLORES_AVATAR } from '../../data/flores';
 import { validarPerfil } from '../../data/comunidad';
 import Avatar from './Avatar';
 
@@ -39,20 +39,23 @@ export default function FormPerfil({ inicial, guardando, onGuardar, onCancelar }
       <fieldset className="campo selector-flor">
         <legend>Tu flor (avatar)</legend>
         <div className="selector-flor__opciones">
-          {GENEROS.map((genero) => (
-            <label key={genero.valor} className="selector-flor__opcion" title={FLORES[genero.valor].nombre}>
+          {FLORES_AVATAR.map((clave) => (
+            <label key={clave} className="selector-flor__opcion" title={CATALOGO_FLORES[clave].nombre}>
               <input
                 type="radio"
                 name="flor"
-                value={genero.valor}
-                checked={flor === genero.valor}
-                onChange={() => setFlor(genero.valor)}
+                value={clave}
+                checked={flor === clave}
+                onChange={() => setFlor(clave)}
               />
-              <Avatar flor={genero.valor} tamano={3} />
-              <span className="sr-only">{FLORES[genero.valor].nombre}</span>
+              <Avatar flor={clave} tamano={3} />
+              <span className="sr-only">{CATALOGO_FLORES[clave].nombre}</span>
             </label>
           ))}
         </div>
+        <p className="campo__ayuda">
+          {CATALOGO_FLORES[flor].nombre}: {CATALOGO_FLORES[flor].significado}
+        </p>
       </fieldset>
 
       <div className="modal__acciones">

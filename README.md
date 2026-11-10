@@ -135,3 +135,4 @@ Ruta: `users/{uid}/plantas/{plantaId}`
 | v0.2 | Identidad pixel art (flores dibujadas con código, ventanas retro), validaciones, avisos, confirmación de borrado, diseño para celular |
 | v0.3 | Nombre **Nana**, búsqueda en la API de Kitsu (portadas y datos automáticos), edición de plantas, estados coherentes con los capítulos, reglas más estrictas |
 | v0.4 | **Comunidad**: perfiles, CRUD de clubes, misiones de 6 tipos con rol de administradora (tablero Kanban), CRUD de eventos, compartir, invitación por enlace |
+| v0.4.1 | 9 flores con formas distintas (y significado), guía flotante de crecimiento, abeja decorativa, **Nana IA** (asistente con base de conocimiento propia), eliminar perfil y cerrar sesión |

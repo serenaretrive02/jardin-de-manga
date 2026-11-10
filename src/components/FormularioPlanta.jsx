@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { FLORES, GENEROS, MAX_TITULO } from '../data/flores';
-import { PALETA_BASE, spriteDeEtapa } from '../data/sprites';
 import { validarPlanta } from '../data/validaciones';
 import BuscadorObras from './BuscadorObras';
-import PixelSprite from './PixelSprite';
+import SpriteFlor from './SpriteFlor';
 import Ventana from './Ventana';
 
 // Formulario para "plantar" un manga o anime nuevo.
@@ -145,12 +144,7 @@ export default function FormularioPlanta({ onAgregar, guardando }) {
         )}
 
         <div className="vista-previa">
-          <PixelSprite
-            filas={spriteDeEtapa('flor')}
-            paleta={{ ...PALETA_BASE, ...flor.colores }}
-            tamano={4}
-            etiqueta={`Vista previa: ${flor.nombre}`}
-          />
+          <SpriteFlor clave={genero} tamano={4} etiqueta={`Vista previa: ${flor.nombre}`} />
           <p>
             Cuando lo termines va a florecer como <strong>{flor.nombre}</strong>.
           </p>

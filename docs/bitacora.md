@@ -610,3 +610,95 @@ Las reglas también controlan que:
 - **Significado de cada flor** (*hanakotoba*).
 - **(Opcional)** Guardar la cuenta con Google para recuperar el jardín y los clubes en otro dispositivo, que es la "ampliación opcional" que menciona la consigna.
 - Grabar el **video de demostración**.
+
+---
+
+## Versión 0.4.1 — Ajustes de la versión 4: flores únicas, guía, abeja y Nana IA (10/11/2026)
+
+### Por qué una "0.4.1"
+Después de probar la v0.4 surgieron mejoras de **diseño y ayuda** que completan esa misma versión. No agregan un módulo nuevo, así que se publicaron como una **versión intermedia** (0.4.1) antes de la final.
+
+### 1. Cada flor con su propia forma
+**Antes:** todas las flores eran el mismo dibujo pintado de distinto color.
+**Ahora:** hay **9 flores dibujadas con formas distintas**:
+
+| Flor | Forma | Uso | Significado (hanakotoba) |
+|---|---|---|---|
+| Rosa (*bara*) | Pétalos en espiral | Romance | Amor |
+| Girasol (*himawari*) | Pétalos alrededor de un centro grande | Acción | Admiración y energía |
+| Tulipán violeta (*chūrippu*) | Copa con tres puntas | Fantasía | Amor eterno y nobleza |
+| Margarita (*deijī*) | Rueda de pétalos blancos | Comedia | Inocencia y alegría |
+| Flor de cerezo (*sakura*) | Cinco pétalos con muesca | Drama | La belleza de lo que dura poco |
+| Hibisco (*haibisukasu*) | Pétalos grandes y estambre largo | Misterio | Belleza delicada |
+| Flor estelar | Estrella | Solo avatar | **Inventada por Nana**: guarda deseos |
+| Campanilla (*kikyō*) | Campana | Solo avatar | Amor que no cambia |
+| Loto (*hasu*) | Pétalos abiertos en capas | Solo avatar | Pureza y volver a empezar |
+
+- Técnicamente, cada flor tiene su "cabeza" (6 filas de píxeles) y comparten el mismo tallo y la misma maceta. Un componente nuevo, `SpriteFlor`, dibuja cualquier flor en cualquier etapa.
+- El perfil ahora ofrece **9 avatares** y muestra el significado de la flor elegida. Se actualizó la regla de Firestore del perfil para aceptar las 3 flores nuevas, y **se publicó antes del código**.
+
+![Las nueve flores](capturas/v0.4.1-01-nueve-flores.png)
+*Hoja con las 9 flores y las etapas de crecimiento.*
+
+![Jardín con las 6 flores](capturas/v0.4.1-02-jardin-seis-flores.png)
+*Un jardín con un manga de cada género: cada uno florece con su forma.*
+
+### 2. Guía flotante "¿Cómo crece tu flor?"
+Un botón **"?"** fijo abajo a la izquierda. Al pasar el mouse muestra su etiqueta, y al tocarlo abre la ventana `como_crece.exe`:
+- las 4 etapas (semilla → brote → creciendo → en flor) y qué hace falta para llegar a cada una;
+- qué pasa si se abandona (se marchita) y cómo revivirla;
+- qué flor da cada género.
+
+No ocupa lugar todo el tiempo: se abre solo cuando se necesita.
+
+**Cambio de funcionamiento:** la guía dice que una planta marchita **revive si la regás**. Antes no era así: una planta abandonada seguía marchita aunque se regara. Se corrigió para que la app haga lo que promete: regar una planta abandonada la pasa a "Leyendo".
+
+![Guía](capturas/v0.4.1-03-guia.png)
+
+### 3. La abeja que revolotea
+Una **abeja pixelada** recorre los bordes de la pantalla, aleteando y parpadeando.
+- Es **solo decoración**: no se puede tocar, no tapa botones y los lectores de pantalla la ignoran.
+- **Accesibilidad:** si la persona configuró su sistema para "reducir el movimiento", la abeja no aparece.
+- El parpadeo usa `useEffect` con `setInterval`, y su **limpieza** (`clearInterval`) detiene el temporizador.
+
+### 4. Nana IA, la asistente virtual
+Una abeja con ojitos y cachetes, en la esquina inferior derecha. Al tocarla se abre el chat `nana_ia.exe`, que **explica paso a paso** cómo usar la app. Algunas preguntas que responde:
+- "¿Cómo planto un manga?", "¿Cómo crece mi flor?", "¿Qué significa el girasol?";
+- "¿Quién asigna las misiones?", "¿Cómo cierro sesión?";
+- "¿Cuántas plantas tengo?": esta respuesta usa **tus datos reales** del jardín.
+
+**Decisión de diseño importante: ¿por qué no ChatGPT u otra IA externa?**
+Conectar un modelo de IA externo exige una **clave privada**, y la consigna dice que nunca se deben incorporar claves privadas en el código del navegador (con el prefijo `VITE_` quedarían a la vista de cualquiera). Por eso Nana IA funciona con una **base de conocimiento propia** (`src/data/conocimiento.js`):
+- 27 temas, cada uno con palabras clave, una respuesta y, si corresponde, los pasos;
+- la pregunta se **normaliza** (minúsculas, sin tildes ni signos) y se compara con las palabras clave. Gana el tema con más coincidencias;
+- algunas respuestas se arman en el momento: la lista de flores (con `map`), el significado de una flor (con `find`) y el resumen de tu jardín (con `filter` y `reduce`);
+- si la pregunta no es sobre Nana, lo dice y ofrece **preguntas sugeridas** que se pueden tocar.
+
+Así cumple lo pedido ("que tenga información de la aplicación y el sitio únicamente"), funciona sin internet extra, no cuesta nada y no expone ninguna clave.
+
+![Nana IA](capturas/v0.4.1-04-nana-ia.png)
+*Nana IA explicando paso a paso cómo plantar y el significado del girasol.*
+
+![Fuera de tema](capturas/v0.4.1-05-nana-ia-fuera-de-tema.png)
+*Si le preguntan algo que no es de la app, lo aclara y sugiere preguntas.*
+
+### 5. Perfil con CRUD completo y "Cerrar sesión"
+- El perfil ya se podía **crear, ver y editar**. Faltaba **eliminarlo**: ahora en `perfil.exe` está "Eliminar perfil", que pide confirmación y vuelve a la bienvenida, como al principio.
+- **Cerrar sesión**, al pie de la página. Como el acceso es **anónimo**, cerrar sesión significa **empezar de cero**: Firebase crea una identidad nueva con un jardín vacío. Por eso la app lo **advierte antes** en la ventana `cerrar_sesion.exe`, y sugiere editar el perfil si solo se quiere cambiar el apodo.
+- Al cambiar de identidad, la Comunidad se reinicia por completo: el componente lleva `key={uid}`, así React lo vuelve a crear de cero.
+
+![Nueve avatares](capturas/v0.4.1-06-nueve-avatares.png)
+![Cerrar sesión](capturas/v0.4.1-07-cerrar-sesion.png)
+
+### Dificultades y cómo se resolvieron
+| Problema | Cómo se detectó | Solución |
+|---|---|---|
+| Nana IA no entendía "¿Cómo **planto**…?" ni "¿Cómo **cierro** sesión?" | Prueba automática con preguntas reales | Las palabras clave ahora incluyen raíces ("plant", "rieg", "elimin") y conjugaciones |
+| A "¿Cuál es la capital de Francia?" respondía sobre la **API** | La prueba esperaba "no sé" | "c**api**tal" contenía "api". Ahora las claves solo coinciden con el **comienzo de una palabra** |
+| A "¿Qué significa la flor de loto?" respondía con la **flor de cerezo** | Revisando el código antes de probar | Se buscaba la primera palabra del nombre ("flor"). Ahora se usan palabras distintivas: loto, hasu, sakura… |
+| La guía prometía que la planta revive al regarla, pero no pasaba | Al escribir el texto de la guía | Se cambió la lógica: regar una planta abandonada la pasa a "Leyendo" |
+
+### Pruebas (21 de 21 correctas)
+La abeja aparece y es decorativa · las 6 flores distintas en el jardín · la etiqueta del "?" al pasar el mouse · la guía con etapas y géneros · 9 preguntas a Nana IA con su respuesta correcta (incluida una fuera de tema) · las sugerencias se pueden tocar · 9 avatares · el significado del avatar · perfil creado con la flor de loto (la regla nueva lo acepta) · eliminar perfil · cerrar sesión crea una identidad nueva con el jardín vacío · celular sin desplazamiento horizontal con Nana IA abierta · ningún error en la consola.
+
+![Celular](capturas/v0.4.1-08-celular-nana.png)
