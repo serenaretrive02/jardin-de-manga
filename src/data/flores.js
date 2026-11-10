@@ -1,12 +1,30 @@
 // Cada género de manga/anime se asocia a una flor.
-// v0.1: solo nombre y emoji. (Más adelante: significado según el hanakotoba e ilustraciones propias.)
+// "colores" pinta las letras P, p y C del dibujo de la flor (ver sprites.js).
 export const FLORES = {
-  romance: { nombre: 'Rosa', emoji: '🌹' },
-  accion: { nombre: 'Girasol', emoji: '🌻' },
-  fantasia: { nombre: 'Tulipán', emoji: '🌷' },
-  comedia: { nombre: 'Margarita', emoji: '🌼' },
-  drama: { nombre: 'Flor de cerezo', emoji: '🌸' },
-  misterio: { nombre: 'Hibisco', emoji: '🌺' },
+  romance: {
+    nombre: 'Rosa',
+    colores: { P: '#F06A8A', p: '#C2415F', C: '#FFD1DC' },
+  },
+  accion: {
+    nombre: 'Girasol',
+    colores: { P: '#FFC83D', p: '#E09A12', C: '#7A4A1E' },
+  },
+  fantasia: {
+    nombre: 'Tulipán violeta',
+    colores: { P: '#B58CFF', p: '#8458D6', C: '#FFE58A' },
+  },
+  comedia: {
+    nombre: 'Margarita',
+    colores: { P: '#FFFFFF', p: '#D9DDE3', C: '#FFC83D' },
+  },
+  drama: {
+    nombre: 'Flor de cerezo',
+    colores: { P: '#FFB7D0', p: '#E68AAE', C: '#FFF0F5' },
+  },
+  misterio: {
+    nombre: 'Hibisco',
+    colores: { P: '#E8453C', p: '#A92B25', C: '#FFD23F' },
+  },
 };
 
 export const GENEROS = [
@@ -25,18 +43,22 @@ export const ESTADOS = [
   { valor: 'abandonado', etiqueta: 'Abandonado' },
 ];
 
-// Devuelve cómo se ve la planta según su avance.
+export const MAX_TITULO = 120;
+export const MAX_CAPITULOS = 5000;
+
+// Avance de 0 a 1, o null si no se conoce el total de capítulos.
+export function avanceDePlanta(planta) {
+  if (planta.capitulosTotales <= 0) return null;
+  return Math.min(planta.capitulosLeidos / planta.capitulosTotales, 1);
+}
+
+// Decide qué dibujo mostrar según el estado y el avance.
 export function etapaDePlanta(planta) {
-  if (planta.estado === 'abandonado') return { emoji: '🥀', texto: 'Marchita' };
-  if (planta.estado === 'terminado') {
-    return { emoji: FLORES[planta.genero].emoji, texto: 'En flor' };
-  }
-  if (planta.capitulosLeidos === 0) return { emoji: '🫘', texto: 'Semilla' };
+  if (planta.estado === 'abandonado') return { clave: 'marchita', texto: 'Marchita' };
+  if (planta.estado === 'terminado') return { clave: 'flor', texto: 'En flor' };
+  if (planta.capitulosLeidos === 0) return { clave: 'semilla', texto: 'Semilla' };
 
-  const avance = planta.capitulosTotales > 0
-    ? planta.capitulosLeidos / planta.capitulosTotales
-    : 0;
-
-  if (avance < 0.5) return { emoji: '🌱', texto: 'Brote' };
-  return { emoji: '🌿', texto: 'Creciendo' };
+  const avance = avanceDePlanta(planta) ?? 0;
+  if (avance < 0.5) return { clave: 'brote', texto: 'Brote' };
+  return { clave: 'creciendo', texto: 'Creciendo' };
 }

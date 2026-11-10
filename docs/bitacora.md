@@ -216,3 +216,119 @@ Lo que se observó al probar esta versión y que se va a trabajar en la próxima
 6. **Eliminar sin confirmar:** un clic por error borra la planta.
 7. **Coherencia de datos:** se puede marcar "Terminado" con 1 de 12 capítulos, o sumar capítulos por encima del total.
 8. **Emojis:** dependen del sistema de cada dispositivo. Ilustraciones propias darían un diseño más cuidado y coherente.
+
+---
+
+## Versión 0.2 — Identidad visual pixel art y mejor experiencia de uso (10/11/2026)
+
+### Objetivo de esta versión
+Resolver las mejoras que quedaron anotadas al probar la v0.1. Sobre todo, que la app **tenga identidad propia** y **se use cómodamente en el celular**. En esta versión no se agregan datos nuevos a Firebase: se mejora cómo se ven y cómo se usan los que ya existen.
+
+### Decisión de diseño: ¿por qué pixel art?
+- **Conecta con el público y con mis gustos.** La estética de videojuego retro (Minecraft, juegos de 8 bits) es familiar para quienes leen manga y miran anime. Convierte "registrar capítulos" en algo parecido a cuidar plantas en un juego.
+- **Refuerza la metáfora del jardín.** Cada planta es un pequeño personaje que cambia a medida que avanzás. El pixel art permite dibujar esas etapas de forma simple y reconocible.
+- **Es coherente.** Todo (flores, íconos, botones, sombras, tipografía) sigue la misma regla: bordes oscuros, colores planos y sombras "duras" sin difuminar.
+
+**Referencias visuales que se usaron** (imágenes de inspiración, no son propias):
+
+| Referencia | Qué se tomó |
+|---|---|
+| ![ART.flora](referencias/ref-1-art-flora.webp) | Paleta **verde lima + rosa pastel** y flores en maceta pixeladas |
+| ![Íconos pixelados](referencias/ref-2-iconos-pixelados.png) | Íconos con contorno negro y barra de "LOADING" por bloques |
+| ![Escritorio retro](referencias/ref-3-escritorio-retro.png) | **Ventanas de computadora retro** con barra de título y botones `_ □ ×` |
+
+### Sistema visual definido
+| Elemento | Decisión | Por qué |
+|---|---|---|
+| Colores | Lima `#D7F59A` (principal), rosa `#F9C6CF` (acento), contorno `#1E2B1F`, fondo crema `#FFFBEF` | Pastel y alegre, con buen contraste gracias al contorno oscuro |
+| Tipografías | **Press Start 2P** para títulos y **Pixelify Sans** para textos (Google Fonts) | La primera es muy "arcade", pero cuesta leerla en textos largos. Por eso se usa solo en títulos |
+| Bordes y sombras | Bordes de 3 px y sombras sólidas de 4 px | Imitan los píxeles: nada difuminado |
+| Ventanas | El formulario es `plantar.exe` y el jardín es `mi_jardin.exe` | Cada sección parece un "programa" de una compu retro |
+| Fondo | Cuadrícula de puntitos | Recuerda al papel cuadriculado donde se dibuja pixel art |
+
+### Las flores, dibujadas con código
+Las flores **no son imágenes descargadas**: se dibujaron a mano como **grillas de letras**. Cada dibujo es un *array* de 16 textos de 16 letras, y cada letra es un píxel de un color. El componente `PixelSprite` recorre ese array con **`map`** (las filas) y otro **`map`** (las letras), y dibuja un cuadradito por cada letra. Así se aplica lo visto en la guía de *Arrays, map y filter*.
+
+```
+'.....KK..KK.....'     K = contorno
+'....KPPKKPPK....'     P = pétalo (cambia según el género)
+'...KPPWPPPPpK...'     C = centro de la flor
+'...KPPPCCPPpK...'     G = tallo, H = hoja
+```
+
+La flor es **una sola grilla**, y cada género le cambia los colores de los pétalos y del centro (rosa, girasol, tulipán violeta, margarita, cerezo e hibisco). Así, con 5 dibujos (semilla, brote, creciendo, flor y marchita) se obtienen 10 apariencias distintas.
+
+**Iteración del dibujo:** en el primer boceto la flor parecía una mancha redonda y el ícono de "pala" no se entendía. Se le marcaron pétalos con muescas y la pala se cambió por un tacho de compost.
+
+| Primer boceto | Versión final |
+|---|---|
+| ![Primer boceto](capturas/v0.2-01a-sprites-primer-boceto.png) | ![Final](capturas/v0.2-01b-sprites-final.png) |
+
+### Cambios en la experiencia de uso
+| Problema de la v0.1 | Solución en la v0.2 |
+|---|---|
+| Los botones cambiaban de lugar según el largo del texto | Los títulos ocupan como máximo 2 líneas y las acciones quedan siempre al final de la tarjeta |
+| Botones chicos en el celular | Todos los botones miden al menos 44 px de alto, el tamaño recomendado para tocar con el dedo |
+| No había mensajes de éxito | Aparece un **aviso flotante** ("Plantaste…", "Regaste… (3 cap.)", "…volvió a la tierra") que se cierra solo |
+| Validación mínima | Mensajes debajo de cada campo: título vacío o muy largo (máx. 120), capítulos negativos o con decimales. Se muestra un contador "0 / 120" |
+| Se borraba sin confirmar | El botón de compost pregunta **"¿Compostar esta planta?" Sí / No** dentro de la misma tarjeta |
+| Se podían sumar capítulos sin límite | Al llegar al total, el botón cambia a **"Completo"** y se desactiva |
+| "Cargando..." era un texto plano | **Barra de carga por bloques**, como en los videojuegos |
+| No se veía el avance | **Barra de progreso** de 10 bloques en cada tarjeta |
+| — | **Vista previa** en el formulario: muestra qué flor vas a obtener según el género elegido |
+| — | En anime dice "episodios" en lugar de "capítulos" |
+| — | Pie de página con el código de la "jardinera anónima", que ayuda a explicar el acceso anónimo |
+
+### Antes y después
+| v0.1 | v0.2 |
+|---|---|
+| ![v0.1](capturas/v0.1-10-vercel-compu.png) | ![v0.2](capturas/v0.2-05-compu.png) |
+
+![Validaciones](capturas/v0.2-03-validacion.png)
+*Captura: los errores del formulario se marcan en rojo, debajo de cada campo.*
+
+![Aviso de éxito](capturas/v0.2-04-aviso-exito.png)
+*Captura: aviso de éxito después de plantar.*
+
+![Confirmación](capturas/v0.2-06-confirmar-borrado.png)
+*Captura: antes de eliminar, la tarjeta pide confirmación.*
+
+![Jardín vacío](capturas/v0.2-02-vacio.png)
+*Captura: así se ve el jardín cuando todavía no hay plantas.*
+
+### Diseño para celular: una iteración dentro de la versión
+El primer intento para celular ponía **2 plantas por fila**. Al probarlo en una pantalla de 390 px, el texto del estado se cortaba ("Abandono…") y el botón de compost caía a otra línea. Se rediseñó: en el celular cada tarjeta es **horizontal**, con la maceta a la izquierda y los datos a la derecha, una planta por fila.
+
+| Primer intento (descartado) | Versión final |
+|---|---|
+| ![2 columnas](capturas/v0.2-07a-celular-intento-2-columnas.png) | ![1 columna horizontal](capturas/v0.2-07-celular.png) |
+
+### Uso de IA en esta etapa
+- **Instrucción dada:** *"Vayamos con la 0.2. Me gustaría que el diseño sea tipo pixel art si se puede"*, junto con tres imágenes de referencia.
+- **Qué hizo la IA:** propuso dibujar las flores como grillas de texto en lugar de usar imágenes, definió la paleta a partir de las referencias, escribió los componentes y probó la app con un navegador automático.
+- **Qué revisé y corregí:** las capturas en compu y en celular. A partir de esa revisión se rehicieron el dibujo de la flor, el diseño para celular y el problema de la tipografía.
+
+### Dificultades y cómo se resolvieron
+| Problema | Cómo se detectó | Solución |
+|---|---|---|
+| La fuente Pixelify Sans dibuja "fl" como un solo símbolo y **"flor" se leía "Aor"** | Mirando la captura del formulario ("va a Aorecer") | Se desactivaron las ligaduras tipográficas con `font-variant-ligatures: none` |
+| En el celular, con 2 columnas, los textos se cortaban | Captura automática a 390 px de ancho | Tarjetas horizontales de una columna (ver arriba) |
+| El primer dibujo de la flor no se reconocía | Mirando la "hoja de sprites" | Pétalos con muescas y brillo blanco |
+| El aviso flotante podía reiniciar su temporizador en cada render | Revisando el código del efecto | Se le pasa el *setter* `setAviso`, que no cambia entre renders. Así el `useEffect` solo se reinicia cuando llega un aviso nuevo (y limpia el anterior con `clearTimeout`) |
+
+### Pruebas realizadas (en local, con un navegador automático)
+| Prueba | Resultado |
+|---|---|
+| Enviar el formulario sin título y con capítulos en −3 | ✅ Aparecen los dos mensajes de error y no se guarda nada |
+| Plantar 6 títulos de distintos géneros | ✅ Aviso de éxito en cada uno |
+| Regar hasta el total | ✅ El botón pasa a "Completo" y se desactiva |
+| Cambiar estados (terminado, abandonado) | ✅ La flor florece o se marchita |
+| Recargar la página | ✅ Todo sigue igual: los datos están en Firestore |
+| Pedir compostar | ✅ Pregunta antes de borrar |
+| Celular (390 px) | ✅ Sin desplazamiento horizontal y con todo legible |
+| Errores en la consola del navegador | ✅ Ninguno |
+
+### Mejoras pendientes para la v0.3
+- Buscar mangas y animes reales con una **API** (portada, sinopsis y cantidad de capítulos automática), usando `fetch` como en la guía de APIs.
+- Poder **editar** el título, el género o el total de capítulos de una planta ya plantada.
+- Marcar automáticamente "Terminado" al llegar al último capítulo.

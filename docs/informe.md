@@ -31,15 +31,34 @@ Para lectoras y lectores de manga y espectadores de anime, sobre todo jóvenes, 
 
 ## 2. Funciones implementadas
 
-| Acción | Qué hace | Operación en la base de datos |
-|---|---|---|
-| Ver mi jardín | Muestra todas las plantas guardadas | Consultar |
-| Plantar | Agrega un manga o anime nuevo | Agregar |
-| +1 capítulo | Suma un capítulo leído y la planta crece | Modificar |
-| Cambiar estado | Pendiente / Leyendo / Terminado / Abandonado | Modificar |
-| Eliminar | Quita la planta del jardín | Eliminar |
+| Acción | Qué hace | Operación en la base de datos | Desde |
+|---|---|---|---|
+| Ver mi jardín | Muestra todas las plantas guardadas, con su dibujo y su barra de avance | Consultar | v0.1 |
+| Plantar | Agrega un manga o anime. Antes valida los datos y muestra una vista previa de la flor | Agregar | v0.1 (validaciones y vista previa: v0.2) |
+| Regar +1 | Suma un capítulo y la planta crece. Al llegar al total se bloquea ("Completo") | Modificar | v0.1 (límite: v0.2) |
+| Cambiar estado | Pendiente / Leyendo / Terminado (florece) / Abandonado (se marchita) | Modificar | v0.1 |
+| Compostar | Elimina la planta, después de pedir confirmación | Eliminar | v0.1 (confirmación: v0.2) |
 
-*(Se amplía en cada versión.)*
+**Experiencia de uso (consigna, punto 6):**
+- **Validaciones:** el título es obligatorio y tiene un máximo de 120 caracteres. Los capítulos tienen que ser un número entero entre 0 y 5000. Los errores se muestran debajo de cada campo.
+- **Información de carga:** una barra pixelada mientras se trae el jardín. Los botones dicen "Plantando..." y las tarjetas se atenúan mientras se guardan.
+- **Mensajes de éxito o error:** aviso flotante después de cada operación. Si Firebase falla, el aviso es rojo y explica qué pasó.
+- **Celular y compu:** en la compu, el formulario y el jardín van lado a lado. En el celular, todo en una columna, con tarjetas horizontales y botones de al menos 44 px.
+
+## 2.b Diseño: por qué se ve así
+
+El diseño **no es el primer resultado de la IA**: se construyó en iteraciones (ver la bitácora).
+- **v0.1:** a propósito, sin diseño. Era un formulario y tarjetas grises, para priorizar que funcione.
+- **v0.2:** **estética pixel art**, inspirada en tres referencias visuales:
+  - una tienda de plantas en pixel art (paleta lima y rosa),
+  - íconos pixelados,
+  - un escritorio de computadora retro (ventanas con barra de título).
+
+**Justificación:**
+- El pixel art conecta con el público (lectores de manga y anime, cercanos a los videojuegos) y refuerza la idea de "cuidar un jardín" como en un juego.
+- Las flores se dibujaron a mano como grillas de colores, así cada género tiene su propia flor y cada etapa (semilla → brote → creciendo → flor, o marchita) se reconoce de un vistazo.
+- La tipografía arcade (*Press Start 2P*) se usa solo en títulos porque cuesta leerla en textos largos. Los textos usan *Pixelify Sans*, que mantiene el estilo pero se lee mejor.
+- Los bordes oscuros y las sombras sólidas mantienen buen contraste y dan coherencia: todo parece hecho de píxeles.
 
 ## 3. Información guardada en Firebase
 
@@ -86,6 +105,8 @@ Se usó **Claude Code**, un asistente de IA de Anthropic que trabaja directament
 1. *"Antes de crear cualquier aplicación, pensá ideas sumamente creativas y originales según las cosas que me gustan, que permitan hacer cada acción que pide la consigna, pero que no sea una típica."*
 2. *"Todo lo que hagamos tiene que ser lo que vimos en clase (Visual Studio Code, GitHub y lo de los PDF)."*
 
+3. *"Vayamos con la 0.2. Me gustaría que el diseño sea tipo pixel art si se puede"*, junto con tres imágenes de referencia. La IA propuso dibujar las flores como grillas de texto recorridas con `map`. Al revisar las capturas pedí corregir la flor, el diseño para celular y un problema de la tipografía.
+
 *(Se agregan más ejemplos en cada versión.)*
 
 **Cómo verifiqué lo que hizo la IA:** probando la app en el navegador, revisando en la consola de Firebase que los datos realmente se guarden y comparando el código con los ejemplos de las guías de la materia.
@@ -94,6 +115,8 @@ Se usó **Claude Code**, un asistente de IA de Anthropic que trabaja directament
 Ver el detalle en la [bitácora](bitacora.md). Resumen:
 - El `.gitignore` original no excluía el `.env`, por lo que las llaves se habrían publicado en GitHub. Se corrigió agregándolo.
 - PowerShell bloqueaba `npm run dev` por seguridad. Se resolvió con el comando indicado por el profesor (`Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`).
+- La fuente pixelada mostraba "flor" como "Aor" (unía la "f" y la "l"). Se desactivaron las ligaduras tipográficas.
+- En el celular, 2 tarjetas por fila cortaban los textos. Se rediseñó con tarjetas horizontales.
 - Abrir `index.html` con doble clic muestra una página en blanco: una app de Vite se abre con `npm run dev`.
 - En la versión publicada el jardín empezó vacío: por el acceso anónimo, cada sitio (local o Vercel) y cada navegador tiene su propio jardín.
 
@@ -102,7 +125,9 @@ Ver el detalle en la [bitácora](bitacora.md). Resumen:
 - **Props:** datos que un componente le pasa a otro. Por ejemplo, la lista le pasa a cada tarjeta su planta.
 - **Estado (`useState`):** datos que la app recuerda y que, al cambiar, actualizan la pantalla.
 - **`useEffect`:** código que se ejecuta al abrir la app para conectarse con algo externo, como Firebase.
-- **`map`:** recorre el array de plantas y arma una tarjeta por cada una.
+- **`map`:** recorre el array de plantas y arma una tarjeta por cada una. También dibuja las flores: recorre las filas y las letras de cada dibujo y pinta un píxel por letra.
+- **`children`:** lo que se escribe entre la etiqueta de apertura y la de cierre de un componente. El componente `Ventana` lo usa para envolver cualquier contenido con el marco retro.
+- **Limpieza de un efecto:** función que devuelve `useEffect` para "deshacer" lo que hizo. El aviso la usa para cancelar su temporizador.
 - **Serverless:** no administro un servidor propio. Firebase y Vercel se encargan de eso.
 - **Variables de entorno (`.env`):** archivo con las llaves de conexión, que queda fuera del repositorio.
 - **Reglas de Firestore:** permisos que dicen quién puede leer o escribir cada dato.

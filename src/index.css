@@ -1,7 +1,81 @@
-/* v0.1: estilos mínimos, a propósito. El diseño se trabaja en la v0.2. */
+/* =========================================================
+   Jardín de Manga · Estilos generales (v0.2: estética pixel art)
+   Los colores se guardan como variables para usarlos en todo el sitio.
+   ========================================================= */
+:root {
+  --tinta: #1e2b1f; /* contorno oscuro, como en el pixel art */
+  --crema: #fffbef; /* fondo */
+  --blanco: #ffffff;
+  --lima: #d7f59a; /* color principal */
+  --lima-oscuro: #a8d86a;
+  --verde: #4e9a3a;
+  --rosa: #f9c6cf; /* color de acento */
+  --rosa-oscuro: #e8829a;
+  --agua: #bfe6fb;
+  --error: #c93a3a;
+  --error-fondo: #ffe1e1;
+  --texto-suave: #4f5b50;
+
+  --borde: 3px solid var(--tinta);
+  --sombra: 4px 4px 0 var(--tinta); /* sombra dura, sin difuminar */
+  --sombra-chica: 2px 2px 0 var(--tinta);
+
+  --fuente-titulo: 'Press Start 2P', 'Courier New', monospace;
+  --fuente: 'Pixelify Sans', system-ui, sans-serif;
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #ffffff;
-  color: #222222;
+  min-height: 100vh;
+  font-family: var(--fuente);
+  font-size: 18px;
+  line-height: 1.35;
+  /* La fuente pixelada une "fl" en un solo símbolo que se leía como "A": se desactiva */
+  font-variant-ligatures: none;
+  color: var(--tinta);
+  background-color: var(--crema);
+  /* Cuadrícula de puntitos, como papel de pixel art */
+  background-image: radial-gradient(var(--lima-oscuro) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Los dibujos se ven nítidos, sin suavizar los bordes */
+.pixel-sprite {
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* Texto solo para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 3px dashed var(--rosa-oscuro);
+  outline-offset: 2px;
 }

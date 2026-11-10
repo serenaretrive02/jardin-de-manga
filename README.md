@@ -68,15 +68,22 @@ Abrir `http://localhost:5173/`. Si se cambia el `.env`, reiniciar el comando.
 ```
 src/
 ├── main.jsx                  Punto de entrada: monta <App />
-├── App.jsx                   Componente principal: sesión, estados y operaciones
+├── App.jsx                   Componente principal: sesión anónima, estados y operaciones
+├── App.css / index.css       Estilos (paleta pixel art, diseño adaptable a celular)
 ├── firebase.js               Conexión con Firebase (lee el .env)
 ├── services/plantas.js       Consultar, agregar, modificar y eliminar en Firestore
 ├── data/flores.js            Géneros, flores, estados y etapas de crecimiento
+├── data/sprites.js           Dibujos pixel art como arrays de texto (flores, maceta, íconos)
 └── components/
-    ├── FormularioPlanta.jsx  Formulario para plantar un manga/anime
-    ├── ListaJardin.jsx       Lista de plantas (usa map)
-    └── TarjetaPlanta.jsx     Tarjeta de cada planta con sus acciones
+    ├── FormularioPlanta.jsx  Formulario con validaciones y vista previa de la flor
+    ├── ListaJardin.jsx       Lista de plantas (usa map) y estado vacío
+    ├── TarjetaPlanta.jsx     Tarjeta de cada planta: dibujo, avance y acciones
+    ├── PixelSprite.jsx       Dibuja un pixel art recorriendo el array con map
+    ├── Ventana.jsx           Marco de "ventana retro" reutilizable
+    ├── Aviso.jsx             Mensaje flotante de éxito o error
+    └── BarraCarga.jsx        Indicador de carga por bloques
 firestore.rules               Reglas de seguridad de la base de datos
+docs/                         Bitácora, informe, capturas y referencias visuales
 ```
 
 ## Datos guardados en Firestore
@@ -98,3 +105,4 @@ Ruta: `users/{uid}/plantas/{plantaId}`
 | Versión | Contenido |
 |---|---|
 | v0.1 | MVP funcional: agregar, listar, cambiar estado, sumar capítulos y eliminar con Firestore |
+| v0.2 | Identidad pixel art (flores dibujadas con código, ventanas retro), validaciones, avisos, confirmación de borrado, diseño para celular |
