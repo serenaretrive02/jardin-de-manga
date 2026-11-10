@@ -59,7 +59,7 @@ export default function FormularioPlanta({ onAgregar, guardando }) {
   const palabra = tipo === 'anime' ? 'Episodios' : 'Capítulos';
 
   return (
-    <Ventana titulo="plantar.exe" className="ventana--formulario">
+    <Ventana titulo="plantar.exe" className="ventana--formulario" adorno="izq">
       <div className="selector-tipo" role="group" aria-label="¿Qué vas a plantar?">
         {['manga', 'anime'].map((opcion) => (
           <button

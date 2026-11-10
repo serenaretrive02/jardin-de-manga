@@ -260,7 +260,7 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
   if (!perfil) {
     return (
       <div className="bienvenida">
-        <Ventana titulo="perfil_nuevo.exe">
+        <Ventana titulo="perfil_nuevo.exe" adorno="izq">
           <p className="bienvenida__texto">
             ¡Bienvenida a la comunidad de Nana! Armá clubes de lectura con tus amigas, asignen misiones y
             organicen eventos. Primero, contanos cómo te llamamos.
@@ -278,7 +278,7 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
   return (
     <div className="comunidad">
       <div className="comunidad__lateral">
-        <Ventana titulo="perfil.exe">
+        <Ventana titulo="perfil.exe" adorno="izq">
           <div className="perfil">
             <Avatar flor={perfil.flor} tamano={4} />
             <div>

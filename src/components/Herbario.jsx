@@ -7,7 +7,7 @@ const ETAPAS = ['semilla', 'brote', 'creciendo', 'flor'];
 // Herbario: el catálogo de todas las flores de Nana, con su significado y cómo conseguirlas.
 export default function Herbario({ plantas }) {
   return (
-    <Ventana titulo={`herbario.exe (${Object.keys(CATALOGO_FLORES).length} flores)`} className="ventana--herbario">
+    <Ventana titulo={`herbario.exe (${Object.keys(CATALOGO_FLORES).length} flores)`} className="ventana--herbario" adorno="izq">
       <p className="herbario__intro">
         Cada género de manga o anime florece con una flor distinta. Sus significados vienen del{' '}
         <strong>hanakotoba</strong>, el lenguaje japonés de las flores. Las tres últimas se eligen como avatar en

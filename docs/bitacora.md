@@ -15,6 +15,7 @@ Registro de cómo fue evolucionando la aplicación, versión por versión: qué 
 | [v0.4 — Comunidad](#versión-04--comunidad-clubes-misiones-con-roles-y-eventos-10112026) | 10/11 | Clubes, misiones por rol, eventos |
 | [v0.4.1 — Ajustes](#versión-041--ajustes-de-la-versión-4-flores-únicas-guía-abeja-y-nana-ia-10112026) | 10/11 | Flores únicas, guía, abeja, Nana IA |
 | [v1.0 — Final](#versión-10--versión-final-quinta-versión-10112026) | 10/11 | Ramo, filtros, herbario, sonidos, auditoría |
+| [v1.1 — Pulido kawaii](#versión-11--pulido-de-diseño-kawaii-10112026) | 10/11 | Más espacio, esquinas pixeladas, adornos, revisión final |
 | [Conclusión](#conclusión-del-proceso) | | Qué se aprendió |
 
 ---
@@ -813,6 +814,92 @@ El botón con el **parlante pixelado** (arriba a la derecha) los apaga o prende.
 
 ---
 
+## Versión 1.1 — Pulido de diseño kawaii (10/11/2026)
+
+### Objetivo
+Revisar por última vez todo contra la consigna y la rúbrica, y **pulir la interfaz**: los textos estaban "apelmazados", con poco espacio alrededor. La idea fue darle aire, hacerla más **kawaii** (tierna) y que se vea profesional, **sin cambiar la paleta de colores** (lima, rosa, crema y tinta oscura).
+
+### Referencias visuales
+La autora sumó nuevas imágenes de referencia: enredaderas de cerezo pixeladas en las esquinas de un panel, un planificador kawaii en tonos rosa y crema, macetas pixeladas y una baldosa de pasto con margaritas. De ahí salieron tres decisiones:
+1. **Flores que abrazan las esquinas** de las ventanas principales.
+2. **Fondo de cuaderno cuadriculado** rosa pálido, como el del planificador.
+3. **Una franja de pasto con margaritas** al pie de la página, como si la app fuera un jardín.
+
+### Qué cambió
+
+**1. Más aire en toda la app**
+- Se armó una **escala de espacios** (4, 8, 12, 16, 24 y 32 píxeles) y se usó en todos lados, así todo "respira" igual.
+- Interlineado más alto (de 1,35 a 1,5) y más margen interior en ventanas, tarjetas, formularios, filtros, el chat de Nana IA, la guía, el herbario y la comunidad.
+- La guía "¿Cómo crece tu flor?" pasó de 4 columnas apretadas a **2 columnas**, y se lee de corrido.
+
+**2. Esquinas "redondeadas en píxeles"**
+En pixel art no se usan bordes redondeados (se verían borrosos). Lo que se hace es **cortar el píxel de cada esquina**. Se logró dibujando el marco con 4 sombras duras, una por lado, que dejan las esquinas vacías. Así se ven las ventanas, las tarjetas, los botones, el aviso y los botones flotantes.
+
+**3. Sombras rosadas suaves** en las ventanas grandes (antes eran negras), y los tres botones de cada ventana ahora son **cuadraditos pastel** (amarillo, celeste y rosa).
+
+**4. Adornos pixelados dibujados con código**, igual que las flores (archivo nuevo `src/data/decoracion.js` y componente `Adorno.jsx`):
+- **Enredadera de cerezo** en una esquina de las ventanas principales. Es la misma imagen dada vuelta como en un espejo para la esquina derecha.
+- **Destello** titilante al lado de "NANA" y un **corazón** en "tu jardín de manga".
+- **Franja de pasto con margaritas** al pie. Es una "baldosa" pixelada que se convierte en imagen con la función `spriteComoFondo` (recorre el dibujo con `map`, igual que `PixelSprite`) y se repite a lo ancho.
+- Todos los adornos son solo decoración: los lectores de pantalla los ignoran y no reciben clics.
+
+**5. Encabezado como cartel**: el logo, el nombre y el lema ahora están dentro de un cartel blanco con enredadera, y **las pestañas tienen un iconito**: una rosa (Mi jardín), la abeja (Comunidad) y un tulipán (Herbario).
+
+**6. El formulario "plantar" acompaña el scroll** en la compu: si el jardín es largo, el formulario queda a la vista (`position: sticky`).
+
+Todos estos cambios están en un archivo nuevo, **`src/Diseno.css`**, que se carga al final y refina los estilos de las versiones anteriores. Así se puede ver en un solo lugar qué cambió en el diseño.
+
+![Jardín con el diseño nuevo](capturas/v1.1-02-jardin.png)
+*Comparar con la v1.0: más espacio, cartel con enredadera, pestañas con íconos, esquinas pixeladas y sombras rosadas.*
+
+![Guía en dos columnas y ventana de edición](capturas/v1.1-03-guia-y-edicion.png)
+![Nana IA](capturas/v1.1-04-nana-ia.png)
+![Herbario](capturas/v1.1-05-herbario.png)
+![Comunidad y club](capturas/v1.1-06-comunidad.png)
+![Celular](capturas/v1.1-07-celular.png)
+![Tablet](capturas/v1.1-08-tablet.png)
+
+### Revisión final contra la consigna y la rúbrica
+Se volvió a leer la consigna completa y la tabla de evaluación.
+
+| Bloque de la rúbrica | Qué se revisó | Estado |
+|---|---|---|
+| **A.** React + Vite con las interacciones principales | 30 componentes, eventos y estado. Todas las pruebas pasan | ✅ |
+| **A.** Firebase: consultar, agregar, modificar, eliminar y recargar | 5 CRUD completos, verificados en Firestore y recargando la página | ✅ |
+| **A.** GitHub con los archivos para ejecutar | Código, `package.json`, README con pasos | ✅ |
+| **A.** Vercel con URL funcional y conexión a Firebase | Despliegue automático, verificado en la URL pública | ✅ |
+| **B.** Entrega ordenada con enlaces claros | `docs/entrega.md` con la tabla de enlaces y las versiones | ✅ |
+| **B.** README, `.env.example`, reglas; informe con IA y dificultades | Los tres archivos están en el repositorio. `.env` **no** está publicado | ✅ |
+| **C.** Originalidad, coherencia visual, interacciones, facilidad de uso, elaboración propia | Diseño refinado en 7 versiones y justificado con referencias en esta bitácora | ✅ |
+| Mini video | Lo graba la autora (guion en `entrega.md`) | ⏳ |
+
+### Dificultades de esta versión
+| Problema | Cómo se detectó | Solución |
+|---|---|---|
+| **En el celular el jardín quedó en dos columnas** y todo se aplastaba contra la derecha. La regla nueva de la compu (`380px + resto`) se cargaba después y "pisaba" la regla del celular | Captura en 390 px | Se repitió la regla del celular dentro de `Diseno.css`, para que se cargue después |
+| **La guía y Nana IA dejaron de flotar** y aparecían al final de la página. Al darle `position: relative` a todas las ventanas (para ubicar la enredadera), también se cambió la de estos paneles, que también son ventanas | Captura con el chat abierto | Se les devolvió `position: fixed` a los dos paneles |
+| La enredadera de la derecha **generaba un scroll horizontal** de 3 píxeles en la tablet | Prueba automática de desborde (mide si la página es más ancha que la pantalla) | Se acercó la enredadera a la esquina y se agregó `overflow-x: clip` |
+| La ventana de edición **recortaba su propio marco** (tiene scroll propio y el marco nuevo se dibuja por fuera) | Captura de la edición | Se le dio un pequeño margen interior para que entren el marco y la sombra |
+
+![Error: el celular en dos columnas](capturas/v1.1-01a-error-celular-dos-columnas.png)
+*Antes de la corrección: en el celular el jardín quedaba en una columna angosta a la derecha.*
+
+![Error: paneles sueltos](capturas/v1.1-01b-error-paneles-sueltos.png)
+*Antes de la corrección: el chat de Nana IA aparecía al final de la página en lugar de flotar.*
+
+### Pruebas
+| Prueba automática | Resultado |
+|---|---|
+| Diseño v1.1: sin scroll horizontal en compu (1366 px), tablet (820 px) y celular (390 px), en las 3 pestañas; sin errores | **7/7** ✅ |
+| Regresión v1.0: ramo, filtros, herbario, sonidos, Nana IA | **26/26** ✅ |
+| Regresión v0.4.1: flores, guía, Nana IA, perfil, cerrar sesión | **21/21** ✅ |
+| Regresión v0.4: comunidad con dos usuarias, roles y seguridad (403) | **19/19** ✅ |
+| Regresión v0.3: jardín, API, edición, estados | **17/17** ✅ |
+
+Es un cambio solo de diseño: **no se tocó Firestore ni las reglas**, por eso no hizo falta volver a publicarlas.
+
+---
+
 ## Conclusión del proceso
 
 | Versión | Qué aportó | Tipo de iteración |
@@ -823,6 +910,7 @@ El botón con el **parlante pixelado** (arriba a la derecha) los apaga o prende.
 | v0.4 | Comunidad: clubes, misiones con rol de administradora, eventos, compartir | Módulo nuevo |
 | v0.4.1 | 9 flores con forma propia, guía, abeja, Nana IA, CRUD del perfil | Ajustes de diseño y ayuda |
 | v1.0 | Ramo, filtros, herbario, sonidos, auditoría y documentación final | Estabilización |
+| v1.1 | Más espacio, esquinas pixeladas, enredaderas, pasto y revisión final de la rúbrica | Pulido visual |
 
 **Lo que más se aprendió:**
 - **Probar es tan importante como programar:** casi todos los errores aparecieron en las capturas o en las pruebas, no al escribir el código.

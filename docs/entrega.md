@@ -22,7 +22,8 @@
 | [v0.3](https://github.com/serenaretrive02/jardin-de-manga/tree/v0.3) | Nombre "Nana", búsqueda con la API Kitsu, edición, estados coherentes |
 | [v0.4](https://github.com/serenaretrive02/jardin-de-manga/tree/v0.4) | Comunidad: perfiles, clubes, misiones con rol de administradora, eventos, compartir |
 | [v0.4.1](https://github.com/serenaretrive02/jardin-de-manga/tree/v0.4.1) | 9 flores con forma propia, guía flotante, abeja, Nana IA, eliminar perfil y cerrar sesión |
-| [**v1.0**](https://github.com/serenaretrive02/jardin-de-manga/tree/v1.0) | **Final:** Mi ramo, filtros, herbario, sonidos, auditoría y documentación |
+| [v1.0](https://github.com/serenaretrive02/jardin-de-manga/tree/v1.0) | Mi ramo, filtros, herbario, sonidos, auditoría y documentación |
+| [**v1.1**](https://github.com/serenaretrive02/jardin-de-manga/tree/v1.1) | **Final:** pulido de diseño kawaii (más espacio, esquinas pixeladas, enredaderas y pasto) y revisión final de la rúbrica |
 
 ## Guion sugerido para el mini video (3–4 minutos)
 1. **La idea** (20 s): qué es Nana y para quién es.

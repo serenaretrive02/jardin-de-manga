@@ -1,13 +1,13 @@
 # Informe — Nana, tu jardín de manga
 
 **Trabajo Práctico 2 · Desarrollo Frontend II · UADE**
-Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026 · Versión final: **v1.0**
+Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026 · Versión final: **v1.1**
 
 | Entrega | Enlace |
 |---|---|
 | App publicada (Vercel) | https://jardin-de-manga.vercel.app |
 | Repositorio (GitHub) | https://github.com/serenaretrive02/jardin-de-manga |
-| Bitácora del proceso (6 versiones, con capturas) | [bitacora.md](bitacora.md) |
+| Bitácora del proceso (7 versiones, con capturas) | [bitacora.md](bitacora.md) |
 | Especificación (requisitos, casos de uso, sprints) | [especificacion.md](especificacion.md) |
 | Guía para el oral (dónde está cada tema en el código) | [guia-oral.md](guia-oral.md) |
 | Video de demostración | _pendiente: agregar el enlace_ |
@@ -21,7 +21,7 @@ Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026 · Ver
 
 **Público:** lectoras y lectores de manga y espectadores de anime, sobre todo jóvenes, que no quieren crear una cuenta ni completar formularios largos (el ingreso es anónimo).
 
-**Por qué se ve así:** estética **pixel art** de videojuego retro (ventanas tipo "programa", paleta lima y rosa, sombras duras), porque conecta con un público gamer y otaku y refuerza la idea de "cuidar un jardín" como en un juego. Las 9 flores y la abeja están **dibujadas con código**: son arrays de texto que React convierte en píxeles. El diseño se refinó en varias iteraciones a partir de referencias visuales y de las capturas de cada prueba (ver la bitácora).
+**Por qué se ve así:** estética **pixel art** de videojuego retro (ventanas tipo "programa", paleta lima y rosa, sombras duras), porque conecta con un público gamer y otaku y refuerza la idea de "cuidar un jardín" como en un juego. Las 9 flores, la abeja, las enredaderas y el pasto están **dibujados con código**: son arrays de texto que React convierte en píxeles. En la última iteración (v1.1) se sumó un toque **kawaii** inspirado en planificadores tiernos: más espacio para que los textos respiren, esquinas "redondeadas en píxeles", sombras rosadas y enredaderas de cerezo, siempre con la misma paleta. El diseño se refinó en siete versiones a partir de referencias visuales y de las capturas de cada prueba (ver la bitácora).
 
 ## 2. Funciones implementadas (todas con CRUD)
 
@@ -101,3 +101,4 @@ Se usó **Claude Code**, que trabaja directamente sobre la carpeta del proyecto,
 - Tipografía: la fuente pixelada no tenía "Í"/"Ó" en mayúscula y leía "flor" como "Aor": se ajustaron las fuentes.
 - Fechas: los eventos se calculaban en hora UTC: se pasó a hora local.
 - El aviso flotante **tapaba botones** que quedaban debajo: ahora deja pasar los clics.
+- En el pulido final (v1.1), una regla nueva de diseño "pisó" la del celular y el jardín quedó en dos columnas: se detectó en las capturas y se corrigió.

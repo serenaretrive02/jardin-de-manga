@@ -134,6 +134,7 @@ flowchart LR
 | v0.4 | Comunidad | Perfiles, CRUD de clubes, misiones con roles, eventos, compartir | Incremento grande (nuevo módulo) |
 | v0.4.1 | Ajustes de la v0.4 | 9 flores con forma propia, guía, abeja, Nana IA, CRUD del perfil | Iteración de diseño y ayuda |
 | v1.0 | Versión final | Mi ramo, filtros, herbario, sonidos, auditoría y documentación | Estabilización |
+| v1.1 | Pulido final | Más espacio, esquinas pixeladas, adornos kawaii y revisión de la rúbrica | Pulido visual |
 
 ### Backlog final (tablero Kanban del proyecto)
 

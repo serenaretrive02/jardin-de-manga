@@ -25,9 +25,16 @@ import Ventana from './components/Ventana';
 import './App.css';
 import './Comunidad.css';
 import './Extras.css';
+import './Diseno.css';
+import Adorno from './components/Adorno';
+import Abeja from './components/Abeja';
+import { PALETA_ADORNOS, PASTO, spriteComoFondo } from './data/decoracion';
 
 // Si se abrió un enlace de invitación (…/?club=ABC123), se guarda el código.
 const codigoInvitacion = new URLSearchParams(window.location.search).get('club');
+
+// Franja de pasto pixelado del pie de página (se calcula una sola vez).
+const FONDO_PASTO = spriteComoFondo(PASTO, PALETA_ADORNOS);
 
 // Consulta las plantas en Firestore y actualiza los estados de la interfaz.
 async function cargarPlantas(uid, setPlantas, setCargando, setAviso) {
@@ -178,10 +185,17 @@ export default function App() {
   return (
     <div className="app">
       <header className="encabezado">
+        <Adorno tipo="enredadera" posicion="arriba-izq" />
         <div className="encabezado__logo">{logo}</div>
-        <div>
-          <h1 className="encabezado__titulo">Nana</h1>
-          <p className="encabezado__subtitulo">tu jardín de manga</p>
+        <div className="encabezado__textos">
+          <h1 className="encabezado__titulo">
+            Nana
+            <Adorno tipo="destello" tamano={4} posicion="titulo" />
+          </h1>
+          <p className="encabezado__subtitulo">
+            <Adorno tipo="corazon" tamano={2} />
+            tu jardín de manga
+          </p>
           <p className="encabezado__lema">
             Cada manga o anime que seguís es una flor. Leé, regá y mirá crecer tu jardín.
           </p>
@@ -193,12 +207,15 @@ export default function App() {
 
       <nav className="pestanas" role="tablist" aria-label="Secciones">
         <button role="tab" aria-selected={seccion === 'jardin'} className="pestana" onClick={() => setSeccion('jardin')}>
+          <SpriteFlor clave="romance" tamano={2} />
           Mi jardín
         </button>
         <button role="tab" aria-selected={seccion === 'comunidad'} className="pestana" onClick={() => setSeccion('comunidad')}>
+          <Abeja tamano={2} />
           Comunidad
         </button>
         <button role="tab" aria-selected={seccion === 'herbario'} className="pestana" onClick={() => setSeccion('herbario')}>
+          <SpriteFlor clave="fantasia" tamano={2} />
           Herbario
         </button>
       </nav>
@@ -207,7 +224,7 @@ export default function App() {
         <main className="contenido">
           <FormularioPlanta onAgregar={manejarAgregar} guardando={guardando} />
 
-          <Ventana titulo={`mi_jardin.exe (${plantas.length})`} className="ventana--jardin">
+          <Ventana titulo={`mi_jardin.exe (${plantas.length})`} className="ventana--jardin" adorno="der">
             {cargando ? (
               <BarraCarga texto="Cargando jardín..." />
             ) : (
@@ -247,6 +264,7 @@ export default function App() {
           </p>
         )}
         <p>Nana · Hecho con React + Vite + Firebase · Datos de obras: Kitsu · TP2 Desarrollo Frontend II</p>
+        <div className="pie__pasto" style={{ backgroundImage: FONDO_PASTO }} aria-hidden="true" />
       </footer>
 
       {editando && (

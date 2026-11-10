@@ -24,7 +24,7 @@ export default function DetalleClub({
   const esAdmin = club.adminUid === uid;
 
   return (
-    <Ventana titulo={`club_${club.id}.exe`} className="ventana--club">
+    <Ventana titulo={`club_${club.id}.exe`} className="ventana--club" adorno="der">
       <div className="club__cabecera">
         <div>
           <h2 className="club__nombre">{club.nombre}</h2>

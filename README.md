@@ -74,6 +74,7 @@ src/
 ├── main.jsx                  Punto de entrada: monta <App />
 ├── App.jsx                   Sesión anónima, pestañas (Mi jardín / Comunidad / Herbario), avisos y sonido
 ├── App.css / Comunidad.css / Extras.css   Estilos pixel art y diseño adaptable
+├── Diseno.css                Capa de diseño kawaii de la v1.1 (espacios, esquinas pixeladas, adornos)
 ├── index.css                 Colores, tipografías y estilos generales
 ├── firebase.js               Conexión con Firebase (lee el .env)
 ├── services/
@@ -91,11 +92,12 @@ src/
 │   ├── sprites.js            Dibujos pixel art como arrays de texto
 │   ├── validaciones.js       Validaciones del jardín
 │   ├── comunidad.js          Tipos de misión y evento, validaciones de la comunidad
-│   └── conocimiento.js       Base de conocimiento de Nana IA
+│   ├── conocimiento.js       Base de conocimiento de Nana IA
+│   └── decoracion.js         Adornos pixelados de la v1.1 (enredadera, destello, corazón, pasto)
 └── components/
     ├── FormularioPlanta.jsx, BuscadorObras.jsx, JardinFiltrado.jsx (ramo + filtros), ListaJardin.jsx, TarjetaPlanta.jsx, EditarPlanta.jsx
     ├── Herbario.jsx, GuiaCrecimiento.jsx, NanaIA.jsx, BotonSonido.jsx
-    ├── SpriteFlor.jsx, Abeja.jsx, AbejaVoladora.jsx
+    ├── SpriteFlor.jsx, Abeja.jsx, AbejaVoladora.jsx, Adorno.jsx
     ├── PixelSprite.jsx, Ventana.jsx, Modal.jsx, Aviso.jsx, BarraCarga.jsx
     └── comunidad/
         ├── Comunidad.jsx       Coordina perfil, clubes, misiones y eventos
@@ -142,4 +144,5 @@ Ruta: `users/{uid}/plantas/{plantaId}`
 | v0.3 | Nombre **Nana**, búsqueda en la API de Kitsu (portadas y datos automáticos), edición de plantas, estados coherentes con los capítulos, reglas más estrictas |
 | v0.4 | **Comunidad**: perfiles, CRUD de clubes, misiones de 6 tipos con rol de administradora (tablero Kanban), CRUD de eventos, compartir, invitación por enlace |
 | v0.4.1 | 9 flores con formas distintas (y significado), guía flotante de crecimiento, abeja decorativa, **Nana IA** (asistente con base de conocimiento propia), eliminar perfil y cerrar sesión |
-| **v1.0** | **Final:** "Mi ramo", filtros y orden del jardín, herbario de 9 flores, sonidos retro con opción de silencio, Nana IA ampliada, informe breve, guía para el oral |
+| v1.0 | "Mi ramo", filtros y orden del jardín, herbario de 9 flores, sonidos retro con opción de silencio, Nana IA ampliada, informe breve, guía para el oral |
+| **v1.1** | **Final:** pulido de diseño kawaii: más espacio, esquinas pixeladas, enredaderas de cerezo, pasto con margaritas y pestañas con íconos |
