@@ -593,6 +593,17 @@ Las reglas también controlan que:
 
 **Resultado: 19/19 pruebas correctas.**
 
+### Publicación y verificación en Vercel
+1. Primero se publicaron las **reglas nuevas** en Firebase y después el código.
+2. Se revisó la lista de cambios (37 archivos, sin borrados ni `.env`) y se subió con la etiqueta **`v0.4`**.
+3. Vercel la publicó solo, en 4 segundos (*Ready*).
+4. **Sobre la URL pública** se repitió la prueba de dos usuarias (**19/19** ✅, incluidos los dos rechazos 403) y además la prueba completa del jardín de la v0.3 (**17/17** ✅), para confirmar que las reglas nuevas no rompieron nada de lo anterior. Esto es una **prueba de regresión**.
+
+![v0.4 publicada](capturas/v0.4-07-vercel-club.png)
+*La v0.4 funcionando en https://jardin-de-manga.vercel.app*
+
+![v0.4 publicada en celular](capturas/v0.4-08-vercel-celular.png)
+
 ### Ideas para la versión final (v1.0)
 - **"Mi ramo":** estadísticas del jardín (flores, capítulos leídos, género favorito).
 - **Filtros y buscador** dentro del jardín.
