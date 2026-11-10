@@ -803,6 +803,14 @@ El botón con el **parlante pixelado** (arriba a la derecha) los apaga o prende.
 
 ![Celular](capturas/v1.0-06-celular.png)
 
+### Publicación y verificación final en Vercel
+1. Se revisó la lista de cambios (25 archivos, sin borrados ni `.env`) y se buscaron llaves en el código: no había ninguna.
+2. Se subió con la etiqueta **`v1.0`**. Vercel la publicó en 4 segundos (*Ready*).
+3. **Sobre la URL pública** se corrieron **todas** las pruebas: v1.0 (26/26), jardín (17/17), comunidad con dos usuarias (19/19) y v0.4.1 (21/21). En total, **83 de 83 correctas** y ningún error en la consola.
+
+![Herbario publicado](capturas/v1.0-07-vercel-herbario.png)
+![Versión final en celular](capturas/v1.0-08-vercel-celular.png)
+
 ---
 
 ## Conclusión del proceso
