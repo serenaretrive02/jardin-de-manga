@@ -898,6 +898,14 @@ Se volvió a leer la consigna completa y la tabla de evaluación.
 
 Es un cambio solo de diseño: **no se tocó Firestore ni las reglas**, por eso no hizo falta volver a publicarlas.
 
+### Publicación y verificación en Vercel
+1. Se revisó la lista de cambios antes del commit: sin archivos borrados, sin `.env` y sin llaves en el código.
+2. Se subió con la etiqueta **`v1.1`** y Vercel la publicó solo, en segundos.
+3. **Sobre la URL pública** se volvieron a correr **todas** las pruebas: diseño (7/7), v1.0 (26/26), v0.4.1 (21/21), comunidad con dos usuarias y seguridad (19/19) y jardín (17/17). En total, **90 de 90 correctas** y ningún error en la consola.
+
+![Versión publicada en compu](capturas/v1.1-09-vercel-jardin.png)
+![Versión publicada en celular](capturas/v1.1-10-vercel-celular.png)
+
 ---
 
 ## Conclusión del proceso

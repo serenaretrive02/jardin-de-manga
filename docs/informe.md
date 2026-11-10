@@ -78,7 +78,7 @@ Se usó **Claude Code**, que trabaja directamente sobre la carpeta del proyecto,
 - probar la app con un navegador automático;
 - redactar la documentación.
 
-**Cómo se verificó lo que hizo la IA:** cada versión se probó con **pruebas automáticas** (de 17 a 26 pasos por versión, incluida una con dos usuarias a la vez), se revisaron las **capturas** en compu y en celular, se comprobaron los datos en la **consola de Firestore** y se repitieron las pruebas **sobre la URL de Vercel**. Gracias a eso se encontraron y corrigieron más de 25 problemas (ver la bitácora). Los pasos que implicaban confirmar algo público o cargar llaves los hizo la autora.
+**Cómo se verificó lo que hizo la IA:** cada versión se probó con **pruebas automáticas** (de 7 a 26 pasos por versión, incluida una con dos usuarias a la vez; 90 en total sobre la versión final publicada), se revisaron las **capturas** en compu y en celular, se comprobaron los datos en la **consola de Firestore** y se repitieron las pruebas **sobre la URL de Vercel**. Gracias a eso se encontraron y corrigieron más de 25 problemas (ver la bitácora). Los pasos que implicaban confirmar algo público o cargar llaves los hizo la autora.
 
 **Ejemplos representativos de instrucciones dadas a la IA:**
 1. *"Antes de crear cualquier aplicación, pensá ideas sumamente creativas y originales según las cosas que me gustan (Minecraft, LoL, manga, anime, flores), que permitan hacer cada acción que pide la consigna, pero que no sea una típica."*
