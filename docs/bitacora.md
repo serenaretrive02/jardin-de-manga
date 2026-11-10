@@ -464,6 +464,18 @@ Se actualizaron las **reglas de Firestore** y se publicaron de nuevo en la conso
 ![v0.3 en compu](capturas/v0.3-06-compu.png)
 *Captura: la v0.3 en la compu, con portadas, botón de editar y estados coherentes.*
 
+### Publicación y verificación en Vercel
+1. **Primero se publicaron las reglas nuevas en Firebase y después el código.** En el orden inverso, la versión publicada habría intentado guardar portadas que las reglas viejas rechazaban.
+2. Se revisó la lista de cambios (24 archivos, sin borrados ni `.env`) y se subió con la etiqueta **`v0.3`**.
+3. Vercel publicó la versión solo, en 5 segundos (*Ready*).
+4. Se repitió la **prueba automática de 17 pasos sobre la URL pública**: 17/17 correctas y ningún error en la consola.
+
+![v0.3 publicada](capturas/v0.3-08-vercel-compu.png)
+*Captura: la v0.3 funcionando en https://jardin-de-manga.vercel.app*
+
+![v0.3 publicada en celular](capturas/v0.3-09-vercel-celular.png)
+*Captura: la v0.3 publicada, vista en celular.*
+
 ### Ideas para la v0.4
 - **Buscar y filtrar dentro del jardín** (por estado, género o nombre), aplicando `filter` como en la guía.
 - **"Mi ramo"**: estadísticas del jardín (cuántas flores, capítulos leídos en total, género favorito).
