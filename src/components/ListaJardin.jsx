@@ -3,7 +3,7 @@ import PixelSprite from './PixelSprite';
 import TarjetaPlanta from './TarjetaPlanta';
 
 // Recorre el array de plantas con map y arma una tarjeta por cada una.
-export default function ListaJardin({ plantas, idOcupada, onActualizar, onEliminar }) {
+export default function ListaJardin({ plantas, idOcupada, onActualizar, onEliminar, onEditar }) {
   if (plantas.length === 0) {
     return (
       <div className="vacio">
@@ -23,6 +23,7 @@ export default function ListaJardin({ plantas, idOcupada, onActualizar, onElimin
           ocupada={idOcupada === planta.id}
           onActualizar={onActualizar}
           onEliminar={onEliminar}
+          onEditar={onEditar}
         />
       ))}
     </ul>

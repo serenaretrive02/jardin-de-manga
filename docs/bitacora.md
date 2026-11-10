@@ -1,8 +1,8 @@
-# 📓 Bitácora del proceso — Jardín de Manga
+# 📓 Bitácora del proceso — Nana, tu jardín de manga
 
 Registro de cómo fue evolucionando la aplicación, versión por versión: qué se cambió, por qué, cómo se probó, cómo se usó la inteligencia artificial y qué problemas aparecieron.
 
-> *Jardín de Manga* es un nombre provisorio. El nombre definitivo se elige al final del proceso.
+> La app empezó con el nombre provisorio *Jardín de Manga*. Desde la v0.3 se llama **Nana** (ver la v0.3).
 
 ---
 
@@ -346,3 +346,126 @@ El primer intento para celular ponía **2 plantas por fila**. Al probarlo en una
 - Buscar mangas y animes reales con una **API** (portada, sinopsis y cantidad de capítulos automática), usando `fetch` como en la guía de APIs.
 - Poder **editar** el título, el género o el total de capítulos de una planta ya plantada.
 - Marcar automáticamente "Terminado" al llegar al último capítulo.
+
+---
+
+## Versión 0.3 — Nombre nuevo, búsqueda con API y edición (10/11/2026)
+
+### Objetivo de esta versión
+Sumar **funcionalidades nuevas**: buscar obras reales en internet, editar plantas y hacer que el estado de cada planta sea coherente con los capítulos. Además, la app pasa a llamarse **Nana**.
+
+### La app ahora se llama "Nana"
+- "Jardín de Manga" era un nombre provisorio y descriptivo. **Nana** es corto, fácil de recordar y suena a ***hana*** (花), que en japonés significa "flor". Une las dos ideas de la app: el manga y las flores.
+- "Tu jardín de manga" queda como **subtítulo**, para que se entienda de qué se trata.
+- **Además resolvió un problema pendiente:** la fuente de títulos no tenía la "Í" mayúscula ("JARDíN"). "NANA" no lleva tilde, y los textos con tilde que usaban esa fuente (como "Cargando jardín…") pasaron a la fuente Pixelify Sans, que sí tiene todas las letras.
+- El repositorio y la URL siguen siendo `jardin-de-manga`. Cambiarlos rompería los enlaces que ya funcionan.
+
+### Nueva función: buscar mangas y animes reales (API)
+En el formulario ahora se elige **Manga** o **Anime**, se escribe un nombre y se toca **Buscar**. La app consulta una **API pública** y muestra hasta 6 resultados con portada, año, cantidad de capítulos y la flor sugerida. Al elegir uno, **se completan solos** el título, los capítulos y el género, y se pueden corregir a mano.
+
+**Cómo funciona (lo visto en la guía de APIs):**
+1. Con `fetch` se hace un pedido GET a una dirección como `https://kitsu.io/api/edge/manga?filter[text]=frieren`.
+2. Se revisa `respuesta.ok` (fetch no falla solo con un error 404 o 500) y se lee el JSON con `respuesta.json()`.
+3. Los resultados vienen en `datos.data`. Esta API usa el nombre `data`, no `message` como la Dog CEO de clase: hay que leer la documentación de cada API.
+4. Se transforman con **`map`** en objetos simples. Con **`filter`** se descartan las categorías vacías, con **`forEach`** se arma un diccionario de categorías y con **`find`** se elige la flor que corresponde.
+5. La consulta se hace al tocar **Buscar** (un evento) y no en cada letra, para no hacer pedidos de más ni chocar con el límite de consultas.
+6. Hay estados de **carga** ("Buscando en Kitsu..."), **error** ("No se pudo consultar la API. Podés completar los datos a mano") y **sin resultados**. Si el error es el 429 (demasiadas consultas), se pide esperar unos segundos.
+
+**Cómo se elige la flor a partir de la API:** Kitsu devuelve categorías en inglés ("Romance", "Fantasy", "Action"…). Una tabla las relaciona con nuestros géneros, en orden de prioridad: romance → fantasía → acción → misterio → comedia → drama. Por ejemplo, *Spy x Family* (Action, Comedy…) se sugiere como **girasol** (acción).
+
+![Búsqueda](capturas/v0.3-02-busqueda.png)
+*Captura: resultados de la búsqueda "frieren", con portada, año, capítulos y la flor sugerida.*
+
+![Obra elegida](capturas/v0.3-03-obra-elegida.png)
+*Captura: al elegir un resultado se completan los campos y se avisa que los datos vienen de Kitsu.*
+
+### Dificultad: la API que habíamos planeado estaba caída
+El plan original era usar **Jikan**, una API gratuita que toma los datos de MyAnimeList.
+
+| Paso | Qué se hizo | Resultado |
+|---|---|---|
+| 1 | Se consultó Jikan desde la terminal | *Connection timed out* (no respondía) |
+| 2 | Se probó en el navegador con `fetch` | `TypeError: Failed to fetch` |
+| 3 | Se comprobó que otras páginas sí respondían | GitHub respondía bien: el problema era Jikan, no la conexión |
+| 4 | Se probaron dos alternativas gratuitas y sin clave: **Kitsu** y **AniList** | Las dos respondieron (código 200) |
+| 5 | Se eligió **Kitsu** | Funciona igual que lo visto en clase: una URL con `fetch` (GET) que devuelve JSON. AniList usa GraphQL, un sistema que no vimos en la materia |
+
+**Aprendizaje:** una app que depende de un servicio externo tiene que funcionar aunque ese servicio falle. Por eso la búsqueda es **una ayuda opcional**: si la API no responde, se avisa y se puede completar todo a mano.
+
+### Nueva función: editar una planta
+Cada tarjeta tiene un botón con un **lápiz pixelado** que abre la ventana **`editar.exe`**. Desde ahí se cambian el título, el género (y con él, la flor), los capítulos vistos y el total.
+- Valida igual que el formulario de plantar y además **no deja poner más capítulos vistos que el total**.
+- Se cierra con *Cancelar*, con la tecla *Escape* o tocando afuera.
+
+![Editar](capturas/v0.3-05-editar.png)
+*Captura: la ventana de edición avisa que los capítulos vistos no pueden superar el total.*
+
+### Estados coherentes con los capítulos
+| Situación | Antes (v0.2) | Ahora (v0.3) |
+|---|---|---|
+| Regar por primera vez una planta "Pendiente" | Seguía "Pendiente" | Pasa a **"Leyendo"** |
+| Regar el último capítulo | Solo se bloqueaba el botón | **Florece sola** (Terminado) con el aviso "¡…floreció! Lo terminaste" |
+| Marcar "Terminado" con capítulos pendientes | Quedaba "en flor" con 0/22 | **Completa los capítulos** automáticamente |
+| Editar y agregar capítulos a algo "Terminado" | — | Vuelve a **"Leyendo"** |
+
+![Aviso de florecimiento](capturas/v0.3-04-aviso-florecio.png)
+
+### Base de datos: campos nuevos y reglas más estrictas
+Cada planta puede guardar dos datos nuevos (solo si vino de la búsqueda):
+- `portada`: la dirección de la imagen de tapa;
+- `kitsuId`: el número de la obra en Kitsu.
+
+Se actualizaron las **reglas de Firestore** y se publicaron de nuevo en la consola de Firebase (desplegar en Vercel no las actualiza):
+- **Solo se aceptan los campos conocidos** (`hasOnly`). Si alguien intenta guardar un campo inventado, Firebase lo rechaza.
+- La portada tiene que ser un enlace que empiece con `https://`.
+- Los capítulos leídos **no pueden superar el total**. Ahora lo controla también la base de datos, no solo la interfaz.
+
+![Reglas nuevas](capturas/v0.3-01-reglas-nuevas.jpg)
+*Captura: reglas publicadas. A la izquierda se ve la versión nueva (1:38) junto a las anteriores.*
+
+### Uso de IA en esta etapa
+- **Instrucción dada:** *"Sí [seguimos con la v0.3]. Cambiemos el título a Nana."*
+- **Qué hizo la IA:** investigó por qué Jikan no respondía y comparó alternativas, escribió el servicio de búsqueda, la edición y las reglas nuevas, y armó una prueba automática de 17 pasos.
+- **Qué se revisó:** las capturas de cada prueba. Gracias a eso se encontraron los errores de la tabla siguiente.
+
+### Dificultades y cómo se resolvieron
+| Problema | Cómo se detectó | Solución |
+|---|---|---|
+| La API Jikan no respondía | Pruebas desde la terminal y desde el navegador | Se cambió a Kitsu (ver arriba) |
+| Si una obra de Kitsu no tiene portada, se mandaba un texto vacío y **la regla nueva lo rechazaba** | Releyendo las reglas mientras se publicaban | La portada solo se guarda si existe |
+| En el celular, el formulario **se salía de la pantalla** (409 px en una pantalla de 390 px) | La prueba automática de "sin desplazamiento horizontal" falló. Un diagnóstico mostró que era la ventana `plantar.exe` | En CSS Grid, `1fr` no deja que una columna sea más angosta que su contenido. Se cambió por `minmax(0, 1fr)` |
+| Al editar el total de una planta "en flor", seguía en flor con 9/12 | Mirando la captura del jardín después de editar | Al guardar una edición se recalcula el estado |
+| Con el botón de editar, el de compost bajaba a otra línea | Captura de la compu | Los tres botones quedan en una fila y "Regar" se adapta al espacio |
+| El texto de ejemplo del buscador se cortaba en el celular | Captura del celular | Se acortó a "Ej: Frieren" |
+| La prueba automática apretaba "Buscar" en vez de "Plantar" | La prueba se quedaba esperando | Había dos botones de envío. Se indicó cuál era el del formulario. Era un problema de la prueba, no de la app |
+
+| Antes | Después |
+|---|---|
+| ![Desborde](capturas/v0.3-07a-celular-desborde-antes.png) | ![Corregido](capturas/v0.3-07-celular.png) |
+
+### Pruebas realizadas (en local, prueba automática de 17 pasos)
+| Prueba | Resultado |
+|---|---|
+| El título dice NANA | ✅ |
+| Buscar "frieren" en Kitsu devuelve resultados | ✅ |
+| Al elegir, se completan el título y el aviso "Datos traídos de Kitsu" | ✅ |
+| La tarjeta muestra la portada | ✅ |
+| Buscar el anime "spy x family": completa 12 episodios y sugiere girasol (acción) | ✅ |
+| Regar por primera vez pasa a "Leyendo" | ✅ |
+| Regar el último capítulo hace florecer la planta | ✅ |
+| Marcar "Terminado" completa los episodios (12/12) | ✅ |
+| Editar no deja poner 9 capítulos vistos de un total de 3 | ✅ |
+| Editar guarda el título, el total y el género, y cierra la ventana | ✅ |
+| Después de editar el total, la planta vuelve a "Leyendo" | ✅ |
+| Después de recargar, todo sigue igual (incluidas las portadas) | ✅ |
+| Celular de 390 px sin desplazamiento horizontal | ✅ |
+| Errores en la consola | ✅ Ninguno |
+
+![v0.3 en compu](capturas/v0.3-06-compu.png)
+*Captura: la v0.3 en la compu, con portadas, botón de editar y estados coherentes.*
+
+### Ideas para la v0.4
+- **Buscar y filtrar dentro del jardín** (por estado, género o nombre), aplicando `filter` como en la guía.
+- **"Mi ramo"**: estadísticas del jardín (cuántas flores, capítulos leídos en total, género favorito).
+- **Significado de cada flor** según el *hanakotoba* (el lenguaje japonés de las flores).
+- Ordenar el jardín (más recientes, por avance, por nombre).

@@ -4,7 +4,7 @@ import { ICONOS, PALETA_BASE, spriteDeEtapa } from '../data/sprites';
 import PixelSprite from './PixelSprite';
 
 // Muestra una planta (un manga/anime) con su dibujo, su avance y sus acciones.
-export default function TarjetaPlanta({ planta, ocupada, onActualizar, onEliminar }) {
+export default function TarjetaPlanta({ planta, ocupada, onActualizar, onEliminar, onEditar }) {
   const [confirmando, setConfirmando] = useState(false);
 
   const etapa = etapaDePlanta(planta);
@@ -14,17 +14,30 @@ export default function TarjetaPlanta({ planta, ocupada, onActualizar, onElimina
     planta.capitulosTotales > 0 && planta.capitulosLeidos >= planta.capitulosTotales;
   const palabraCapitulo = planta.tipo === 'anime' ? 'ep.' : 'cap.';
 
+  // Regar suma un capítulo. Además:
+  // - si estaba "pendiente", pasa a "leyendo" (empezaste a leerlo)
+  // - si llega al último capítulo, florece sola (pasa a "terminado")
   function regar() {
-    onActualizar(
-      planta.id,
-      { capitulosLeidos: planta.capitulosLeidos + 1 },
-      `Regaste "${planta.titulo}" (${planta.capitulosLeidos + 1} ${palabraCapitulo})`,
-    );
+    const leidos = planta.capitulosLeidos + 1;
+    const cambios = { capitulosLeidos: leidos };
+    let mensaje = `Regaste "${planta.titulo}" (${leidos} ${palabraCapitulo})`;
+
+    if (planta.estado === 'pendiente') cambios.estado = 'leyendo';
+    if (planta.capitulosTotales > 0 && leidos === planta.capitulosTotales) {
+      cambios.estado = 'terminado';
+      mensaje = `¡"${planta.titulo}" floreció! Lo terminaste`;
+    }
+    onActualizar(planta.id, cambios, mensaje);
   }
 
+  // Si se marca "Terminado" y faltaban capítulos, se completan automáticamente.
   function cambiarEstado(evento) {
     const nuevo = ESTADOS.find((estado) => estado.valor === evento.target.value);
-    onActualizar(planta.id, { estado: nuevo.valor }, `"${planta.titulo}": ${nuevo.etiqueta}`);
+    const cambios = { estado: nuevo.valor };
+    if (nuevo.valor === 'terminado' && planta.capitulosTotales > planta.capitulosLeidos) {
+      cambios.capitulosLeidos = planta.capitulosTotales;
+    }
+    onActualizar(planta.id, cambios, `"${planta.titulo}": ${nuevo.etiqueta}`);
   }
 
   return (
@@ -44,10 +57,17 @@ export default function TarjetaPlanta({ planta, ocupada, onActualizar, onElimina
       </div>
 
       <div className="tarjeta__info">
-        <h3 className="tarjeta__titulo" title={planta.titulo}>
-          {planta.titulo}
-        </h3>
-        <p className="tarjeta__tipo">{planta.tipo === 'anime' ? 'Anime' : 'Manga'}</p>
+        <div className="tarjeta__cabecera">
+          {planta.portada && (
+            <img src={planta.portada} alt={`Portada de ${planta.titulo}`} className="tarjeta__portada" loading="lazy" />
+          )}
+          <div>
+            <h3 className="tarjeta__titulo" title={planta.titulo}>
+              {planta.titulo}
+            </h3>
+            <p className="tarjeta__tipo">{planta.tipo === 'anime' ? 'Anime' : 'Manga'}</p>
+          </div>
+        </div>
 
         <p className="tarjeta__capitulos">
           {planta.capitulosLeidos}
@@ -81,7 +101,7 @@ export default function TarjetaPlanta({ planta, ocupada, onActualizar, onElimina
       </div>
 
       {/* Las acciones van siempre al final de la tarjeta, en un lugar fijo */}
-      <div className="tarjeta__acciones">
+      <div className={`tarjeta__acciones ${confirmando ? 'tarjeta__acciones--confirmar' : ''}`}>
         {confirmando ? (
           <>
             <p className="tarjeta__pregunta">¿Compostar esta planta?</p>
@@ -106,6 +126,15 @@ export default function TarjetaPlanta({ planta, ocupada, onActualizar, onElimina
             >
               <PixelSprite filas={ICONOS.gota} paleta={PALETA_BASE} tamano={2} />
               {llegoAlFinal ? 'Completo' : 'Regar +1'}
+            </button>
+            <button
+              className="boton boton--icono boton--editar"
+              onClick={() => onEditar(planta)}
+              disabled={ocupada}
+              aria-label={`Editar ${planta.titulo}`}
+              title="Editar"
+            >
+              <PixelSprite filas={ICONOS.lapiz} paleta={PALETA_BASE} tamano={2} />
             </button>
             <button
               className="boton boton--icono"

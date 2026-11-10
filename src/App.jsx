@@ -11,6 +11,7 @@ import { FLORES } from './data/flores';
 import { PALETA_BASE, spriteDeEtapa } from './data/sprites';
 import Aviso from './components/Aviso';
 import BarraCarga from './components/BarraCarga';
+import EditarPlanta from './components/EditarPlanta';
 import FormularioPlanta from './components/FormularioPlanta';
 import ListaJardin from './components/ListaJardin';
 import PixelSprite from './components/PixelSprite';
@@ -38,6 +39,7 @@ export default function App() {
   const [guardando, setGuardando] = useState(false);
   const [idOcupada, setIdOcupada] = useState(null); // planta que se está guardando
   const [aviso, setAviso] = useState(null); // { tipo: 'exito' | 'error', texto }
+  const [editando, setEditando] = useState(null); // planta abierta en la ventana de edición
 
   // 1) Al abrir la app: iniciar sesión anónima (sin registro).
   useEffect(() => {
@@ -89,12 +91,19 @@ export default function App() {
       const datos = await obtenerPlantas(usuario.uid);
       setPlantas(datos);
       setAviso({ tipo: 'exito', texto: mensaje });
+      return true;
     } catch (error) {
       console.error(error);
       setAviso({ tipo: 'error', texto: 'No se pudo guardar el cambio.' });
+      return false;
     } finally {
       setIdOcupada(null);
     }
+  }
+
+  async function manejarEdicion(cambios) {
+    const ok = await manejarActualizar(editando.id, cambios, `Guardaste los cambios de "${cambios.titulo}"`);
+    if (ok) setEditando(null);
   }
 
   async function manejarEliminar(id, titulo) {
@@ -138,9 +147,8 @@ export default function App() {
       <header className="encabezado">
         <div className="encabezado__logo">{logo}</div>
         <div>
-          <h1 className="encabezado__titulo">
-            Jardín <span>de</span> Manga
-          </h1>
+          <h1 className="encabezado__titulo">Nana</h1>
+          <p className="encabezado__subtitulo">tu jardín de manga</p>
           <p className="encabezado__lema">
             Cada manga o anime que seguís es una flor. Leé, regá y mirá crecer tu jardín.
           </p>
@@ -159,6 +167,7 @@ export default function App() {
               idOcupada={idOcupada}
               onActualizar={manejarActualizar}
               onEliminar={manejarEliminar}
+              onEditar={setEditando}
             />
           )}
         </Ventana>
@@ -166,8 +175,17 @@ export default function App() {
 
       <footer className="pie">
         {usuario && <p>Jardinera anónima #{usuario.uid.slice(0, 5).toUpperCase()}</p>}
-        <p>Hecho con React + Vite + Firebase · TP2 Desarrollo Frontend II</p>
+        <p>Nana · Hecho con React + Vite + Firebase · Datos de obras: Kitsu · TP2 Desarrollo Frontend II</p>
       </footer>
+
+      {editando && (
+        <EditarPlanta
+          planta={editando}
+          guardando={idOcupada === editando.id}
+          onGuardar={manejarEdicion}
+          onCancelar={() => setEditando(null)}
+        />
+      )}
 
       <Aviso aviso={aviso} onCerrar={setAviso} />
     </div>

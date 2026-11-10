@@ -19,6 +19,7 @@ export const PALETA_BASE = {
   D: '#866E4C', // tallo seco
   A: '#5BB8F0', // agua
   a: '#2E86C1', // agua (sombra)
+  Y: '#FFC83D', // amarillo (lápiz)
 };
 
 // Maceta: es la misma para todas las plantas (6 filas de 16 píxeles).
@@ -103,6 +104,16 @@ export const ICONOS = {
     'KAAAAaaK',
     '.KAAaaK.',
     '..KKKK..',
+  ],
+  lapiz: [
+    '.....KK.',
+    '....KLLK',
+    '...KYYK.',
+    '..KYYK..',
+    '.KYYK...',
+    'KbYK....',
+    'KbbK....',
+    'KKK.....',
   ],
   compost: [
     '..KKKK..',

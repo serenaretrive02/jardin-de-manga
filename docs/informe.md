@@ -1,4 +1,4 @@
-# Informe — Jardín de Manga
+# Informe — Nana, tu jardín de manga
 
 **Trabajo Práctico 2 · Desarrollo Frontend II · UADE**
 Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026
@@ -15,7 +15,7 @@ Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026
 
 ## 1. La idea
 
-**Jardín de Manga** es una aplicación web para llevar el registro de los mangas y animes que estás siguiendo. En lugar de una lista común, **cada título es una flor**:
+**Nana** (antes llamada *Jardín de Manga*) es una aplicación web para llevar el registro de los mangas y animes que estás siguiendo. En lugar de una lista común, **cada título es una flor**:
 
 - La **especie** depende del género. Por ejemplo, el romance es una rosa y la acción un girasol.
 - La planta **crece** a medida que avanzás capítulos: semilla → brote → creciendo → en flor.
@@ -33,10 +33,12 @@ Para lectoras y lectores de manga y espectadores de anime, sobre todo jóvenes, 
 
 | Acción | Qué hace | Operación en la base de datos | Desde |
 |---|---|---|---|
-| Ver mi jardín | Muestra todas las plantas guardadas, con su dibujo y su barra de avance | Consultar | v0.1 |
+| Ver mi jardín | Muestra todas las plantas guardadas, con su dibujo, portada y barra de avance | Consultar | v0.1 (portadas: v0.3) |
+| Buscar en internet | Busca el manga o anime en la API de Kitsu y completa título, capítulos y género | — (API externa) | v0.3 |
 | Plantar | Agrega un manga o anime. Antes valida los datos y muestra una vista previa de la flor | Agregar | v0.1 (validaciones y vista previa: v0.2) |
-| Regar +1 | Suma un capítulo y la planta crece. Al llegar al total se bloquea ("Completo") | Modificar | v0.1 (límite: v0.2) |
-| Cambiar estado | Pendiente / Leyendo / Terminado (florece) / Abandonado (se marchita) | Modificar | v0.1 |
+| Regar +1 | Suma un capítulo y la planta crece. La primera vez pasa a "Leyendo" y en el último capítulo florece sola | Modificar | v0.1 (automático: v0.3) |
+| Cambiar estado | Pendiente / Leyendo / Terminado (florece y completa los capítulos) / Abandonado (se marchita) | Modificar | v0.1 |
+| Editar | Cambia título, género, capítulos vistos y total, con validaciones | Modificar | v0.3 |
 | Compostar | Elimina la planta, después de pedir confirmación | Eliminar | v0.1 (confirmación: v0.2) |
 
 **Experiencia de uso (consigna, punto 6):**
@@ -69,14 +71,23 @@ La app usa dos servicios de Firebase:
 
 Los datos se ordenan como carpetas: `users / (código del usuario) / plantas / (cada planta)`.
 
-Cada planta guarda: título, tipo (manga o anime), género, capítulos leídos, capítulos totales, estado y fecha de creación.
+Cada planta guarda: título, tipo (manga o anime), género, capítulos leídos, capítulos totales, estado y fecha de creación. Si se eligió desde la búsqueda, también guarda la **portada** (dirección de la imagen) y el **número de la obra en Kitsu** (desde la v0.3).
 
 ### Seguridad
-- Las **reglas de Firestore** (archivo `firestore.rules`) hacen que cada persona **solo pueda leer y modificar su propio jardín**. Además, controlan que los datos tengan la forma correcta: que el título no esté vacío, que el estado sea uno de los permitidos, etc. Cualquier otra parte de la base queda cerrada.
+- Las **reglas de Firestore** (archivo `firestore.rules`) hacen que cada persona **solo pueda leer y modificar su propio jardín**. Además, controlan que los datos tengan la forma correcta: que el título no esté vacío, que el estado sea uno de los permitidos, etc. Cualquier otra parte de la base queda cerrada. Desde la v0.3 además solo se aceptan los campos conocidos, la portada tiene que ser un enlace `https://` y los capítulos leídos no pueden superar el total.
 - Las **llaves de conexión** de Firebase se guardan en un archivo `.env` que **no se sube a GitHub**. En el repositorio solo está `.env.example`, con los nombres de las variables y sin sus valores. En Vercel, las llaves se cargan como variables de entorno.
 
 ### ¿Qué pasa si abro la app en otro dispositivo?
 Como el ingreso es anónimo, cada navegador tiene su propio jardín. Abrir la app en el celular muestra un jardín distinto al de la computadora. La consigna menciona esta limitación y deja el inicio de sesión permanente como ampliación opcional.
+
+## 3.b API externa: Kitsu
+
+Para no tener que escribir todo a mano, desde la v0.3 la app consulta la **API pública de Kitsu** (https://kitsu.io), una base de datos de anime y manga gratuita que no necesita clave.
+- **Qué se pide:** `fetch` a `https://kitsu.io/api/edge/manga?filter[text]=<lo que se escribió>` (o `/anime`).
+- **Qué devuelve:** un JSON con la lista en `data` (título, capítulos o episodios, fecha, portada) y los géneros en `included`.
+- **Qué se hace con eso:** se transforma con `map`, `filter`, `forEach` y `find` en objetos simples, y se sugiere la flor según el género.
+- **Si falla:** se muestra un aviso y se puede seguir completando a mano. Un error 429 ("demasiadas consultas") pide esperar.
+- **Por qué Kitsu:** primero se intentó usar Jikan (MyAnimeList), pero estaba caída. Se compararon Kitsu y AniList y se eligió Kitsu porque funciona igual que lo visto en clase (GET y JSON).
 
 ## 4. Herramientas utilizadas
 
@@ -88,6 +99,7 @@ Como el ingreso es anónimo, cada navegador tiene su propio jardín. Abrir la ap
 | Firebase | Identificación anónima y base de datos |
 | Git + GitHub | Control de versiones y repositorio |
 | Vercel | Publicación del sitio |
+| API de Kitsu | Búsqueda de mangas y animes reales (portadas, capítulos, géneros) |
 | Claude Code (IA) | Ideas, generación y revisión de código, documentación |
 
 ## 5. Uso de inteligencia artificial
@@ -107,6 +119,8 @@ Se usó **Claude Code**, un asistente de IA de Anthropic que trabaja directament
 
 3. *"Vayamos con la 0.2. Me gustaría que el diseño sea tipo pixel art si se puede"*, junto con tres imágenes de referencia. La IA propuso dibujar las flores como grillas de texto recorridas con `map`. Al revisar las capturas pedí corregir la flor, el diseño para celular y un problema de la tipografía.
 
+4. *"Sí. Cambiemos el título a Nana."* Con esta instrucción se encaró la v0.3. Cuando la API planeada (Jikan) no respondió, la IA investigó el problema, comparó dos alternativas y propuso Kitsu. Las capturas de la prueba automática permitieron encontrar 4 errores de diseño y de lógica antes de publicar.
+
 *(Se agregan más ejemplos en cada versión.)*
 
 **Cómo verifiqué lo que hizo la IA:** probando la app en el navegador, revisando en la consola de Firebase que los datos realmente se guarden y comparando el código con los ejemplos de las guías de la materia.
@@ -117,6 +131,8 @@ Ver el detalle en la [bitácora](bitacora.md). Resumen:
 - PowerShell bloqueaba `npm run dev` por seguridad. Se resolvió con el comando indicado por el profesor (`Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`).
 - La fuente pixelada mostraba "flor" como "Aor" (unía la "f" y la "l"). Se desactivaron las ligaduras tipográficas.
 - En el celular, 2 tarjetas por fila cortaban los textos. Se rediseñó con tarjetas horizontales.
+- La API Jikan estaba caída: se investigó y se cambió por Kitsu. La búsqueda quedó como ayuda opcional.
+- En el celular, el formulario nuevo se salía de la pantalla: se corrigió la grilla con `minmax(0, 1fr)`.
 - Abrir `index.html` con doble clic muestra una página en blanco: una app de Vite se abre con `npm run dev`.
 - En la versión publicada el jardín empezó vacío: por el acceso anónimo, cada sitio (local o Vercel) y cada navegador tiene su propio jardín.
 
@@ -127,6 +143,9 @@ Ver el detalle en la [bitácora](bitacora.md). Resumen:
 - **`useEffect`:** código que se ejecuta al abrir la app para conectarse con algo externo, como Firebase.
 - **`map`:** recorre el array de plantas y arma una tarjeta por cada una. También dibuja las flores: recorre las filas y las letras de cada dibujo y pinta un píxel por letra.
 - **`children`:** lo que se escribe entre la etiqueta de apertura y la de cierre de un componente. El componente `Ventana` lo usa para envolver cualquier contenido con el marco retro.
+- **API:** un servicio de otra página al que la app le pide datos. Kitsu es la API de mangas y animes que usa Nana.
+- **`fetch` / `async` / `await`:** `fetch` hace el pedido y `await` espera la respuesta sin trabar la página.
+- **JSON:** el formato de texto en que llegan los datos de la API.
 - **Limpieza de un efecto:** función que devuelve `useEffect` para "deshacer" lo que hizo. El aviso la usa para cancelar su temporizador.
 - **Serverless:** no administro un servidor propio. Firebase y Vercel se encargan de eso.
 - **Variables de entorno (`.env`):** archivo con las llaves de conexión, que queda fuera del repositorio.

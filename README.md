@@ -1,4 +1,4 @@
-# 🌸 Jardín de Manga
+# 🌸 Nana · tu jardín de manga
 
 Aplicación web donde cada manga o anime que seguís se convierte en una **flor de tu jardín**.
 La flor depende del género y crece a medida que avanzás capítulos: semilla → brote → creciendo → en flor.
@@ -20,6 +20,7 @@ Trabajo Práctico 2 · Desarrollo Frontend II · UADE · Prof. Joaquín Cerviño
 | Cloud Firestore | Guarda los datos (persisten al recargar) |
 | GitHub | Repositorio del código |
 | Vercel | Publicación de la app en una URL |
+| API de Kitsu | Búsqueda de mangas y animes reales (gratis, sin clave) |
 
 ## Cómo ejecutar el proyecto en tu computadora
 
@@ -72,10 +73,14 @@ src/
 ├── App.css / index.css       Estilos (paleta pixel art, diseño adaptable a celular)
 ├── firebase.js               Conexión con Firebase (lee el .env)
 ├── services/plantas.js       Consultar, agregar, modificar y eliminar en Firestore
+├── services/kitsu.js         Búsqueda en la API de Kitsu con fetch
 ├── data/flores.js            Géneros, flores, estados y etapas de crecimiento
 ├── data/sprites.js           Dibujos pixel art como arrays de texto (flores, maceta, íconos)
+├── data/validaciones.js      Validaciones compartidas (plantar y editar)
 └── components/
     ├── FormularioPlanta.jsx  Formulario con validaciones y vista previa de la flor
+    ├── BuscadorObras.jsx     Buscador de obras reales (API Kitsu)
+    ├── EditarPlanta.jsx      Ventana emergente para editar una planta
     ├── ListaJardin.jsx       Lista de plantas (usa map) y estado vacío
     ├── TarjetaPlanta.jsx     Tarjeta de cada planta: dibujo, avance y acciones
     ├── PixelSprite.jsx       Dibuja un pixel art recorriendo el array con map
@@ -99,6 +104,8 @@ Ruta: `users/{uid}/plantas/{plantaId}`
 | `capitulosTotales` | 28 | Total (0 = desconocido) |
 | `estado` | "leyendo" | pendiente, leyendo, terminado, abandonado |
 | `creadoEn` | fecha | Cuándo se plantó |
+| `portada` | "https://media.kitsu.app/…" | Tapa de la obra (opcional, de Kitsu) |
+| `kitsuId` | "45398" | Número de la obra en Kitsu (opcional) |
 
 ## Versiones
 
@@ -106,3 +113,4 @@ Ruta: `users/{uid}/plantas/{plantaId}`
 |---|---|
 | v0.1 | MVP funcional: agregar, listar, cambiar estado, sumar capítulos y eliminar con Firestore |
 | v0.2 | Identidad pixel art (flores dibujadas con código, ventanas retro), validaciones, avisos, confirmación de borrado, diseño para celular |
+| v0.3 | Nombre **Nana**, búsqueda en la API de Kitsu (portadas y datos automáticos), edición de plantas, estados coherentes con los capítulos, reglas más estrictas |

@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// Reglas de seguridad de Cloud Firestore - Jardín de Manga
+// Reglas de seguridad de Cloud Firestore - Nana, tu jardín de manga
 // Cada visitante (usuario anónimo) solo puede leer y modificar SU propio jardín.
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -15,14 +15,24 @@ service cloud.firestore {
       // ¿Los datos que se quieren guardar tienen la forma correcta?
       function datosValidos() {
         let d = request.resource.data;
-        return d.titulo is string
+        return d.keys().hasOnly([
+            'titulo', 'tipo', 'genero', 'estado', 'capitulosLeidos',
+            'capitulosTotales', 'creadoEn', 'portada', 'kitsuId'
+          ])
+          && d.titulo is string
           && d.titulo.size() > 0
           && d.titulo.size() <= 120
           && d.tipo in ['manga', 'anime']
           && d.genero in ['romance', 'accion', 'fantasia', 'comedia', 'drama', 'misterio']
           && d.estado in ['pendiente', 'leyendo', 'terminado', 'abandonado']
           && d.capitulosLeidos is int && d.capitulosLeidos >= 0
-          && d.capitulosTotales is int && d.capitulosTotales >= 0;
+          && d.capitulosTotales is int && d.capitulosTotales >= 0 && d.capitulosTotales <= 5000
+          // los capítulos leídos no pueden superar el total (si el total se conoce)
+          && (d.capitulosTotales == 0 || d.capitulosLeidos <= d.capitulosTotales)
+          // campos opcionales que vienen de la API de Kitsu (v0.3)
+          && (!('portada' in d) || (d.portada is string && d.portada.size() <= 500
+                                    && d.portada.matches('https://.*')))
+          && (!('kitsuId' in d) || (d.kitsuId is string && d.kitsuId.size() <= 20));
       }
 
       allow read, delete: if esDueno();

@@ -1,44 +1,39 @@
 import { useState } from 'react';
-import { FLORES, GENEROS, MAX_CAPITULOS, MAX_TITULO } from '../data/flores';
+import { FLORES, GENEROS, MAX_TITULO } from '../data/flores';
 import { PALETA_BASE, spriteDeEtapa } from '../data/sprites';
+import { validarPlanta } from '../data/validaciones';
+import BuscadorObras from './BuscadorObras';
 import PixelSprite from './PixelSprite';
 import Ventana from './Ventana';
 
-// Revisa los datos antes de enviarlos. Devuelve un objeto con los errores encontrados.
-function validar(titulo, capitulosTotales) {
-  const errores = {};
-  const tituloLimpio = titulo.trim();
-
-  if (tituloLimpio === '') {
-    errores.titulo = 'Escribí el nombre del manga o anime.';
-  } else if (tituloLimpio.length > MAX_TITULO) {
-    errores.titulo = `El título puede tener hasta ${MAX_TITULO} caracteres.`;
-  }
-
-  if (capitulosTotales !== '') {
-    const numero = Number(capitulosTotales);
-    if (!Number.isInteger(numero) || numero < 0) {
-      errores.capitulos = 'Usá un número entero, sin decimales ni negativos.';
-    } else if (numero > MAX_CAPITULOS) {
-      errores.capitulos = `Como máximo ${MAX_CAPITULOS} capítulos.`;
-    }
-  }
-
-  return errores;
-}
-
 // Formulario para "plantar" un manga o anime nuevo.
+// Se puede completar buscando en la API (Kitsu) o escribiendo a mano.
 export default function FormularioPlanta({ onAgregar, guardando }) {
-  const [titulo, setTitulo] = useState('');
   const [tipo, setTipo] = useState('manga');
+  const [titulo, setTitulo] = useState('');
   const [genero, setGenero] = useState('romance');
   const [capitulosTotales, setCapitulosTotales] = useState('');
+  const [obra, setObra] = useState(null); // obra elegida en la API (portada e id)
   const [errores, setErrores] = useState({});
+
+  function cambiarTipo(nuevoTipo) {
+    setTipo(nuevoTipo);
+    setObra(null); // una obra de manga no sirve si ahora elegimos anime
+  }
+
+  // Cuando se elige un resultado del buscador, se completan los campos.
+  function elegirObra(elegida) {
+    setTitulo(elegida.titulo.slice(0, MAX_TITULO));
+    setCapitulosTotales(elegida.capitulos ? String(elegida.capitulos) : '');
+    setGenero(elegida.genero);
+    setObra(elegida);
+    setErrores({});
+  }
 
   async function manejarEnvio(evento) {
     evento.preventDefault(); // evita que el formulario recargue la página
 
-    const nuevosErrores = validar(titulo, capitulosTotales);
+    const nuevosErrores = validarPlanta({ titulo, capitulosTotales });
     setErrores(nuevosErrores);
     if (Object.keys(nuevosErrores).length > 0) return; // hay errores: no se envía
 
@@ -49,19 +44,58 @@ export default function FormularioPlanta({ onAgregar, guardando }) {
       capitulosLeidos: 0,
       capitulosTotales: Number(capitulosTotales) || 0,
       estado: 'pendiente',
+      // Solo si vino de la API, se guardan la portada y el id de Kitsu
+      ...(obra && { kitsuId: obra.kitsuId }),
+      ...(obra?.portada && { portada: obra.portada }),
     });
 
     if (ok) {
       setTitulo('');
       setCapitulosTotales('');
+      setObra(null);
     }
   }
 
   const flor = FLORES[genero];
+  const palabra = tipo === 'anime' ? 'Episodios' : 'Capítulos';
 
   return (
     <Ventana titulo="plantar.exe" className="ventana--formulario">
+      <div className="selector-tipo" role="group" aria-label="¿Qué vas a plantar?">
+        {['manga', 'anime'].map((opcion) => (
+          <button
+            key={opcion}
+            type="button"
+            className="selector-tipo__opcion"
+            aria-pressed={tipo === opcion}
+            onClick={() => cambiarTipo(opcion)}
+          >
+            {opcion === 'manga' ? 'Manga' : 'Anime'}
+          </button>
+        ))}
+      </div>
+
+      <BuscadorObras tipo={tipo} onElegir={elegirObra} />
+
+      <p className="separador">
+        <span>{obra ? 'revisá los datos' : 'o completalo a mano'}</span>
+      </p>
+
       <form className="formulario" onSubmit={manejarEnvio} noValidate>
+        {obra && (
+          <div className="obra-elegida">
+            {obra.portada && <img src={obra.portada} alt="" />}
+            <p>
+              Datos traídos de <strong>Kitsu</strong>
+              <br />
+              <span className="campo__ayuda">Podés corregir cualquier campo.</span>
+            </p>
+            <button type="button" className="boton boton--chico" onClick={() => setObra(null)}>
+              Quitar
+            </button>
+          </div>
+        )}
+
         <div className="campo">
           <label htmlFor="titulo">Título</label>
           <input
@@ -80,15 +114,7 @@ export default function FormularioPlanta({ onAgregar, guardando }) {
 
         <div className="campo-doble">
           <div className="campo">
-            <label htmlFor="tipo">Tipo</label>
-            <select id="tipo" value={tipo} onChange={(evento) => setTipo(evento.target.value)}>
-              <option value="manga">Manga</option>
-              <option value="anime">Anime</option>
-            </select>
-          </div>
-
-          <div className="campo">
-            <label htmlFor="capitulos">{tipo === 'anime' ? 'Episodios' : 'Capítulos'}</label>
+            <label htmlFor="capitulos">{palabra}</label>
             <input
               id="capitulos"
               type="number"
@@ -100,23 +126,23 @@ export default function FormularioPlanta({ onAgregar, guardando }) {
               aria-invalid={Boolean(errores.capitulos)}
             />
           </div>
+
+          <div className="campo">
+            <label htmlFor="genero">Género</label>
+            <select id="genero" value={genero} onChange={(evento) => setGenero(evento.target.value)}>
+              {GENEROS.map((opcion) => (
+                <option key={opcion.valor} value={opcion.valor}>
+                  {opcion.etiqueta}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         {errores.capitulos ? (
           <p className="campo__error">{errores.capitulos}</p>
         ) : (
-          <p className="campo__ayuda">Si no sabés cuántos son, dejalo vacío.</p>
+          <p className="campo__ayuda">Si no sabés cuántos son (o sigue en emisión), dejalo vacío.</p>
         )}
-
-        <div className="campo">
-          <label htmlFor="genero">Género</label>
-          <select id="genero" value={genero} onChange={(evento) => setGenero(evento.target.value)}>
-            {GENEROS.map((opcion) => (
-              <option key={opcion.valor} value={opcion.valor}>
-                {opcion.etiqueta}
-              </option>
-            ))}
-          </select>
-        </div>
 
         <div className="vista-previa">
           <PixelSprite
