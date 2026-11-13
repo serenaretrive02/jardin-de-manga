@@ -24,7 +24,7 @@
 | [v0.4.1](https://github.com/serenaretrive02/jardin-de-manga/tree/v0.4.1) | 9 flores con forma propia, guía flotante, abeja, Nana IA, eliminar perfil y cerrar sesión |
 | [v1.0](https://github.com/serenaretrive02/jardin-de-manga/tree/v1.0) | Mi ramo, filtros, herbario, sonidos, auditoría y documentación |
 | [v1.1](https://github.com/serenaretrive02/jardin-de-manga/tree/v1.1) | Pulido de diseño kawaii (más espacio, esquinas pixeladas, enredaderas y pasto) y revisión final de la rúbrica |
-| [**v1.2**](https://github.com/serenaretrive02/jardin-de-manga/tree/v1.2) | **Final:** puntuación de 1 a 5 sakuras y reseña corta (con CRUD completo), promedio en "Mi ramo" y orden "Mejor puntuadas" |
+| [**v1.2**](https://github.com/serenaretrive02/jardin-de-manga/tree/v1.2) | **Final:** puntuación de 1 a 5 sakuras y reseña corta (con CRUD completo), promedio en "Mi ramo", orden "Mejor puntuadas", **Diario de lecturas** con fecha, música de fondo original, gatito y revisión final |
 
 ## Mini video
 El guion completo, escena por escena, con qué mostrar y qué decir, está en **[docs/guion-video.md](guion-video.md)**. En resumen, el video dura de 4 a 5 minutos:

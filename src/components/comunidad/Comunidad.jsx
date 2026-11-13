@@ -300,7 +300,7 @@ export default function Comunidad({ usuario, codigoInicial, onAviso }) {
 
         <Ventana titulo={`mis_clubes.exe (${clubes.length})`}>
           {clubes.length === 0 ? (
-            <p className="campo__ayuda">Todavía no estás en ningún club. Creá uno o unite con un código.</p>
+            <p className="campo__ayuda clubes__vacio">Todavía no estás en ningún club. Creá uno o unite con un código.</p>
           ) : (
             <ul className="lista-clubes">
               {clubes.map((c) => (

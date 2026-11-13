@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { GENEROS, MAX_RESENA, MAX_TITULO } from '../data/flores';
-import { validarPlanta, validarResena } from '../data/validaciones';
+import { ESTADOS_CERRADOS, GENEROS, MAX_RESENA, MAX_TITULO, hoyLocal } from '../data/flores';
+import { validarFechaCierre, validarPlanta, validarResena } from '../data/validaciones';
 import Puntuacion from './Puntuacion';
 import Ventana from './Ventana';
 
@@ -16,8 +16,11 @@ export default function EditarPlanta({ planta, guardando, onGuardar, onCancelar 
   // v1.2 · Puntuación y reseña (solo se muestran si la historia terminó o ya tenía una).
   const [puntuacion, setPuntuacion] = useState(planta.puntuacion ?? 0);
   const [resena, setResena] = useState(planta.resena ?? '');
-  const conResena =
-    planta.estado === 'terminado' || planta.estado === 'abandonado' || Boolean(planta.puntuacion || planta.resena);
+  const cerrada = ESTADOS_CERRADOS.includes(planta.estado);
+  const conResena = cerrada || Boolean(planta.puntuacion || planta.resena);
+  // v1.2 · Diario: fecha en que la terminaste (se puede corregir, como en Letterboxd).
+  const [fecha, setFecha] = useState(planta.terminadoEn ?? '');
+  const hoy = hoyLocal();
   const [errores, setErrores] = useState({});
 
   // Cerrar con la tecla Escape. La limpieza quita el "escuchador" al cerrar la ventana.
@@ -34,6 +37,7 @@ export default function EditarPlanta({ planta, guardando, onGuardar, onCancelar 
     const nuevosErrores = {
       ...validarPlanta({ titulo, capitulosTotales, capitulosLeidos }),
       ...(conResena ? validarResena({ resena }) : {}),
+      ...(cerrada ? validarFechaCierre({ fecha, hoy }) : {}),
     };
     setErrores(nuevosErrores);
     if (Object.keys(nuevosErrores).length > 0) return;
@@ -53,6 +57,7 @@ export default function EditarPlanta({ planta, guardando, onGuardar, onCancelar 
       cambios.puntuacion = puntuacion || null;
       cambios.resena = resena.trim() || null;
     }
+    if (cerrada) cambios.terminadoEn = fecha || null;
 
     onGuardar(cambios);
   }
@@ -132,7 +137,21 @@ export default function EditarPlanta({ planta, guardando, onGuardar, onCancelar 
 
             {conResena && (
               <fieldset className="resena">
-                <legend>Tu reseña</legend>
+                <legend>Tu reseña (diario)</legend>
+                {cerrada && (
+                  <div className="campo">
+                    <label htmlFor="editar-fecha">{planta.estado === 'terminado' ? '¿Cuándo lo terminaste?' : '¿Cuándo lo dejaste?'}</label>
+                    <input
+                      id="editar-fecha"
+                      type="date"
+                      value={fecha}
+                      max={hoy}
+                      onChange={(evento) => setFecha(evento.target.value)}
+                      aria-invalid={Boolean(errores.fecha)}
+                    />
+                    {errores.fecha && <p className="campo__error">{errores.fecha}</p>}
+                  </div>
+                )}
                 <div className="campo">
                   <span className="campo__etiqueta" id="editar-puntuacion">Puntuación</span>
                   <Puntuacion

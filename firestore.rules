@@ -39,7 +39,7 @@ service cloud.firestore {
         let d = request.resource.data;
         return d.keys().hasOnly([
             'titulo', 'tipo', 'genero', 'estado', 'capitulosLeidos',
-            'capitulosTotales', 'creadoEn', 'portada', 'kitsuId', 'puntuacion', 'resena'
+            'capitulosTotales', 'creadoEn', 'portada', 'kitsuId', 'puntuacion', 'resena', 'terminadoEn'
           ])
           && d.titulo is string
           && d.titulo.size() > 0
@@ -57,7 +57,10 @@ service cloud.firestore {
           && (!('kitsuId' in d) || (d.kitsuId is string && d.kitsuId.size() <= 20))
           // v1.2: puntuación (1 a 5 sakuras) y reseña corta, los dos opcionales
           && (!('puntuacion' in d) || (d.puntuacion is int && d.puntuacion >= 1 && d.puntuacion <= 5))
-          && (!('resena' in d) || (d.resena is string && d.resena.size() > 0 && d.resena.size() <= 280));
+          && (!('resena' in d) || (d.resena is string && d.resena.size() > 0 && d.resena.size() <= 280))
+          // v1.2: fecha del diario (cuándo la terminaste o la dejaste), con formato AAAA-MM-DD
+          && (!('terminadoEn' in d) || (d.terminadoEn is string
+                                       && d.terminadoEn.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')));
       }
 
       allow read, delete: if esDueno();

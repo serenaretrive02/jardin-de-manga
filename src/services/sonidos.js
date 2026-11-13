@@ -29,6 +29,20 @@ export function cambiarSonido(valor) {
   }
 }
 
+// Devuelve el "contexto de audio" del navegador (lo comparten los sonidos y la música de fondo).
+// Se crea recién la primera vez que hace falta, porque los navegadores lo exigen después de un clic.
+export function obtenerContexto(crear = true) {
+  if (!contexto && crear) {
+    try {
+      contexto = new (window.AudioContext || window.webkitAudioContext)();
+    } catch {
+      return null;
+    }
+  }
+  if (contexto && crear && contexto.state === 'suspended') contexto.resume();
+  return contexto;
+}
+
 // Una nota: frecuencia (Hz), cuándo empieza (s), cuánto dura (s), tipo de onda y volumen.
 // "hasta" permite deslizar la frecuencia (por ejemplo, una gota que cae).
 function nota(frecuencia, inicio, duracion, { tipo = 'square', volumen = 0.05, hasta } = {}) {
@@ -90,13 +104,17 @@ const SONIDOS = {
   abeja: () => nota(240, 0, 0.18, { tipo: 'sawtooth', volumen: 0.025, hasta: 300 }),
   // burbuja de chat
   burbuja: () => nota(700, 0, 0.06, { tipo: 'sine', volumen: 0.05, hasta: 1000 }),
+  // v1.2 · el gatito maúlla: "mi" que sube y "au" que baja
+  miau: () => {
+    nota(650, 0, 0.16, { tipo: 'sine', volumen: 0.07, hasta: 950 });
+    nota(950, 0.16, 0.24, { tipo: 'sine', volumen: 0.07, hasta: 520 });
+  },
 };
 
 export function reproducir(nombre) {
   if (!activado || !SONIDOS[nombre]) return;
   try {
-    contexto ??= new (window.AudioContext || window.webkitAudioContext)();
-    if (contexto.state === 'suspended') contexto.resume();
+    if (!obtenerContexto()) return;
     SONIDOS[nombre]();
   } catch (error) {
     console.warn('No se pudo reproducir el sonido', error);

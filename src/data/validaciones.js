@@ -51,3 +51,11 @@ export function validarResena({ resena }) {
   }
   return errores;
 }
+
+// v1.2 · Diario: la fecha en que la terminaste es opcional, pero no puede ser del futuro.
+export function validarFechaCierre({ fecha, hoy }) {
+  const errores = {};
+  if (fecha && !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) errores.fecha = 'Elegí una fecha válida.';
+  else if (fecha && fecha > hoy) errores.fecha = 'La fecha no puede ser del futuro.';
+  return errores;
+}

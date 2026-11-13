@@ -56,6 +56,26 @@ El final consiste en **defender este proyecto** y en un **repaso conceptual oral
 - *¿Cómo se pintan las sakuras al pasar el mouse?* Con un estado local `previa` (`useState`) en `Puntuacion.jsx`: es un estado que **no** se guarda en Firebase, solo sirve para la vista previa.
 - *¿Por qué se publicaron primero las reglas?* Porque las reglas solo aceptan campos conocidos (`hasOnly`). Si se subía el código antes, la app publicada fallaba al puntuar.
 
+## 2 ter. El Diario de lecturas (v1.2): cómo defenderlo
+**Qué es:** la pestaña "Diario" muestra todo lo que terminaste o abandonaste, por mes, con la fecha, las sakuras y la reseña, como el perfil de Letterboxd.
+
+**La decisión clave:** **no** es una colección nueva. Son los **mismos documentos** del jardín, mirados de otra forma. Así no hay datos duplicados que se puedan desincronizar. Solo se agregó el campo `terminadoEn`.
+
+| Tema | Dónde | Qué decir |
+|---|---|---|
+| `filter` | `Diario.jsx`: `plantas.filter((p) => ESTADOS_CERRADOS.includes(p.estado))` | Me quedo solo con lo terminado o abandonado |
+| `sort` | `COMPARAR` en `Diario.jsx` | Cuatro formas de ordenar: por fecha (dos), por puntuación y por título |
+| `reduce` | `agruparPorMes` | Arma un objeto `{ "Noviembre de 2026": [...] }` para mostrar cada mes como una página del diario |
+| Fecha automática | `conFechaDeCierre` en `data/flores.js`, llamada desde `manejarActualizar` en `App.jsx` | Si el estado pasa a terminado o abandonado, agrega `terminadoEn` = hoy en el mismo `updateDoc`. Si vuelve a leyendo, manda `null` y se borra con `deleteField` |
+| Hora local | `hoyLocal()` | Uso la fecha local y no `toISOString()`, que está en UTC: a la noche daría el día siguiente (ya nos pasó con los eventos) |
+| Validación | `validarFechaCierre` + regla `matches('^[0-9]{4}-…')` | En la interfaz, no acepta fechas futuras. En el servidor, la regla exige el formato |
+
+## 2 quater. La música de fondo
+- **Es original** y se genera con la **Web Audio API** (`src/services/musica.js`): no hay archivos de audio.
+- **Por qué empieza al tocar la página:** los navegadores bloquean el sonido automático. Un `useEffect` en `App.jsx` escucha el primer `pointerdown` (`{ once: true }`) y lo quita en la limpieza.
+- **Cómo se apaga:** el botón Sonido llama a `detenerMusica()`, que corta el `setInterval` y baja el volumen con un fundido.
+- La preferencia de sonido se guarda en `localStorage` porque es una **preferencia del navegador**, no un dato de la app. Los datos están en Firestore.
+
 ## 3. Qué se mejoró después de la entrega regular
 El final pide aclarar qué se mejoró a partir de la entrega del TP2. Ideas para seguir:
 - **Iniciar sesión con Google** para recuperar el jardín y los clubes en otro dispositivo (la "ampliación opcional" de la consigna).

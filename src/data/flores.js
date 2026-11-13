@@ -127,3 +127,33 @@ export function etapaDePlanta(planta) {
   if (avance < 0.5) return { clave: 'brote', texto: 'Brote' };
   return { clave: 'creciendo', texto: 'Creciendo' };
 }
+
+// ---------------- v1.2 · Diario de lecturas ----------------
+// Cuando una historia "termina para vos" (la terminaste o la abandonaste) se anota la fecha
+// en el campo terminadoEn, con formato AAAA-MM-DD (como un diario).
+export const ESTADOS_CERRADOS = ['terminado', 'abandonado'];
+
+// Fecha de hoy en hora LOCAL (no UTC), con formato AAAA-MM-DD.
+export function hoyLocal() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// Recibe la planta y los cambios que se van a guardar, y les agrega la fecha si hace falta:
+// - si pasa a terminado o abandonado (y no se eligió una fecha a mano) → terminadoEn = hoy
+// - si vuelve a pendiente o leyendo → terminadoEn = null (se borra con deleteField)
+export function conFechaDeCierre(planta, cambios) {
+  if (!cambios.estado || cambios.estado === planta.estado) return cambios;
+  if (ESTADOS_CERRADOS.includes(cambios.estado)) {
+    return cambios.terminadoEn ? cambios : { ...cambios, terminadoEn: hoyLocal() };
+  }
+  return planta.terminadoEn ? { ...cambios, terminadoEn: null } : cambios;
+}
+
+// Fecha que se muestra en el diario: la de cierre o, si es una planta vieja sin fecha, la de plantado.
+export function fechaDeLectura(planta) {
+  if (planta.terminadoEn) return planta.terminadoEn;
+  const creado = planta.creadoEn?.toDate?.();
+  if (!creado) return null;
+  return `${creado.getFullYear()}-${String(creado.getMonth() + 1).padStart(2, '0')}-${String(creado.getDate()).padStart(2, '0')}`;
+}

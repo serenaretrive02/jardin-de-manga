@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { detenerMusica, iniciarMusica } from '../services/musica';
 import { cambiarSonido, reproducir, sonidoActivado } from '../services/sonidos';
 import PixelSprite from './PixelSprite';
 
@@ -25,7 +26,7 @@ const SIN_SONIDO = [
   '...K......',
 ];
 
-// Botón para activar o apagar los sonidos.
+// Botón para activar o apagar los sonidos y la música de fondo (v1.2).
 export default function BotonSonido() {
   const [activo, setActivo] = useState(sonidoActivado);
 
@@ -33,7 +34,12 @@ export default function BotonSonido() {
     const nuevo = !activo;
     cambiarSonido(nuevo);
     setActivo(nuevo);
-    if (nuevo) reproducir('exito');
+    if (nuevo) {
+      reproducir('exito');
+      iniciarMusica();
+    } else {
+      detenerMusica();
+    }
   }
 
   return (
@@ -41,7 +47,7 @@ export default function BotonSonido() {
       className="boton boton--chico boton-sonido"
       onClick={alternar}
       aria-pressed={activo}
-      title={activo ? 'Apagar sonidos' : 'Activar sonidos'}
+      title={activo ? 'Apagar la música y los sonidos' : 'Activar la música y los sonidos'}
     >
       <PixelSprite filas={activo ? CON_SONIDO : SIN_SONIDO} paleta={PALETA} tamano={3} />
       <span>{activo ? 'Sonido' : 'Silencio'}</span>

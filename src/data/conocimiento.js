@@ -14,6 +14,7 @@ export const SUGERENCIAS = [
   '¿Quién asigna las misiones?',
   '¿Cómo filtro mi jardín?',
   '¿Cómo puntúo un manga?',
+  '¿Dónde veo lo que leí?',
   '¿Qué es el herbario?',
   '¿Cómo cierro sesión?',
 ];
@@ -81,6 +82,19 @@ export const TEMAS = [
       'En su tarjeta, tocá de 1 a 5 sakuras. Tocá la misma otra vez para quitar la puntuación.',
       'Para escribir una reseña corta (hasta 280 caracteres), abrí el lápiz y completá "Tu reseña".',
       'Con el orden "Mejor puntuadas" ves arriba tus favoritas.',
+      'Todas tus puntuaciones quedan guardadas en la pestaña "Diario".',
+    ],
+  },
+  {
+    id: 'diario',
+    claves: ['diario', 'visto', 'lo que lei', 'que lei', 'mis leid', 'leidos', 'historial', 'puntuados', 'mis lecturas', 'lecturas', 'mis resenas', 'donde veo mis'],
+    respuesta:
+      'El Diario es la segunda pestaña, como tu perfil de Letterboxd: ahí queda todo lo que terminaste o abandonaste, agrupado por mes, con la fecha, tus sakuras y tu reseña. Arriba ves cuántas leíste, tu promedio y un gráfico con tus puntuaciones.',
+    pasos: [
+      'Cuando una planta florece (o la abandonás), se anota sola en el Diario con la fecha de hoy.',
+      'Tocá una sakura para puntuarla, o "Escribir reseña" para contar qué te pareció y corregir la fecha.',
+      'Filtrá por terminadas, abandonadas, con reseña o sin puntuar, y ordená por fecha, puntuación o título.',
+      '"Borrar reseña" quita las sakuras y el texto, pero la lectura sigue en tu diario.',
     ],
   },
   {
@@ -239,7 +253,7 @@ export const TEMAS = [
     id: 'herbario',
     claves: ['herbario', 'catalogo', 'coleccion', 'todas las flores', 'conseguir una flor', 'como consigo'],
     respuesta:
-      'El Herbario es la tercera pestaña: muestra las 9 flores de Nana con su dibujo, su nombre en japonés, su significado, con qué género florecen y cuántas tenés en tu jardín.',
+      'El Herbario es la cuarta pestaña: muestra las 9 flores de Nana con su dibujo, su nombre en japonés, su significado, con qué género florecen y cuántas tenés en tu jardín.',
   },
   {
     id: 'ramo',
@@ -249,9 +263,14 @@ export const TEMAS = [
   },
   {
     id: 'sonido',
-    claves: ['sonido', 'musica', 'silencio', 'mute', 'ruido', 'volumen', 'apagar el sonido'],
+    claves: ['sonido', 'musica', 'cancion', 'melodia', 'silencio', 'mute', 'mutear', 'ruido', 'volumen', 'apagar el sonido'],
     respuesta:
-      'Nana tiene sonidos estilo consola retro: al plantar, regar, florecer, compostar o cumplir una misión. Para apagarlos o prenderlos, tocá el botón del parlante arriba a la derecha.',
+      'Nana tiene una canción de fondo tipo cajita musical (es original, compuesta para la app) y sonidos estilo consola retro al plantar, regar, florecer o compostar. La música empieza cuando tocás la página. Para apagar todo o prenderlo, tocá el botón del parlante arriba a la derecha.',
+  },
+  {
+    id: 'gatito',
+    claves: ['gato', 'gatito', 'michi', 'miau'],
+    respuesta: 'Abajo de todo, sobre el pasto, duerme un gatito pixelado. Si lo tocás, maúlla y te regala un corazón.',
   },
   {
     id: 'celular',

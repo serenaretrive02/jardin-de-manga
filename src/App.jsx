@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signInAnonymously, signOut } from 'firebase/auth';
 import { auth, configCompleta } from './firebase';
-import { reproducir } from './services/sonidos';
+import { reproducir, sonidoActivado } from './services/sonidos';
+import { iniciarMusica } from './services/musica';
+import { conFechaDeCierre } from './data/flores';
 import {
   actualizarPlanta,
   agregarPlanta,
@@ -19,6 +21,9 @@ import EditarPlanta from './components/EditarPlanta';
 import FormularioPlanta from './components/FormularioPlanta';
 import BotonSonido from './components/BotonSonido';
 import Herbario from './components/Herbario';
+import Diario from './components/Diario';
+import Gatito from './components/Gatito';
+import PixelSprite from './components/PixelSprite';
 import JardinFiltrado from './components/JardinFiltrado';
 import SpriteFlor from './components/SpriteFlor';
 import Ventana from './components/Ventana';
@@ -28,7 +33,7 @@ import './Extras.css';
 import './Diseno.css';
 import Adorno from './components/Adorno';
 import Abeja from './components/Abeja';
-import { PALETA_ADORNOS, PASTO, spriteComoFondo } from './data/decoracion';
+import { PALETA_ADORNOS, PASTO, SAKURA, spriteComoFondo } from './data/decoracion';
 
 // Si se abrió un enlace de invitación (…/?club=ABC123), se guarda el código.
 const codigoInvitacion = new URLSearchParams(window.location.search).get('club');
@@ -58,7 +63,7 @@ export default function App() {
   const [idOcupada, setIdOcupada] = useState(null); // planta que se está guardando
   const [aviso, setAviso] = useState(null); // { tipo: 'exito' | 'error', texto }
   const [editando, setEditando] = useState(null); // planta abierta en la ventana de edición
-  // Sección visible: 'jardin' o 'comunidad'. Con una invitación, se abre directo la comunidad.
+  // Sección visible: 'jardin', 'diario', 'comunidad' o 'herbario'. Con una invitación, se abre directo la comunidad.
   const [seccion, setSeccion] = useState(codigoInvitacion ? 'comunidad' : 'jardin');
   const [confirmarSalida, setConfirmarSalida] = useState(false);
 
@@ -108,7 +113,9 @@ export default function App() {
   async function manejarActualizar(id, cambios, mensaje, sonido) {
     setIdOcupada(id);
     try {
-      await actualizarPlanta(usuario.uid, id, cambios);
+      // v1.2 · Diario: si la historia termina (o vuelve a empezar), se anota (o se borra) la fecha.
+      const planta = plantas.find((p) => p.id === id);
+      await actualizarPlanta(usuario.uid, id, planta ? conFechaDeCierre(planta, cambios) : cambios);
       // Se vuelve a consultar para mostrar lo que realmente quedó guardado.
       const datos = await obtenerPlantas(usuario.uid);
       setPlantas(datos);
@@ -150,6 +157,16 @@ export default function App() {
     }
     document.addEventListener('click', alHacerClic);
     return () => document.removeEventListener('click', alHacerClic); // limpieza
+  }, []);
+
+  // v1.2 · Música de fondo: los navegadores no dejan sonar nada hasta que la persona toca la página.
+  // Con el primer toque (si el sonido está activado) empieza la canción. Se apaga con el botón Sonido.
+  useEffect(() => {
+    function primerToque() {
+      if (sonidoActivado()) iniciarMusica();
+    }
+    document.addEventListener('pointerdown', primerToque, { once: true });
+    return () => document.removeEventListener('pointerdown', primerToque); // limpieza
   }, []);
 
   // Cerrar sesión: al ser anónima, Firebase crea enseguida una identidad NUEVA (jardín vacío).
@@ -210,6 +227,10 @@ export default function App() {
           <SpriteFlor clave="romance" tamano={2} />
           Mi jardín
         </button>
+        <button role="tab" aria-selected={seccion === 'diario'} className="pestana" onClick={() => setSeccion('diario')}>
+          <PixelSprite filas={SAKURA} paleta={PALETA_ADORNOS} tamano={3} />
+          Diario
+        </button>
         <button role="tab" aria-selected={seccion === 'comunidad'} className="pestana" onClick={() => setSeccion('comunidad')}>
           <Abeja tamano={2} />
           Comunidad
@@ -238,6 +259,22 @@ export default function App() {
             )}
           </Ventana>
         </main>
+      ) : seccion === 'diario' ? (
+        <main>
+          {cargando ? (
+            <Ventana titulo="diario.exe">
+              <BarraCarga texto="Abriendo tu diario..." />
+            </Ventana>
+          ) : (
+            <Diario
+              plantas={plantas}
+              idOcupada={idOcupada}
+              onActualizar={manejarActualizar}
+              onEditar={setEditando}
+              onIrAlJardin={() => setSeccion('jardin')}
+            />
+          )}
+        </main>
       ) : seccion === 'herbario' ? (
         <main>
           <Herbario plantas={plantas} />
@@ -264,7 +301,10 @@ export default function App() {
           </p>
         )}
         <p>Nana · Hecho con React + Vite + Firebase · Datos de obras: Kitsu · TP2 Desarrollo Frontend II</p>
-        <div className="pie__pasto" style={{ backgroundImage: FONDO_PASTO }} aria-hidden="true" />
+        <div className="pie__suelo">
+          <Gatito />
+          <div className="pie__pasto" style={{ backgroundImage: FONDO_PASTO }} aria-hidden="true" />
+        </div>
       </footer>
 
       {editando && (

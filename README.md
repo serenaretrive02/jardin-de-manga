@@ -98,6 +98,8 @@ src/
 └── components/
     ├── FormularioPlanta.jsx, BuscadorObras.jsx, JardinFiltrado.jsx (ramo + filtros), ListaJardin.jsx, TarjetaPlanta.jsx, EditarPlanta.jsx
     ├── Puntuacion.jsx        1 a 5 sakuras para puntuar lo que terminaste (v1.2)
+    ├── Diario.jsx            Diario de lecturas: lo terminado, por mes, con resumen y gráfico (v1.2)
+    ├── Gatito.jsx            Gatito dormilón del pie de página (v1.2)
     ├── Herbario.jsx, GuiaCrecimiento.jsx, NanaIA.jsx, BotonSonido.jsx
     ├── SpriteFlor.jsx, Abeja.jsx, AbejaVoladora.jsx, Adorno.jsx
     ├── PixelSprite.jsx, Ventana.jsx, Modal.jsx, Aviso.jsx, BarraCarga.jsx
@@ -129,6 +131,7 @@ Ruta: `users/{uid}/plantas/{plantaId}`
 | `kitsuId` | "45398" | Número de la obra en Kitsu (opcional) |
 | `puntuacion` | 4 | De 1 a 5 sakuras (opcional, v1.2). Al quitarla, el campo se borra con `deleteField()` |
 | `resena` | "El final me hizo llorar" | Reseña corta, hasta 280 caracteres (opcional, v1.2) |
+| `terminadoEn` | "2026-11-13" | Fecha del diario: cuándo la terminaste o la dejaste (opcional, v1.2). Se borra si vuelve a "Leyendo" |
 
 **Comunidad (v0.4):**
 
@@ -150,4 +153,4 @@ Ruta: `users/{uid}/plantas/{plantaId}`
 | v0.4.1 | 9 flores con formas distintas (y significado), guía flotante de crecimiento, abeja decorativa, **Nana IA** (asistente con base de conocimiento propia), eliminar perfil y cerrar sesión |
 | v1.0 | "Mi ramo", filtros y orden del jardín, herbario de 9 flores, sonidos retro con opción de silencio, Nana IA ampliada, informe breve, guía para el oral |
 | v1.1 | Pulido de diseño kawaii: más espacio, esquinas pixeladas, enredaderas de cerezo, pasto con margaritas y pestañas con íconos |
-| **v1.2** | **Final:** puntuación de 1 a 5 sakuras y reseña corta para lo que terminaste o abandonaste (CRUD completo, validado por las reglas), promedio en "Mi ramo" y orden "Mejor puntuadas" |
+| **v1.2** | **Final:** puntuación de 1 a 5 sakuras y reseña corta para lo que terminaste o abandonaste (CRUD completo, validado por las reglas), promedio en "Mi ramo", orden "Mejor puntuadas", **Diario de lecturas** con fecha, música de fondo original, gatito y revisión final |

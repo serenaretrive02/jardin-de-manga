@@ -16,7 +16,7 @@ Registro de cómo fue evolucionando la aplicación, versión por versión: qué 
 | [v0.4.1 — Ajustes](#versión-041--ajustes-de-la-versión-4-flores-únicas-guía-abeja-y-nana-ia-10112026) | 10/11 | Flores únicas, guía, abeja, Nana IA |
 | [v1.0 — Final](#versión-10--versión-final-quinta-versión-10112026) | 10/11 | Ramo, filtros, herbario, sonidos, auditoría |
 | [v1.1 — Pulido kawaii](#versión-11--pulido-de-diseño-kawaii-10112026) | 10/11 | Más espacio, esquinas pixeladas, adornos, revisión final |
-| [v1.2 — Puntuación](#versión-12--puntuación-con-sakuras-y-reseña-corta-13112026) | 13/11 | Puntuar con 1 a 5 sakuras y reseña corta, con CRUD completo |
+| [v1.2 — Puntuación](#versión-12--puntuación-con-sakuras-y-reseña-corta-13112026) | 13/11 | Puntuar con sakuras y reseña; Diario de lecturas, música de fondo, gatito y revisión final |
 | [Conclusión](#conclusión-del-proceso) | | Qué se aprendió |
 
 ---
@@ -1050,6 +1050,129 @@ En total: **116 de 116 correctas** en local.
 
 ---
 
+### Cierre del sprint v1.2: Diario, música y revisión final (13/11/2026)
+
+La autora probó la versión publicada y pidió **sumar todo a la v1.2**, sin abrir una versión nueva, porque es la versión final. Sus pedidos fueron:
+1. **Un lugar donde queden guardadas las puntuaciones y lo que leyó**, como el perfil de Letterboxd: una sección de "vistos" o "puntuados".
+2. **Más espacio** en la ventana de clubes (el texto quedaba pegado al botón "Crear club"), y revisar el espaciado de toda la app.
+3. **Una canción kawaii de fondo**, que se pueda silenciar con el botón Sonido.
+4. Cualquier otra acción útil que respete la consigna y el CRUD, y detalles más tiernos, siempre en pixel art y con la misma paleta.
+5. Una **revisión general** de GitHub, Firebase, Vercel y el código contra la consigna y la rúbrica.
+
+#### Historias de usuario de este cierre
+| # | Historia | Criterios de aceptación (todos probados) |
+|---|---|---|
+| H1 | *Como* lectora, *quiero* un diario con todo lo que leí y puntué, *para* ver mi historial como en Letterboxd | Pestaña nueva "Diario". Muestra solo lo terminado o abandonado, agrupado por mes, con la fecha, la portada o la flor, las sakuras y la reseña. Tiene un resumen y un gráfico de puntuaciones |
+| H2 | *Como* lectora, *quiero* que quede anotado **cuándo** terminé cada historia y poder corregirlo | Al terminar o abandonar, se guarda la fecha de hoy. Se puede cambiar en la edición. No acepta fechas del futuro. Si la planta vuelve a "Leyendo", la fecha se borra |
+| H3 | *Como* lectora, *quiero* puntuar, reseñar y borrar mi reseña desde el diario | Las sakuras funcionan en el diario. "Borrar reseña" pide confirmación y borra los dos campos, pero la lectura sigue en el diario |
+| H4 | *Como* visitante, *quiero* música de fondo tierna que pueda apagar | Empieza con el primer toque en la página. El botón Sonido la apaga y la prende |
+| H5 | *Como* visitante, *quiero* una interfaz con más aire | El texto de "Mis clubes" ya no queda pegado al botón. Las 4 pestañas entran completas en el celular |
+
+#### Decisión: ¿por qué el Diario **no** es una colección nueva en Firestore?
+Se pensó en crear una colección aparte (`diario/`), pero habría **duplicado** los datos. Si la autora cambiaba la puntuación en el jardín, había que actualizarla en dos lugares. En cambio, el Diario es **otra forma de mirar los mismos documentos** (`users/{uid}/plantas`): filtra los que están terminados o abandonados (`filter`), los ordena (`sort`) y los agrupa por mes (`reduce`).
+
+Solo se agregó **un campo nuevo**, `terminadoEn` (texto con formato AAAA-MM-DD), para saber cuándo terminó cada historia. Es la misma idea que en Letterboxd, donde cada película vista tiene su fecha.
+
+#### Cómo cumple el CRUD el Diario
+| Operación | Qué hace la usuaria | Qué pasa en Firebase |
+|---|---|---|
+| **Crear** | Marca una planta como Terminado o Abandonado (o la riega hasta el último capítulo) | `conFechaDeCierre` agrega `terminadoEn` = hoy en el mismo `updateDoc`, y la lectura **aparece sola** en el diario |
+| **Consultar** | Abre la pestaña Diario: lecturas por mes, resumen (leídas, puntuadas, reseñas, promedio) y gráfico de barras. Filtros y 4 órdenes | `getDocs` de las plantas + `filter`, `sort` y `reduce` en React |
+| **Modificar** | Toca sakuras, escribe la reseña o **corrige la fecha** en la edición | `updateDoc` de `puntuacion`, `resena` o `terminadoEn` |
+| **Eliminar** | "Borrar reseña" (con confirmación) quita sakuras y texto. Si la planta vuelve a "Leyendo", sale del diario. Compostar la planta borra todo | `deleteField()` sobre `puntuacion` y `resena`, o sobre `terminadoEn`. `deleteDoc` al compostar |
+
+#### Música de fondo: original y sin archivos
+La canción es **original** (compuesta para Nana, no es de nadie). Tiene 8 compases en do mayor, con melodía de "cajita musical" y un bajo suave. Igual que los sonidos de los clics, se toca **nota por nota con la Web Audio API**, así que no hay archivos de audio ni derechos de autor de por medio. El archivo es `src/services/musica.js`.
+- Un "programador" revisa cada 100 ms (`setInterval`) qué notas tocan en el próximo cuarto de segundo, y las agenda con el reloj del audio. Así la música no se atrasa.
+- **Los navegadores no dejan sonar nada hasta que la persona toca la página.** Por eso la música empieza con el primer toque: un `useEffect` en `App.jsx` escucha el primer `pointerdown` y quita el "escuchador" en la limpieza.
+- El **botón Sonido** apaga y prende todo (música y efectos). La música entra y sale con un fundido suave, y se pausa si la pestaña queda en segundo plano.
+- El volumen es bajo (6 %), para que acompañe y no moleste.
+
+#### Detalles kawaii nuevos (misma paleta, pixel art)
+- **Gatito dormilón** sobre el pasto del pie de página, inspirado en las referencias de gatitos pixelados que sumó la autora. Está dibujado con código (un array de texto, como las flores). Duerme con unas "z" que suben y bajan, y **si lo tocás maúlla y aparece un corazón**. El maullido también se genera con Web Audio.
+- El mismo gatito acompaña el **diario vacío**, invitando a terminar el primer manga.
+- La pestaña Diario usa la **sakura** como ícono, y los meses del diario parecen pestañas de un cuaderno rosa.
+- El gráfico de puntuaciones tiene **barras pixeladas a rayas rosas**.
+
+#### Espaciado
+- **"Mis clubes":** el texto "Todavía no estás en ningún club" ahora tiene 24 px de aire antes del botón (antes, unos 4 px). También se separó más la sección "¿Te pasaron un código?".
+- **Pestañas en el celular:** con 4 pestañas, "Herbario" quedaba **cortada** en el borde de la pantalla. Ahora son 4 columnas iguales con la fuente pixelada a 8–9 px (está diseñada en múltiplos de 8, así que se ve nítida).
+- Se revisaron con capturas el jardín, el diario, la comunidad, el herbario y la edición, en compu y en celular.
+
+![Antes: el texto pegado al botón](capturas/v1.2-15a-antes-comunidad.png)
+*Antes (captura de la autora): el texto casi toca el botón "Crear club".*
+
+![Después: con aire](capturas/v1.2-15b-despues-comunidad.png)
+*Después: 24 px de separación y más espacio arriba de "¿Te pasaron un código?".*
+
+#### Base de datos: reglas actualizadas
+Se agregó `terminadoEn` a la lista de campos permitidos, con su validación:
+```
+&& (!('terminadoEn' in d) || (d.terminadoEn is string
+                             && d.terminadoEn.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')));
+```
+Se lee así: "si existe la fecha, tiene que ser un texto con forma de fecha (cuatro números, guion, dos, guion, dos)". Las reglas se publicaron **antes** de subir el código, con la autorización de la autora.
+
+![Reglas con el campo del diario](capturas/v1.2-09-reglas-diario.jpg)
+
+#### Capturas del Diario
+![Diario vacío con el gatito](capturas/v1.2-10-diario-vacio.png)
+![Diario con lecturas, resumen y gráfico](capturas/v1.2-11-diario.png)
+*Resumen (3 leídas, 3 puntuadas, 1 reseña, 3,7 de promedio), gráfico de puntuaciones, filtros, el mes como pestaña de cuaderno y cada lectura con su día, su flor, sus sakuras y su reseña.*
+
+![Error: fecha del futuro](capturas/v1.2-12-fecha-error.png)
+![Nana IA explica el Diario](capturas/v1.2-13-nana-diario.png)
+![Gatito mimado](capturas/v1.2-14-gatito.png)
+![Celular: 4 pestañas completas](capturas/v1.2-16-celular-pestanas.png)
+![Celular: diario completo](capturas/v1.2-17-celular-diario.png)
+
+#### Dificultades y cómo se resolvieron
+| Problema | Cómo se detectó | Solución |
+|---|---|---|
+| En el celular, la pestaña **"Herbario" quedaba cortada** | Captura a 390 px. La prueba automática decía "sin scroll horizontal" porque la página **recorta** lo que sobra (`overflow-x: clip`) | Pestañas en 4 columnas iguales y fuente de 8–9 px. Se mejoró la prueba: ahora también comprueba que **ninguna pestaña se corte** |
+| Las pruebas viejas fallaron al buscar Comunidad y Herbario | Regresión: 3 pruebas no encontraban sus pantallas | Las pruebas tocaban las pestañas **por posición** (la 2.ª era Comunidad). Con el Diario en el 2.º lugar se corrieron. Se actualizaron las posiciones |
+| Nana IA decía que el Herbario es la "tercera pestaña" | Prueba de regresión de la v1.0 | Ahora es la cuarta: se corrigió el texto y la prueba |
+| ¿Cómo hacer sonar música si el navegador bloquea el sonido automático? | Investigando la política de reproducción automática de los navegadores | Empieza con el primer toque de la persona en la página, que es lo que los navegadores permiten |
+| ¿Qué pasa con las plantas terminadas **antes** de que existiera la fecha? | Al pensar los datos viejos | El diario usa la fecha en que se plantaron, y se puede corregir con el lápiz |
+
+#### Pruebas finales en local (152 de 152)
+| Prueba automática | Resultado |
+|---|---|
+| **Cierre v1.2:** diario vacío, entrada automática con la fecha, puntuar desde el diario, resumen y gráfico, editar reseña y fecha, fecha del futuro rechazada, agrupación por mes, filtros y orden, borrar reseña (campos borrados en Firestore), volver a leer (sale del diario y se borra la fecha), **403** para una fecha inválida, Nana IA, música (suena, se apaga y vuelve), gatito, espaciado de Comunidad, celular con 4 pestañas completas | **36/36** ✅ |
+| v1.2: puntuación y reseña | **26/26** ✅ |
+| v1.0: ramo, filtros, herbario, sonidos, Nana IA | **26/26** ✅ |
+| v0.4.1: flores, guía, Nana IA, perfil, cerrar sesión | **21/21** ✅ |
+| v0.4: comunidad con dos usuarias, roles y seguridad (403) | **19/19** ✅ |
+| v0.3: jardín, API, edición, estados | **17/17** ✅ |
+| Diseño: sin scroll horizontal en compu, tablet y celular | **7/7** ✅ |
+
+La prueba de la música cuenta cuántas notas crea el navegador: con el sonido activado aparecen unas 12 notas nuevas cada 1,5 segundos. Después de tocar "Sonido", aparecen **0**.
+
+#### Revisión general contra la consigna y la rúbrica
+| Qué pide | Dónde se cumple | Verificado |
+|---|---|---|
+| 1. React + Vite con componentes, eventos y estado | 34 componentes (contando `App`). `useState`, `useEffect` con limpieza, eventos `onClick`, `onChange` y `onSubmit` | ✅ lint y build sin errores |
+| 2. Firestore: consultar, agregar, modificar y eliminar | Plantas, puntuación, reseña, fecha del diario, perfil, clubes, misiones y eventos | ✅ pruebas que leen Firestore directamente |
+| 3. Persistencia al recargar (no array ni `localStorage`) | Todo en Firestore. `localStorage` solo guarda la preferencia de sonido | ✅ las pruebas recargan y comprueban |
+| 4. GitHub con código e instrucciones | Repositorio **público**, README con `npm install` y `npm run dev`, etiquetas v0.1…v1.2 | ✅ visto sin iniciar sesión |
+| 5. Vercel con URL funcional | https://jardin-de-manga.vercel.app, despliegue automático desde `main` | ✅ responde y las pruebas pasan sobre la URL |
+| 6. Validaciones, carga, éxito/error, compu y celular | Errores por campo (título, capítulos, reseña, fecha), barras de carga, avisos, 390 px sin cortes | ✅ |
+| 7. Reglas de Firestore no abiertas | Jardín privado, roles en clubes, validación de cada campo | ✅ varias pruebas de **403** |
+| `.gitignore` con `.env`, `node_modules` y `dist` | Sí. `.env` nunca se subió. Solo está `.env.example` | ✅ revisado con `git ls-files` |
+| `.env.example`, reglas y README en el repo | Los tres están | ✅ |
+| Al menos 3 versiones, con bitácora y verificación | 8 versiones (v0.1 → v1.2), cada una probada en Vercel | ✅ |
+| Informe: idea, público, funciones, datos, IA, instrucciones | `docs/informe.md` | ✅ |
+| Bitácora con capturas, pruebas, IA y dificultades | Este documento | ✅ |
+| Diseño justificado y refinado en iteraciones | Pixel art (v0.2), flores únicas (v0.4.1), kawaii (v1.1), diario y gatito (v1.2), con referencias | ✅ |
+| Mini video | Guion en `docs/guion-video.md` | ⏳ lo graba la autora |
+
+#### Retrospectiva del cierre
+- **Qué salió bien:** el Diario suma una sección muy útil **sin duplicar datos**: reutiliza las mismas plantas, el mismo modal de edición, las sakuras y los avisos.
+- **Qué se aprendió:** una prueba automática puede dar "OK" y aun así haber un problema visual (la pestaña cortada). Por eso siempre se miran también las capturas.
+- **Decisión de alcance:** no se agregaron más secciones. Con 4 pestañas el sitio queda completo y fácil de usar.
+
+---
+
 ## Conclusión del proceso
 
 | Versión | Qué aportó | Tipo de iteración |
@@ -1061,7 +1184,7 @@ En total: **116 de 116 correctas** en local.
 | v0.4.1 | 9 flores con forma propia, guía, abeja, Nana IA, CRUD del perfil | Ajustes de diseño y ayuda |
 | v1.0 | Ramo, filtros, herbario, sonidos, auditoría y documentación final | Estabilización |
 | v1.1 | Más espacio, esquinas pixeladas, enredaderas, pasto y revisión final de la rúbrica | Pulido visual |
-| v1.2 | Puntuación con sakuras, reseña corta, promedio y orden "Mejor puntuadas" | Incremento funcional (cierre del ciclo de la planta) |
+| v1.2 | Puntuación con sakuras, reseña corta, **Diario de lecturas** con fecha, música de fondo original, gatito, espaciado y revisión final | Incremento funcional y cierre |
 
 **Lo que más se aprendió:**
 - **Probar es tan importante como programar:** casi todos los errores aparecieron en las capturas o en las pruebas, no al escribir el código.

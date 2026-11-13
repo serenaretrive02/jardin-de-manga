@@ -86,3 +86,19 @@ export function spriteComoFondo(filas, paleta) {
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${filas[0].length} ${filas.length}' shape-rendering='crispEdges'>${rects}</svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
+
+// v1.2 · Gatito dormilón (18 x 10) que duerme la siesta sobre el pasto del pie de página.
+// Usa los colores de los adornos más dos propios: O = naranja, o = crema.
+export const PALETA_GATO = { ...PALETA_ADORNOS, O: '#F2A45A', o: '#FFF3DF' };
+export const GATO = [
+  '..K....K..........',
+  '.KoK..KoK.........',
+  '.KPoKKoPKKKKKKK...',
+  'KoooooooKOOOOOOKK.',
+  'KoKKoKKoKoOoOoOOOK',
+  'KoooPoooKooooOoOOK',
+  'KooooooooooooooOOK',
+  '.KooooooooooooooOK',
+  '.KKoooooooooooOOKK',
+  '..KKKKKKKKKKKKKKK.',
+];
