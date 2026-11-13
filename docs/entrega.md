@@ -48,7 +48,12 @@ La app **no depende de la compu de la autora**. Funciona sola en internet:
 - La URL pública responde.
 - La prueba completa del jardín pasó **17/17** sobre la versión publicada: buscar en la API, plantar, regar, editar, recargar y ver que los datos siguen, y la vista en celular. No hubo errores.
 - El día anterior, la batería completa había dado **90/90**.
-- **13/11/2026, versión final v1.2:** la batería completa dio **116/116** sobre la URL pública, sin errores. Incluye la prueba nueva de puntuación y reseña (26/26).
+- **13/11/2026, versión final v1.2:** la batería completa dio **152/152** sobre la URL pública, sin errores. Incluye la prueba de puntuación y reseña (26/26) y la del Diario, la música, el gatito y el espaciado (36/36).
+- **Revisión general (13/11):**
+  - el repositorio de GitHub es **público** y se ve sin iniciar sesión;
+  - `.env` no está en el repositorio (solo `.env.example`) y no hay llaves en el código;
+  - `.gitignore` excluye `.env`, `node_modules` y `dist`;
+  - las reglas publicadas en Firebase son las mismas que `firestore.rules`.
 - Las **reglas de Firestore no tienen fecha de vencimiento**. No son las reglas "de prueba" que Firebase corta a los 30 días, así que la base no se va a cerrar sola.
 - El proyecto usa el **plan gratuito** de Firebase (Spark) y de Vercel (Hobby), que no vencen.
 

@@ -1166,6 +1166,15 @@ La prueba de la música cuenta cuántas notas crea el navegador: con el sonido a
 | Diseño justificado y refinado en iteraciones | Pixel art (v0.2), flores únicas (v0.4.1), kawaii (v1.1), diario y gatito (v1.2), con referencias | ✅ |
 | Mini video | Guion en `docs/guion-video.md` | ⏳ lo graba la autora |
 
+#### Publicación y verificación final en Vercel
+1. Las reglas con `terminadoEn` se publicaron **antes** del código (Firestore → Reglas → Publicar).
+2. Se revisó la lista de cambios: sin archivos borrados y sin `.env`.
+3. Se subió a `main`, y Vercel publicó la versión nueva en unos 30 segundos.
+4. **Sobre la URL pública** se corrieron **todas** las pruebas: cierre v1.2 (36/36), puntuación (26/26), v1.0 (26/26), v0.4.1 (21/21), comunidad y seguridad (19/19), jardín (17/17) y diseño (7/7). En total, **152 de 152 correctas**, sin errores en la consola.
+
+![Diario en la versión publicada](capturas/v1.2-18-vercel-diario.png)
+![Versión publicada en celular](capturas/v1.2-19-vercel-celular.png)
+
 #### Retrospectiva del cierre
 - **Qué salió bien:** el Diario suma una sección muy útil **sin duplicar datos**: reutiliza las mismas plantas, el mismo modal de edición, las sakuras y los avisos.
 - **Qué se aprendió:** una prueba automática puede dar "OK" y aun así haber un problema visual (la pestaña cortada). Por eso siempre se miran también las capturas.
