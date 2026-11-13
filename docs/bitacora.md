@@ -1175,6 +1175,15 @@ La prueba de la música cuenta cuántas notas crea el navegador: con el sonido a
 ![Diario en la versión publicada](capturas/v1.2-18-vercel-diario.png)
 ![Versión publicada en celular](capturas/v1.2-19-vercel-celular.png)
 
+#### Integración final: una sola v1.2
+La autora pidió que **todo lo de este sprint quede en una única versión final**, sin crear una v1.3. La etiqueta `v1.2` se había creado con la primera parte del sprint (puntuación y reseña). Por eso **se movió al último commit**: así, en GitHub, `v1.2` incluye la puntuación, el Diario, la música, el gatito, el espaciado y toda la documentación.
+
+También se comprobó la URL pública con **el jardín real de la autora** (no con un usuario de prueba). Su planta terminada, *Sousou no Frieren*, apareció sola en el Diario, con sus 5 sakuras. Las plantas que se terminaron antes de que existiera la fecha usan la fecha en que se plantaron.
+
+![Diario con el jardín real de la autora](capturas/v1.2-20-diario-jardin-real.jpg)
+
+> **Si "no se ven los cambios":** Vercel ya publicó la versión nueva, pero una pestaña abierta desde antes sigue mostrando la versión vieja. Se soluciona recargando con `Ctrl + F5` o abriendo la URL en una ventana de incógnito.
+
 #### Retrospectiva del cierre
 - **Qué salió bien:** el Diario suma una sección muy útil **sin duplicar datos**: reutiliza las mismas plantas, el mismo modal de edición, las sakuras y los avisos.
 - **Qué se aprendió:** una prueba automática puede dar "OK" y aun así haber un problema visual (la pestaña cortada). Por eso siempre se miran también las capturas.
