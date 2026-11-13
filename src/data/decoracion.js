@@ -49,6 +49,9 @@ export const DESTELLO = ['..y..', '..Y..', 'yYWYy', '..Y..', '..y..'];
 // Corazón (7 x 6).
 export const CORAZON = ['.KK.KK.', 'KpPKPPK', 'KPPPPPK', '.KPPPK.', '..KPK..', '...K...'];
 
+// v1.2 · Flor de cerezo (sakura) para puntuar (7 x 7). Se pinta gris con CSS cuando está "vacía".
+export const SAKURA = ['.KK.KK.', 'KpPKPpK', 'KPPRPPK', '.KRYRK.', 'KPPRPPK', 'KpPKPpK', '.KK.KK.'];
+
 // Baldosa de pasto con margaritas (32 x 16). No tiene contorno: el verde de fondo lo pone el CSS.
 export const PASTO = [
   '................................',

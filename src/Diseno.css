@@ -867,3 +867,109 @@ body {
     animation: none;
   }
 }
+
+/* =========================================================
+   v1.2 · Puntuación con sakuras y reseña corta
+   ========================================================= */
+.puntuacion {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Sakura "vacía": la misma flor, en gris y más clara */
+.puntuacion__flor {
+  display: inline-flex;
+  line-height: 0;
+  filter: grayscale(1);
+  opacity: 0.35;
+  transition: opacity 0.12s, transform 0.12s;
+}
+
+.puntuacion__flor--llena {
+  filter: none;
+  opacity: 1;
+}
+
+button.puntuacion__flor {
+  min-width: 32px;
+  min-height: 32px;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+button.puntuacion__flor:hover:not(:disabled),
+button.puntuacion__flor:focus-visible {
+  transform: translateY(-2px) scale(1.08);
+}
+
+button.puntuacion__flor:focus-visible {
+  outline: 2px dashed var(--tinta);
+  outline-offset: 1px;
+}
+
+button.puntuacion__flor:disabled {
+  cursor: wait;
+}
+
+.tarjeta__resena {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  padding: var(--e2) var(--e3);
+  background: var(--rosa-claro);
+  box-shadow: var(--marco-fino);
+  margin: var(--e1) 2px 2px;
+}
+
+.tarjeta__resena-titulo {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tarjeta__cita {
+  margin: 0;
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Reseña dentro de la ventana de edición */
+.resena {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+  margin: var(--e2) 2px 0;
+  padding: var(--e3) var(--e4) var(--e4);
+  border: 0;
+  background: var(--rosa-claro);
+  box-shadow: var(--marco-fino);
+}
+
+.resena legend {
+  float: left;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+}
+
+/* Promedio en "Mi ramo" */
+.ramo__promedio {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+}
+
+.ramo__promedio strong {
+  font-size: 16px;
+}

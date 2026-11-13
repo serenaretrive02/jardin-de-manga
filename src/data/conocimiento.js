@@ -13,6 +13,7 @@ export const SUGERENCIAS = [
   '¿Cómo creo un club?',
   '¿Quién asigna las misiones?',
   '¿Cómo filtro mi jardín?',
+  '¿Cómo puntúo un manga?',
   '¿Qué es el herbario?',
   '¿Cómo cierro sesión?',
 ];
@@ -71,12 +72,30 @@ export const TEMAS = [
       'Hay 4 estados: Pendiente, Leyendo/Viendo, Terminado (florece y completa los capítulos) y Abandonado (se marchita). Se cambian desde el menú de cada tarjeta.',
   },
   {
+    id: 'puntuar',
+    claves: ['puntu', 'calific', 'resena', 'opinion', 'estrella', 'sakura', 'letterboxd', 'que me parecio', 'nota del', 'review', 'votar'],
+    respuesta:
+      'Cuando una historia termina para vos (la terminaste o la abandonaste), su tarjeta muestra 5 sakuras para puntuarla, como en Letterboxd. Tu promedio aparece en "Mi ramo".',
+    pasos: [
+      'Marcá el manga como Terminado (o Abandonado).',
+      'En su tarjeta, tocá de 1 a 5 sakuras. Tocá la misma otra vez para quitar la puntuación.',
+      'Para escribir una reseña corta (hasta 280 caracteres), abrí el lápiz y completá "Tu reseña".',
+      'Con el orden "Mejor puntuadas" ves arriba tus favoritas.',
+    ],
+  },
+  {
+    id: 'quiero-leer',
+    claves: ['quiero leer', 'quiero ver', 'para despues', 'lista de deseos', 'wishlist', 'pendientes', 'por leer', 'anotar para'],
+    respuesta:
+      'Para anotar un manga que querés leer más adelante, plantalo y dejalo en "Pendiente": queda como semilla. Con el filtro "Pendiente" ves tu lista de "quiero leer".',
+  },
+  {
     id: 'editar-planta',
     claves: ['editar', 'edito', 'corregir', 'corrijo', 'cambiar titulo', 'cambiar el genero', 'me equivoque', 'modific', 'lapiz'],
     respuesta: 'Podés corregir cualquier planta con el lápiz amarillo de su tarjeta.',
     pasos: [
       'Tocá el lápiz de la tarjeta.',
-      'Cambiá el título, el género (cambia la flor), los capítulos vistos o el total.',
+      'Cambiá el título, el género (cambia la flor), los capítulos vistos o el total. Si ya la terminaste, también tu puntuación y tu reseña.',
       'Tocá Guardar. Si ponés más capítulos vistos que el total, te avisa.',
     ],
   },
@@ -212,7 +231,7 @@ export const TEMAS = [
     pasos: [
       'Escribí parte del título en "Buscar en mi jardín...".',
       'Tocá un estado (Todas, Pendiente, Leyendo, Terminado, Abandonado): cada uno muestra cuántas hay.',
-      'Elegí un género, manga o anime, y cómo ordenar (recientes, A-Z, más avanzadas, más regadas).',
+      'Elegí un género, manga o anime, y cómo ordenar (recientes, A-Z, más avanzadas, más regadas o mejor puntuadas).',
       'Con "Limpiar filtros" volvés a ver todo.',
     ],
   },
@@ -226,7 +245,7 @@ export const TEMAS = [
     id: 'ramo',
     claves: ['ramo', 'mi ramo', 'genero favorito', 'favorito'],
     respuesta:
-      '"Mi ramo" está arriba de tu jardín: cada manga que terminás suma su flor al ramo. También muestra cuántas plantas tenés, cuántas están en flor, cuántos capítulos regaste y tu género favorito.',
+      '"Mi ramo" está arriba de tu jardín: cada manga que terminás suma su flor al ramo. También muestra cuántas plantas tenés, cuántas están en flor, cuántos capítulos regaste, tu género favorito y el promedio de tus puntuaciones.',
   },
   {
     id: 'sonido',

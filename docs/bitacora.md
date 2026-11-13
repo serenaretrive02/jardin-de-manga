@@ -16,6 +16,7 @@ Registro de cómo fue evolucionando la aplicación, versión por versión: qué 
 | [v0.4.1 — Ajustes](#versión-041--ajustes-de-la-versión-4-flores-únicas-guía-abeja-y-nana-ia-10112026) | 10/11 | Flores únicas, guía, abeja, Nana IA |
 | [v1.0 — Final](#versión-10--versión-final-quinta-versión-10112026) | 10/11 | Ramo, filtros, herbario, sonidos, auditoría |
 | [v1.1 — Pulido kawaii](#versión-11--pulido-de-diseño-kawaii-10112026) | 10/11 | Más espacio, esquinas pixeladas, adornos, revisión final |
+| [v1.2 — Puntuación](#versión-12--puntuación-con-sakuras-y-reseña-corta-13112026) | 13/11 | Puntuar con 1 a 5 sakuras y reseña corta, con CRUD completo |
 | [Conclusión](#conclusión-del-proceso) | | Qué se aprendió |
 
 ---
@@ -915,6 +916,121 @@ Es un cambio solo de diseño: **no se tocó Firestore ni las reglas**, por eso n
 
 ---
 
+## Versión 1.2 — Puntuación con sakuras y reseña corta (13/11/2026)
+
+### Por qué un sprint más
+Al repasar la app completa, la autora sintió que **"le faltaba algo"**. Las ideas iniciales eran dos:
+- una sección de **favoritos / "quiero ver"**;
+- **puntuar** las obras, como en Letterboxd.
+
+La condición era **no saturar el sitio**, porque lo principal sigue siendo anotar cómo va la lectura. También tenía que ser **coherente** con todo lo anterior y poder **defenderse en el final**.
+
+### Decisión: qué se agregó y qué no
+| Idea | ¿Se hizo? | Por qué |
+|---|---|---|
+| Lista "quiero leer / quiero ver" | ❌ No hacía falta | **Ya existe:** es el estado **Pendiente**. Plantás la obra, queda como semilla, y con el filtro "Pendiente" ves la lista. Una sección aparte repetiría lo mismo en dos lugares |
+| Sección de favoritos | ❌ No como sección | Se resuelve **sin pantallas nuevas**: con el orden **"Mejor puntuadas"** las favoritas quedan arriba |
+| **Puntuación de 1 a 5 sakuras + reseña corta** | ✅ **Sí** | Es lo que le faltaba al ciclo del jardín: hoy plantás, regás y florece… y ahí terminaba. Ahora, **cuando la historia termina para vos** (la terminaste o la abandonaste), podés decir qué te pareció |
+
+La **sakura** (flor de cerezo) se eligió en lugar de estrellas porque ya era parte del diseño: las enredaderas de cerezo de la v1.1. Además es un símbolo muy japonés, que encaja con el manga.
+
+### Historia de usuario (metodología ágil)
+> **Como** lectora, **quiero** puntuar y reseñar lo que termino, **para** recordar qué me pareció y encontrar mis favoritas.
+
+**Criterios de aceptación** (cada uno se comprobó con una prueba automática):
+1. Una planta **pendiente o leyendo** no muestra la puntuación: todavía no la terminaste.
+2. Una planta **terminada o abandonada** muestra "¿Qué te pareció?" con 5 sakuras.
+3. Al tocar una sakura aparece un aviso ("Le diste 4 sakuras a…") y **sigue ahí al recargar**.
+4. Tocar **la misma sakura** otra vez quita la puntuación, y **el dato se borra** de Firestore.
+5. La reseña se escribe en la ventana de edición, tiene **hasta 280 caracteres** y, si se pasa, muestra un error y no guarda.
+6. "Mi ramo" muestra el **promedio** de las puntuaciones, y el jardín se puede ordenar por **"Mejor puntuadas"**.
+7. **Firebase rechaza** una puntuación fuera de 1 a 5 o una reseña demasiado larga, aunque alguien se saltee la interfaz.
+8. Funciona en celular, sin scroll horizontal y con botones de al menos 32 px.
+
+### Cómo cumple el CRUD
+| Operación | En la puntuación y la reseña | Código |
+|---|---|---|
+| **Crear** | Tocar una sakura por primera vez o escribir la reseña | `actualizarPlanta(uid, id, { puntuacion: 4 })` → `updateDoc` agrega el campo |
+| **Consultar** | Se ve en la tarjeta, en el promedio de "Mi ramo" y en el orden "Mejor puntuadas". Sigue al recargar | `obtenerPlantas` (`getDocs`) |
+| **Modificar** | Tocar otra sakura o editar el texto | `updateDoc` cambia el campo |
+| **Eliminar** | Tocar la misma sakura, o vaciar la reseña y guardar | El valor `null` se convierte en **`deleteField()`**, que **borra el campo** del documento |
+
+**¿Por qué `deleteField()` y no guardar un 0 o un texto vacío?** Porque "sin puntuar" no es lo mismo que "puntuación 0". Si el campo no existe, la base queda limpia, y las reglas pueden exigir que, **si existe**, valga de 1 a 5.
+
+### Archivos que cambiaron
+| Archivo | Qué se hizo |
+|---|---|
+| `src/components/Puntuacion.jsx` (**nuevo**) | Las 5 sakuras. Se pintan al pasar el mouse (estado `previa` con `useState`). Tiene un modo "solo mirar" para el promedio |
+| `src/components/TarjetaPlanta.jsx` | Muestra "¿Qué te pareció?" si la planta terminó (renderizado condicional) y la función `puntuar(n)` |
+| `src/components/EditarPlanta.jsx` | Sección "Tu reseña" con la puntuación y un campo de texto con contador |
+| `src/components/JardinFiltrado.jsx` | Orden "Mejor puntuadas" (`sort`) y promedio en "Mi ramo" (`filter` + `reduce`) |
+| `src/services/plantas.js` | `actualizarPlanta` convierte los `null` en `deleteField()` |
+| `src/data/validaciones.js` y `flores.js` | `validarResena` y el máximo `MAX_RESENA = 280` |
+| `src/data/decoracion.js` | El dibujo pixelado de la sakura (un array de texto, como las demás flores) |
+| `src/data/conocimiento.js` | Nana IA explica cómo puntuar, y que la lista "quiero leer" es el estado Pendiente |
+| `src/Diseno.css` | Estilos de las sakuras, la reseña y el promedio |
+| `firestore.rules` | Acepta los dos campos nuevos **solo si son válidos** |
+
+### Base de datos: reglas nuevas
+Las reglas solo aceptan campos conocidos (`hasOnly`). Por eso, **antes** de subir el código, se agregaron los dos campos nuevos con su validación:
+```
+'puntuacion', 'resena'   ← sumados a la lista de campos permitidos
+&& (!('puntuacion' in d) || (d.puntuacion is int && d.puntuacion >= 1 && d.puntuacion <= 5))
+&& (!('resena' in d) || (d.resena is string && d.resena.size() > 0 && d.resena.size() <= 280));
+```
+Se leen así: "si existe la puntuación, tiene que ser un número entero de 1 a 5", y "si existe la reseña, tiene que ser un texto de 1 a 280 caracteres".
+
+![Reglas publicadas en Firebase](capturas/v1.2-01-reglas-publicadas.jpg)
+*Las reglas nuevas publicadas en la consola de Firebase (Firestore → Reglas), con la versión de hoy arriba en el historial.*
+
+### Capturas
+![Jardín con puntuaciones](capturas/v1.2-02-jardin-puntuado.png)
+*En "Mi ramo" se ve el promedio (3,7). Haikyuu!! está pendiente, así que no muestra sakuras. Monster está abandonado y también se puede puntuar. Frieren tiene 5 sakuras y su reseña.*
+
+![Reseña en la ventana de edición](capturas/v1.2-03-resena-edicion.png)
+![Error de validación de la reseña](capturas/v1.2-04-resena-error.png)
+*Si la reseña pasa los 280 caracteres, aparece el error en rojo y no se guarda.*
+
+![Nana IA explica cómo puntuar](capturas/v1.2-05-nana-ia.png)
+![Celular](capturas/v1.2-06-celular.png)
+
+### Uso de IA en esta etapa
+La autora planteó la idea ("favoritos o puntuar como en Letterboxd, sin saturar el sitio") y pidió que **cada acción respete el CRUD y la metodología ágil**. Claude Code:
+- comparó las opciones y notó que "quiero leer" ya existía como estado Pendiente;
+- propuso la puntuación con sakuras;
+- escribió el código, las reglas y la prueba automática.
+
+La autora revisó y aprobó la idea, y las reglas se publicaron con su autorización.
+
+### Dificultades y cómo se resolvieron
+| Problema | Cómo se detectó | Solución |
+|---|---|---|
+| **Firebase rechazaba la puntuación** ("Missing or insufficient permissions") | La primera prueba en local dio 7 de 17 | Era lo esperado: las reglas viejas no conocían los campos nuevos (`hasOnly`). Se publicaron las reglas nuevas y la prueba pasó completa. **Esto demuestra que las reglas protegen la base:** nadie puede agregar campos que no estén permitidos |
+| ¿Cómo "eliminar" una puntuación? | Al pensar el CRUD de la función | Con `deleteField()`, que borra el campo. Guardar un 0 habría roto la regla "de 1 a 5" |
+| El error de la reseña **no se borraba** al corregir el texto, y tapaba el contador | Captura de la ventana de edición | Al escribir se quita el error y vuelve el contador ("62 / 280") |
+| La prueba del celular no encontraba las tarjetas | La prueba automática | No era un error de la app: el navegador automático **recarga la página** al pasar a modo celular. La prueba ahora espera a que el jardín vuelva a cargar |
+
+### Pruebas
+| Prueba automática | Resultado |
+|---|---|
+| **v1.2: puntuación y reseña** (los 8 criterios de aceptación, el CRUD completo, recargas, seguridad con 403, compu y celular) | **26/26** ✅ |
+| Regresión v1.0: ramo, filtros, herbario, sonidos, Nana IA | **26/26** ✅ |
+| Regresión v0.4.1: flores, guía, Nana IA, perfil, cerrar sesión | **21/21** ✅ |
+| Regresión v0.4: comunidad con dos usuarias, roles y seguridad (403) | **19/19** ✅ |
+| Regresión v0.3: jardín, API, edición, estados | **17/17** ✅ |
+| Diseño v1.1: sin scroll horizontal en compu, tablet y celular | **7/7** ✅ |
+
+En total: **116 de 116 correctas** en local.
+
+**Prueba de seguridad:** la prueba llama **directo a Firebase**, sin pasar por la app, e intenta guardar una puntuación de **9 sakuras** y una reseña de **400 caracteres**. Firebase responde **403 (rechazado)** las dos veces. Una puntuación válida responde 200 (aceptada).
+
+### Revisión del sprint (retrospectiva)
+- **Qué salió bien:** la función nueva **no agrega pantallas ni botones sueltos**. Aparece sola cuando la planta termina, así que el sitio no se satura. Se reutilizaron piezas que ya existían: el aviso, los sonidos, el modal de edición, los filtros y el dibujo con arrays.
+- **Qué se aprendió:** antes de agregar una función conviene revisar si **ya existe** de otra forma (el "quiero leer" era el estado Pendiente).
+- **Orden correcto:** primero las reglas, después el código. Si se sube el código antes, la app publicada falla al puntuar.
+
+---
+
 ## Conclusión del proceso
 
 | Versión | Qué aportó | Tipo de iteración |
@@ -926,9 +1042,11 @@ Es un cambio solo de diseño: **no se tocó Firestore ni las reglas**, por eso n
 | v0.4.1 | 9 flores con forma propia, guía, abeja, Nana IA, CRUD del perfil | Ajustes de diseño y ayuda |
 | v1.0 | Ramo, filtros, herbario, sonidos, auditoría y documentación final | Estabilización |
 | v1.1 | Más espacio, esquinas pixeladas, enredaderas, pasto y revisión final de la rúbrica | Pulido visual |
+| v1.2 | Puntuación con sakuras, reseña corta, promedio y orden "Mejor puntuadas" | Incremento funcional (cierre del ciclo de la planta) |
 
 **Lo que más se aprendió:**
 - **Probar es tan importante como programar:** casi todos los errores aparecieron en las capturas o en las pruebas, no al escribir el código.
 - **La seguridad no se resuelve escondiendo botones:** se resuelve en las reglas de la base de datos.
+- **Agregar no siempre es mejor:** antes de sumar una función hay que ver si ya existe de otra forma (en la v1.2, "quiero leer" ya era el estado Pendiente).
 - **Una app que depende de servicios externos** (una API) tiene que seguir funcionando si ese servicio falla.
 - **La IA acelera mucho el trabajo,** pero hace falta revisar, entender y decidir: varias decisiones (el nombre, el pixel art, la comunidad en clubes, Nana IA sin claves) salieron de esa revisión.

@@ -1,4 +1,4 @@
-import { MAX_CAPITULOS, MAX_TITULO } from './flores';
+import { MAX_CAPITULOS, MAX_RESENA, MAX_TITULO } from './flores';
 
 // Convierte el texto de un campo numérico en número, o null si está vacío.
 function aNumero(valor) {
@@ -40,5 +40,14 @@ export function validarPlanta({ titulo, capitulosTotales, capitulosLeidos }) {
     }
   }
 
+  return errores;
+}
+
+// v1.2 · Revisa la reseña antes de guardarla (es opcional, pero tiene un largo máximo).
+export function validarResena({ resena }) {
+  const errores = {};
+  if (resena.trim().length > MAX_RESENA) {
+    errores.resena = `La reseña puede tener hasta ${MAX_RESENA} caracteres.`;
+  }
   return errores;
 }

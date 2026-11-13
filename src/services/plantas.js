@@ -4,6 +4,7 @@ import {
   addDoc,
   collection,
   deleteDoc,
+  deleteField,
   doc,
   getDocs,
   orderBy,
@@ -35,9 +36,14 @@ export async function agregarPlanta(uid, datos) {
   });
 }
 
-// MODIFICAR: actualiza solo los campos que cambian (estado, capítulos, etc.).
+// MODIFICAR: actualiza solo los campos que cambian (estado, capítulos, puntuación, etc.).
+// Si un cambio vale null, ese campo se BORRA del documento con deleteField()
+// (por ejemplo, al quitar la puntuación o dejar la reseña vacía).
 export async function actualizarPlanta(uid, id, cambios) {
-  await updateDoc(doc(db, 'users', uid, 'plantas', id), cambios);
+  const datos = Object.fromEntries(
+    Object.entries(cambios).map(([campo, valor]) => [campo, valor === null ? deleteField() : valor]),
+  );
+  await updateDoc(doc(db, 'users', uid, 'plantas', id), datos);
 }
 
 // ELIMINAR: borra la planta de la base.

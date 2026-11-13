@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ESTADOS, FLORES, avanceDePlanta, etapaDePlanta } from '../data/flores';
 import { ICONOS, PALETA_BASE } from '../data/sprites';
 import PixelSprite from './PixelSprite';
+import Puntuacion from './Puntuacion';
 import SpriteFlor from './SpriteFlor';
 
 // Muestra una planta (un manga/anime) con su dibujo, su avance y sus acciones.
@@ -48,6 +49,18 @@ export default function TarjetaPlanta({ planta, ocupada, onActualizar, onElimina
     }
     const sonido = { terminado: 'florecer', abandonado: 'compostar' }[nuevo.valor];
     onActualizar(planta.id, cambios, `"${planta.titulo}": ${nuevo.etiqueta}`, sonido);
+  }
+
+  // v1.2 · Puntuar: se puede cuando la historia terminó para vos (la terminaste o la abandonaste).
+  // Tocar la misma sakura otra vez quita la puntuación (el campo se borra de Firestore).
+  const termino = planta.estado === 'terminado' || planta.estado === 'abandonado';
+  function puntuar(n) {
+    if (n === planta.puntuacion) {
+      onActualizar(planta.id, { puntuacion: null }, `Quitaste la puntuación de "${planta.titulo}"`);
+      return;
+    }
+    const palabra = n === 1 ? 'sakura' : 'sakuras';
+    onActualizar(planta.id, { puntuacion: n }, `Le diste ${n} ${palabra} a "${planta.titulo}"`, 'florecer');
   }
 
   return (
@@ -108,6 +121,19 @@ export default function TarjetaPlanta({ planta, ocupada, onActualizar, onElimina
             ))}
           </select>
         </label>
+
+        {(termino || planta.puntuacion) && (
+          <div className="tarjeta__resena">
+            <span className="tarjeta__resena-titulo">{planta.puntuacion ? 'Tu puntuación' : '¿Qué te pareció?'}</span>
+            <Puntuacion
+              valor={planta.puntuacion ?? 0}
+              onCambiar={puntuar}
+              deshabilitada={ocupada}
+              titulo={planta.titulo}
+            />
+            {planta.resena && <p className="tarjeta__cita">“{planta.resena}”</p>}
+          </div>
+        )}
       </div>
 
       {/* Las acciones van siempre al final de la tarjeta, en un lugar fijo */}

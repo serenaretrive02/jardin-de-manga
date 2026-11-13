@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { GENEROS, MAX_TITULO } from '../data/flores';
-import { validarPlanta } from '../data/validaciones';
+import { GENEROS, MAX_RESENA, MAX_TITULO } from '../data/flores';
+import { validarPlanta, validarResena } from '../data/validaciones';
+import Puntuacion from './Puntuacion';
 import Ventana from './Ventana';
 
 // Ventana emergente para corregir los datos de una planta ya plantada.
@@ -12,6 +13,11 @@ export default function EditarPlanta({ planta, guardando, onGuardar, onCancelar 
   const [capitulosTotales, setCapitulosTotales] = useState(
     planta.capitulosTotales > 0 ? String(planta.capitulosTotales) : '',
   );
+  // v1.2 · Puntuación y reseña (solo se muestran si la historia terminó o ya tenía una).
+  const [puntuacion, setPuntuacion] = useState(planta.puntuacion ?? 0);
+  const [resena, setResena] = useState(planta.resena ?? '');
+  const conResena =
+    planta.estado === 'terminado' || planta.estado === 'abandonado' || Boolean(planta.puntuacion || planta.resena);
   const [errores, setErrores] = useState({});
 
   // Cerrar con la tecla Escape. La limpieza quita el "escuchador" al cerrar la ventana.
@@ -25,7 +31,10 @@ export default function EditarPlanta({ planta, guardando, onGuardar, onCancelar 
 
   function manejarEnvio(evento) {
     evento.preventDefault();
-    const nuevosErrores = validarPlanta({ titulo, capitulosTotales, capitulosLeidos });
+    const nuevosErrores = {
+      ...validarPlanta({ titulo, capitulosTotales, capitulosLeidos }),
+      ...(conResena ? validarResena({ resena }) : {}),
+    };
     setErrores(nuevosErrores);
     if (Object.keys(nuevosErrores).length > 0) return;
 
@@ -38,6 +47,12 @@ export default function EditarPlanta({ planta, guardando, onGuardar, onCancelar 
     // si los capítulos llegaron al total, florece.
     if (planta.estado === 'terminado' && totales > 0 && leidos < totales) cambios.estado = 'leyendo';
     if (planta.estado !== 'abandonado' && totales > 0 && leidos === totales) cambios.estado = 'terminado';
+
+    // null = borrar el campo en Firestore (sin puntuación o reseña vacía).
+    if (conResena) {
+      cambios.puntuacion = puntuacion || null;
+      cambios.resena = resena.trim() || null;
+    }
 
     onGuardar(cambios);
   }
@@ -113,6 +128,43 @@ export default function EditarPlanta({ planta, guardando, onGuardar, onCancelar 
             </div>
             {(errores.leidos || errores.capitulos) && (
               <p className="campo__error">{errores.leidos || errores.capitulos}</p>
+            )}
+
+            {conResena && (
+              <fieldset className="resena">
+                <legend>Tu reseña</legend>
+                <div className="campo">
+                  <span className="campo__etiqueta" id="editar-puntuacion">Puntuación</span>
+                  <Puntuacion
+                    valor={puntuacion}
+                    onCambiar={(n) => setPuntuacion(n === puntuacion ? 0 : n)}
+                    titulo={titulo}
+                  />
+                  <p className="campo__ayuda">
+                    {puntuacion ? `${puntuacion} de 5 sakuras · tocá la misma para quitarla` : 'Sin puntuar'}
+                  </p>
+                </div>
+                <div className="campo">
+                  <label htmlFor="editar-resena">¿Qué te pareció? (opcional)</label>
+                  <textarea
+                    id="editar-resena"
+                    rows={3}
+                    value={resena}
+                    onChange={(evento) => {
+                      setResena(evento.target.value);
+                      // al corregir el texto se borra el error y vuelve a verse el contador
+                      if (errores.resena) setErrores(({ resena: _quitado, ...resto }) => resto);
+                    }}
+                    placeholder="Ej: El final me hizo llorar"
+                    maxLength={MAX_RESENA + 40}
+                    aria-invalid={Boolean(errores.resena)}
+                    aria-describedby="resena-ayuda"
+                  />
+                  <p id="resena-ayuda" className={errores.resena ? 'campo__error' : 'campo__ayuda'}>
+                    {errores.resena ?? `${resena.trim().length} / ${MAX_RESENA}`}
+                  </p>
+                </div>
+              </fieldset>
             )}
 
             <div className="modal__acciones">

@@ -109,6 +109,7 @@ export const ESTADOS = [
 
 export const MAX_TITULO = 120;
 export const MAX_CAPITULOS = 5000;
+export const MAX_RESENA = 280; // v1.2: largo máximo de la reseña (como un posteo corto)
 
 // Avance de 0 a 1, o null si no se conoce el total de capítulos.
 export function avanceDePlanta(planta) {

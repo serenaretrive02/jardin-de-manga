@@ -79,6 +79,7 @@ En la columna **"Qué decir"** hay un texto de ejemplo. No hace falta decirlo de
 | Volvé a la consola. `capitulosLeidos` ahora dice 2 y `estado` dice "leyendo". Si no se actualizó, recargá la consola | "En Firestore se ve el cambio: `capitulosLeidos` pasó a 2 y el estado a 'leyendo'. No se creó un registro nuevo: se **actualizó el mismo**." |
 | En la app, tocá el **lápiz ✏️**, cambiá los capítulos totales y **Guardar** | "También puedo editar todos los datos desde esta ventana, que tiene sus propias validaciones." |
 | **Recargá la página (F5).** La planta sigue igual | "Si recargo la página, todo sigue ahí, porque los datos no están en el navegador: están guardados en Firebase." |
+| (Opcional, v1.2) Cambiá el estado a **Terminado**, tocá la 4.ª **sakura** y mostrá en la consola el campo `puntuacion: 4`. Después tocá la misma sakura y mostrá que el campo **desaparece** | "Cuando termino un manga lo puedo puntuar de 1 a 5 sakuras. En Firestore aparece el campo `puntuacion`. Si toco la misma sakura, la quito, y el campo se **borra** del documento con `deleteField`." |
 
 ### Escena 5 — Eliminar (≈ 15 s)
 | Qué mostrar | Qué decir |
@@ -115,7 +116,7 @@ Si te sobra tiempo, mostralo; si no, no hace falta.
 | Qué mostrar | Qué decir |
 |---|---|
 | Pestaña 4: Vercel → Deployments | "Vercel está conectado al repositorio: cada vez que subo un cambio a GitHub, publica una versión nueva sola." |
-| Pestaña 5: GitHub → **Tags / Releases** (v0.1 … v1.1) | "El proyecto se hizo en siete versiones, de la v0.1 a la v1.1. Cada una está marcada en GitHub y explicada en la bitácora." |
+| Pestaña 5: GitHub → **Tags / Releases** (v0.1 … v1.2) | "El proyecto se hizo en ocho versiones, de la v0.1 a la v1.2. Cada una está marcada en GitHub y explicada en la bitácora." |
 | Volvé a la app | "Eso es Nana. ¡Gracias!" |
 
 ---

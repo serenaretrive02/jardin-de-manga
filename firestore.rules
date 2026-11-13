@@ -39,7 +39,7 @@ service cloud.firestore {
         let d = request.resource.data;
         return d.keys().hasOnly([
             'titulo', 'tipo', 'genero', 'estado', 'capitulosLeidos',
-            'capitulosTotales', 'creadoEn', 'portada', 'kitsuId'
+            'capitulosTotales', 'creadoEn', 'portada', 'kitsuId', 'puntuacion', 'resena'
           ])
           && d.titulo is string
           && d.titulo.size() > 0
@@ -54,7 +54,10 @@ service cloud.firestore {
           // campos opcionales que vienen de la API de Kitsu (v0.3)
           && (!('portada' in d) || (d.portada is string && d.portada.size() <= 500
                                     && d.portada.matches('https://.*')))
-          && (!('kitsuId' in d) || (d.kitsuId is string && d.kitsuId.size() <= 20));
+          && (!('kitsuId' in d) || (d.kitsuId is string && d.kitsuId.size() <= 20))
+          // v1.2: puntuación (1 a 5 sakuras) y reseña corta, los dos opcionales
+          && (!('puntuacion' in d) || (d.puntuacion is int && d.puntuacion >= 1 && d.puntuacion <= 5))
+          && (!('resena' in d) || (d.resena is string && d.resena.size() > 0 && d.resena.size() <= 280));
       }
 
       allow read, delete: if esDueno();
