@@ -1202,8 +1202,9 @@ button.puntuacion__flor:disabled {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: var(--e2);
+  gap: var(--e4); /* 16 px: los botones tienen una sombra pixelada de ~5 px y con menos espacio se veían pegados */
   min-width: 148px;
+  padding: 2px 6px 6px 0; /* lugar para la sombra de los botones */
 }
 
 .entrada__pregunta {
@@ -1350,7 +1351,9 @@ button.puntuacion__flor:disabled {
   .entrada__acciones {
     grid-column: 1 / -1;
     flex-direction: row;
+    gap: var(--e4);
     min-width: 0;
+    padding: 0 6px 6px 0;
   }
 
   .entrada__acciones .boton {

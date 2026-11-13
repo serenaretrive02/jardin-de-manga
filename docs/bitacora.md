@@ -1182,6 +1182,10 @@ También se comprobó la URL pública con **el jardín real de la autora** (no c
 
 ![Diario con el jardín real de la autora](capturas/v1.2-20-diario-jardin-real.jpg)
 
+**Último ajuste de diseño:** la autora notó en el Diario que los botones "Escribir reseña" y "Borrar reseña" estaban **demasiado pegados**. El espacio era de 8 px, pero cada botón tiene una sombra pixelada de unos 5 px hacia abajo, así que a la vista quedaban casi juntos. Se pasó a **16 px** (en compu y en celular) y se dejó lugar para la sombra. La prueba lo mide: 16 px en los dos tamaños, y el Diario sigue en 36/36.
+
+![Botones del Diario separados](capturas/v1.2-21-botones-separados.png)
+
 > **Si "no se ven los cambios":** Vercel ya publicó la versión nueva, pero una pestaña abierta desde antes sigue mostrando la versión vieja. Se soluciona recargando con `Ctrl + F5` o abriendo la URL en una ventana de incógnito.
 
 #### Retrospectiva del cierre
