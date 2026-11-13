@@ -4,6 +4,8 @@ Resumen de cómo evolucionó la app, versión por versión: qué cambió y por q
 
 **En total:** una etapa de idea y **8 versiones publicadas** (v0.1, v0.2, v0.3, v0.4, v0.4.1, v1.0, v1.1 y v1.2). La consigna pide al menos tres. Cada versión tiene su etiqueta en GitHub y se probó en la URL de Vercel.
 
+**Video de demostración:** https://drive.google.com/drive/folders/1BRcwdkakLImKMc9lnUdwTcS10v_i_qTl?usp=sharing
+
 > La versión completa, con todas las pruebas y capturas, quedó como anexo en el repositorio: [bitacora-completa.md](bitacora-completa.md).
 
 ## Índice

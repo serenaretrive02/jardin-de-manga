@@ -11,9 +11,7 @@ Trabajo Práctico 2 · Desarrollo Frontend II · UADE · Prof. Joaquín Cerviño
 - **Bitácora del proceso:** [docs/bitacora.md](docs/bitacora.md) · [PDF con capturas](docs/Bitacora-Nana-TP2.pdf)
 - **Informe:** [docs/informe.md](docs/informe.md) · [PDF con capturas](docs/Informe-Nana-TP2.pdf)
 - **Especificación (requisitos, casos de uso, sprints):** [docs/especificacion.md](docs/especificacion.md)
-- **Resumen de la entrega:** [docs/entrega.md](docs/entrega.md)
-- **Guion del mini video:** [docs/guion-video.md](docs/guion-video.md)
-- **Guía para el oral:** [docs/guia-oral.md](docs/guia-oral.md)
+- **Video de demostración (Google Drive):** https://drive.google.com/drive/folders/1BRcwdkakLImKMc9lnUdwTcS10v_i_qTl?usp=sharing · [portada en PDF](docs/Video-Nana-TP2.pdf)
 
 ## Tecnologías
 

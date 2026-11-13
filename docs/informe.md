@@ -9,8 +9,7 @@ Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026 · Ver
 | Repositorio (GitHub) | https://github.com/serenaretrive02/jardin-de-manga |
 | Bitácora del proceso (8 versiones publicadas, con capturas) | [bitacora.md](bitacora.md) |
 | Especificación (requisitos, casos de uso, sprints) | [especificacion.md](especificacion.md) |
-| Guía para el oral (dónde está cada tema en el código) | [guia-oral.md](guia-oral.md) |
-| Video de demostración | _pendiente: agregar el enlace_ |
+| Video de demostración (Google Drive) | https://drive.google.com/drive/folders/1BRcwdkakLImKMc9lnUdwTcS10v_i_qTl?usp=sharing |
 
 ---
 
@@ -98,7 +97,7 @@ La IA (**Claude Code**, que trabaja sobre la carpeta del proyecto en Visual Stud
 - Publiqué reglas de Firestore en la consola de Firebase y moví la etiqueta final `v1.2` en GitHub con `git tag` y `git push`.
 - **Revisé cada versión en el navegador** y detecté problemas que después se corrigieron: el texto pegado al botón "Crear club", los botones del Diario demasiado juntos, la pestaña cortada en el celular, los cambios que no se veían por la caché del navegador.
 - Busqué y elegí las **referencias visuales** (pixel art, ventanas retro, enredaderas de cerezo, planificadores kawaii, gatitos pixelados).
-- La grabación del mini video de demostración, siguiendo el guion que armé (`docs/guion-video.md`).
+- La grabación del mini video de demostración, siguiendo un guion que armé escena por escena con lo que pide la consigna.
 
 **Cómo verifiqué lo que hizo la IA**
 - Cada versión se probó con **pruebas automáticas**: 152 en total en la versión final, incluida una con dos usuarias a la vez.

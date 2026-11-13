@@ -513,7 +513,7 @@ Antes de empezar se revisó el proyecto contra cada punto de la consigna y de la
 | A · GitHub con los archivos para ejecutar | ✅ 31 archivos. `.gitignore` excluye `.env`, `node_modules` y `dist`. Ninguna llave en el código |
 | A · Vercel con conexión a Firebase | ✅ |
 | B · README, `.env.example`, reglas, informe con IA y dificultades | ✅ |
-| B · Entrega organizada con enlaces | ⚠️ Faltaba un documento de entrega → se creó [`entrega.md`](entrega.md) |
+| B · Entrega organizada con enlaces | ⚠️ Faltaba un documento de entrega → se creó `entrega.md` (documento de trabajo) |
 | C · Originalidad y complejidad | Se refuerza en esta versión con la comunidad |
 | Al menos 3 versiones | ✅ v0.1, v0.2, v0.3 (con etiquetas en GitHub) |
 | Mini video de demostración | ⏳ Pendiente (lo graba la autora) |
@@ -910,11 +910,11 @@ Es un cambio solo de diseño: **no se tocó Firestore ni las reglas**, por eso n
 ![Versión publicada en celular](capturas/v1.1-10-vercel-celular.png)
 
 ### Preparación de la entrega (10/11/2026)
-- **Guion del mini video:** se escribió [docs/guion-video.md](guion-video.md), con 10 escenas. Cada escena dice qué mostrar en pantalla y qué decir. Cubre lo que pide la consigna: la demostración, dónde se configura Firebase y cómo se guarda y se modifica un registro (en la app, en la consola de Firestore y en el código). Avisa además que **no hay que mostrar el archivo `.env`** en el video.
+- **Guion del mini video:** se escribió un guion, con 10 escenas. Cada escena dice qué mostrar en pantalla y qué decir. Cubre lo que pide la consigna: la demostración, dónde se configura Firebase y cómo se guarda y se modifica un registro (en la app, en la consola de Firestore y en el código). Avisa además que **no hay que mostrar el archivo `.env`** en el video.
 - **"La app debe estar operativa":**
   - Se volvió a probar la URL pública y la prueba del jardín dio **17/17**.
   - Se confirmó que las reglas de Firestore no tienen fecha de vencimiento.
-  - Se armó un checklist para el día de la entrega en [docs/entrega.md](entrega.md).
+  - Se armó un checklist para el día de la entrega en `entrega.md` (documento de trabajo).
 
 ---
 
@@ -1166,7 +1166,7 @@ La prueba de la música cuenta cuántas notas crea el navegador: con el sonido a
 | Informe: idea, público, funciones, datos, IA, instrucciones | `docs/informe.md` | ✅ |
 | Bitácora con capturas, pruebas, IA y dificultades | Este documento | ✅ |
 | Diseño justificado y refinado en iteraciones | Pixel art (v0.2), flores únicas (v0.4.1), kawaii (v1.1), diario y gatito (v1.2), con referencias | ✅ |
-| Mini video | Guion en `docs/guion-video.md` | ⏳ lo graba la autora |
+| Mini video | Grabado y publicado en Google Drive: https://drive.google.com/drive/folders/1BRcwdkakLImKMc9lnUdwTcS10v_i_qTl?usp=sharing | ✅ |
 
 #### Publicación y verificación final en Vercel
 1. Las reglas con `terminadoEn` se publicaron **antes** del código (Firestore → Reglas → Publicar).
