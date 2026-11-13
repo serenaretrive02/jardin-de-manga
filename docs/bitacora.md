@@ -1024,6 +1024,25 @@ En total: **116 de 116 correctas** en local.
 
 **Prueba de seguridad:** la prueba llama **directo a Firebase**, sin pasar por la app, e intenta guardar una puntuación de **9 sakuras** y una reseña de **400 caracteres**. Firebase responde **403 (rechazado)** las dos veces. Una puntuación válida responde 200 (aceptada).
 
+### Publicación y verificación en Vercel
+1. **Primero las reglas:** se publicaron en la consola de Firebase (Firestore → Reglas → Publicar), con la autorización de la autora.
+2. Se revisó la lista de cambios antes del commit: sin archivos borrados, sin `.env` (sigue ignorado; solo está `.env.example`) y sin llaves en el código.
+3. Se subió con la etiqueta **`v1.2`**, y Vercel la publicó sola en menos de un minuto.
+4. **Sobre la URL pública** se volvieron a correr **todas** las pruebas:
+
+| Prueba | Resultado |
+|---|---|
+| v1.2: puntuación y reseña | 26/26 |
+| v1.0 | 26/26 |
+| v0.4.1 | 21/21 |
+| Comunidad con dos usuarias y seguridad | 19/19 |
+| Jardín | 17/17 |
+| Diseño | 7/7 |
+| **Total** | **116 de 116 correctas**, sin errores en la consola |
+
+![Versión publicada en compu](capturas/v1.2-07-vercel-jardin.png)
+![Versión publicada en celular](capturas/v1.2-08-vercel-celular.png)
+
 ### Revisión del sprint (retrospectiva)
 - **Qué salió bien:** la función nueva **no agrega pantallas ni botones sueltos**. Aparece sola cuando la planta termina, así que el sitio no se satura. Se reutilizaron piezas que ya existían: el aviso, los sonidos, el modal de edición, los filtros y el dibujo con arrays.
 - **Qué se aprendió:** antes de agregar una función conviene revisar si **ya existe** de otra forma (el "quiero leer" era el estado Pendiente).
