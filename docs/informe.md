@@ -112,3 +112,43 @@ Se usó **Claude Code**, que trabaja directamente sobre la carpeta del proyecto,
 - En la v1.2, Firebase **rechazaba la puntuación** porque las reglas solo aceptan campos conocidos. Se publicaron las reglas nuevas **antes** de subir el código. Para **eliminar** una puntuación se usó `deleteField()`, que borra el campo en lugar de guardar un 0.
 - Con 4 pestañas, en el celular "Herbario" quedaba **cortada**, aunque la prueba automática daba "sin scroll horizontal" (la página recorta lo que sobra). Se vio en la captura, se corrigió y se mejoró la prueba.
 - Los navegadores **bloquean el sonido automático**: la música empieza con el primer toque de la persona en la página.
+
+## 7. Capturas
+
+### Evolución del diseño (de la v0.1 a la versión final)
+La interfaz no es el primer resultado de la IA: se refinó en ocho versiones. Estas son cuatro etapas clave (el detalle de cada cambio está en la bitácora).
+
+![v0.1: el MVP funcional](capturas/v0.1-10-vercel-compu.png)
+*v0.1 — MVP: el CRUD funciona con Firestore, pero el diseño es básico.*
+
+![v0.2: identidad pixel art](capturas/v0.2-05-compu.png)
+*v0.2 — Identidad pixel art: ventanas tipo "programa", flores dibujadas con código, validaciones y avisos.*
+
+![v1.1: pulido kawaii](capturas/v1.1-02-jardin.png)
+*v1.1 — Pulido kawaii: más espacio, esquinas pixeladas, enredaderas de cerezo y pasto con margaritas.*
+
+![v1.2: versión final publicada](capturas/v1.2-24-vercel-jardin-final.png)
+*v1.2 (final) — Cuatro pestañas (Mi jardín, Diario, Comunidad, Herbario), "Mi ramo" con estadísticas y filtros del jardín.*
+
+### La versión final
+![Diario de lecturas](capturas/v1.2-18-vercel-diario.png)
+*Diario de lecturas (v1.2): lo terminado o abandonado, por mes, con resumen, gráfico de puntuaciones, sakuras y reseñas.*
+
+![Comunidad: club con tablero de misiones](capturas/v1.2-22-vercel-club-misiones.png)
+*Comunidad, vista de la administradora: código para invitar, miembros, misiones en un tablero Kanban y el botón "+ Nueva misión" (solo ella puede asignarlas). Abajo se ve un aviso de éxito y el gatito sobre el pasto.*
+
+![Herbario](capturas/v1.2-23-vercel-herbario.png)
+*Herbario: las 9 flores con su significado en japonés (hanakotoba).*
+
+![Nana IA](capturas/v1.2-13-nana-diario.png)
+*Nana IA responde paso a paso, solo sobre la app y sin claves externas.*
+
+![Versión publicada en el celular](capturas/v1.2-19-vercel-celular.png)
+*La misma app en un celular (390 px): una columna y las 4 pestañas completas.*
+
+### Firebase
+![Un registro guardado en Firestore](capturas/v0.1-07-dato-en-firestore.jpg)
+*Un registro creado desde la app, visto en Firestore → Datos.*
+
+![Reglas de seguridad publicadas](capturas/v1.2-09-reglas-diario.jpg)
+*Las reglas publicadas en Firebase: solo aceptan campos conocidos y con la forma correcta.*

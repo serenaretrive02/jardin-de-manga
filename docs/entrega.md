@@ -8,8 +8,8 @@
 |---|---|---|
 | 1 | URL de la aplicación publicada en Vercel | https://jardin-de-manga.vercel.app |
 | 2 | Repositorio de GitHub | https://github.com/serenaretrive02/jardin-de-manga |
-| 3 | Informe breve | [docs/informe.md](informe.md) |
-| 4 | Bitácora del proceso (con capturas) | [docs/bitacora.md](bitacora.md) |
+| 3 | Informe breve | **PDF:** [docs/Informe-Nana-TP2.pdf](Informe-Nana-TP2.pdf) · versión web: [docs/informe.md](informe.md) |
+| 4 | Bitácora del proceso (con capturas) | **PDF:** [docs/Bitacora-Nana-TP2.pdf](Bitacora-Nana-TP2.pdf) · versión web: [docs/bitacora.md](bitacora.md) |
 | 5 | Demostración (mini video) | _pendiente: agregar el enlace_ · guion en [docs/guion-video.md](guion-video.md) |
 | + | Especificación (requisitos, casos de uso, sprints) | [docs/especificacion.md](especificacion.md) |
 | + | Guía para el oral del final | [docs/guia-oral.md](guia-oral.md) |

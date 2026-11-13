@@ -1186,6 +1186,10 @@ También se comprobó la URL pública con **el jardín real de la autora** (no c
 
 ![Botones del Diario separados](capturas/v1.2-21-botones-separados.png)
 
+**Entrega en PDF:** la autora pidió entregar el informe y la bitácora **en PDF, con sus capturas**. Se generaron desde estos mismos documentos (Markdown → HTML → PDF con Chrome), así el contenido es idéntico al del repositorio. Tienen portada, índice con enlaces, números de página y todas las imágenes (11 en el informe y 95 en la bitácora). Además, al informe se le sumó una sección **"7. Capturas"** con la evolución del diseño (v0.1 → v0.2 → v1.1 → v1.2) y las pantallas de la versión final.
+- [docs/Informe-Nana-TP2.pdf](Informe-Nana-TP2.pdf)
+- [docs/Bitacora-Nana-TP2.pdf](Bitacora-Nana-TP2.pdf)
+
 > **Si "no se ven los cambios":** Vercel ya publicó la versión nueva, pero una pestaña abierta desde antes sigue mostrando la versión vieja. Se soluciona recargando con `Ctrl + F5` o abriendo la URL en una ventana de incógnito.
 
 #### Retrospectiva del cierre
