@@ -1,6 +1,8 @@
 # 📓 Bitácora del proceso — Nana, tu jardín de manga
 
-Resumen de cómo evolucionó la app, versión por versión: qué cambió y por qué, cómo se usó la IA, qué problemas aparecieron y cómo se resolvieron. Las capturas muestran solo los **cambios reales** entre versiones, y casi todas son de la versión de **compu (desktop)**.
+Resumen de cómo evolucionó la app, versión por versión: qué cambió y por qué, qué decidí en cada etapa, cómo usé la IA como herramienta, qué problemas aparecieron y cómo se resolvieron. Las capturas muestran solo los **cambios reales** entre versiones, y casi todas son de la versión de **compu (desktop)**.
+
+**En total:** una etapa de idea y **8 versiones publicadas** (v0.1, v0.2, v0.3, v0.4, v0.4.1, v1.0, v1.1 y v1.2). La consigna pide al menos tres. Cada versión tiene su etiqueta en GitHub y se probó en la URL de Vercel.
 
 > La versión completa, con todas las pruebas y capturas, quedó como anexo en el repositorio: [bitacora-completa.md](bitacora-completa.md).
 
@@ -41,6 +43,8 @@ Le pedí a la IA ideas que mezclaran mis gustos (Minecraft, League of Legends, m
 
 **Plan:** trabajar por versiones, como el ciclo **MVP → mejoras → producto** visto en clase.
 
+**Mis decisiones:** elegí la idea entre las cinco. Pensé la equivalencia del CRUD con la jardinería y definí las reglas de trabajo desde el principio: usar solo lo visto en clase (Visual Studio Code, GitHub, Firebase, Vercel y las guías en PDF), documentar cada versión en la bitácora y el informe, y no publicar nunca las llaves.
+
 ---
 
 ## Versión 0.1 — MVP: que funcione (09/11 y 10/11/2026)
@@ -72,7 +76,13 @@ Le pedí a la IA ideas que mezclaran mis gustos (Minecraft, League of Legends, m
 | Al actualizar el repositorio se **borró `.env.example`** (se había renombrado en vez de copiarse) | Se restauró desde un commit anterior. Desde entonces se revisa `git status` antes de cada commit |
 | En Vercel el jardín empezó vacío | No es un error: el acceso es anónimo, y `localhost` y `vercel.app` son dos visitantes distintos |
 
-**Uso de IA:** *"Leé la teoría de todos los PDF y la consigna. Antes de crear la aplicación, pensá ideas creativas según lo que me gusta […]. Todo tiene que ser lo que vimos en clase."* Revisé que el código usara lo visto (`useState`, `useEffect`, props, `map`, `try/catch`) y que las llaves se leyeran con `import.meta.env`.
+**Mis decisiones e IA:** le pedí a la IA que todo siguiera lo visto en clase: *"Todo tiene que ser lo que vimos en clase (Visual Studio Code, GitHub y lo de los PDF)"*. Yo:
+- corrí los comandos en la terminal de VS Code (`npm install`, `npm run dev`);
+- apliqué el permiso de Windows que indicó el profesor;
+- copié las llaves de `firebaseConfig` al `.env` y las cargué en Vercel;
+- me aseguré de que el `.env` **no se subiera a GitHub**.
+
+Revisé que el código usara lo visto (`useState`, `useEffect`, props, `map`, `try/catch`) y que las llaves se leyeran con `import.meta.env`.
 
 **Lo que quedó anotado para mejorar:** diseño sin identidad, botones que se movían, sin mensajes de éxito, sin confirmación al borrar y sin validaciones claras.
 
@@ -116,7 +126,7 @@ Le pedí a la IA ideas que mezclaran mis gustos (Minecraft, League of Legends, m
 | La fuente pixelada unía "fl" en un símbolo y **"flor" se leía "Aor"** | Se desactivaron las ligaduras (`font-variant-ligatures: none`) |
 | En el celular, con 2 columnas, los textos se cortaban | Tarjetas horizontales, una por fila |
 
-**Uso de IA:** *"Vayamos con la 0.2. Me gustaría que el diseño sea tipo pixel art"*, con tres imágenes de referencia. La IA propuso dibujar las flores como grillas de texto. Yo revisé las capturas y pedí rehacer la flor y el diseño para celular.
+**Mis decisiones e IA:** el estilo pixel art fue mi elección, y busqué las tres imágenes de referencia: *"Vayamos con la 0.2. Me gustaría que el diseño sea tipo pixel art"*. La IA propuso dibujar las flores como grillas de texto, una aplicación directa de `map` de la guía de arrays. Yo revisé las capturas y pedí rehacer la flor, que parecía una mancha, y el diseño para celular.
 
 ---
 
@@ -144,7 +154,7 @@ Le pedí a la IA ideas que mezclaran mis gustos (Minecraft, League of Legends, m
 | Si una obra no tenía portada, la regla nueva rechazaba el texto vacío | La portada solo se guarda si existe |
 | En el celular el formulario se salía de la pantalla | `minmax(0, 1fr)` en lugar de `1fr` en la grilla |
 
-**Uso de IA:** *"Cambiemos el título a Nana."* La IA investigó por qué Jikan no respondía y propuso alternativas. Yo elegí la que usaba lo visto en clase.
+**Mis decisiones e IA:** el nombre **Nana** fue idea mía (*"Cambiemos el título a Nana."*). Cuando la API planeada no respondió, la IA comparó alternativas. Elegí Kitsu porque funciona con `fetch` y JSON, como en la guía de APIs, y no con GraphQL, que no vimos en la materia.
 
 ---
 
@@ -174,7 +184,7 @@ Le pedí a la IA ideas que mezclaran mis gustos (Minecraft, League of Legends, m
 | Un evento de esa noche figuraba como "pasado" 3 horas antes | `toISOString()` usa la hora UTC. Se pasó a la hora local |
 | La fuente de títulos no tiene vocales con tilde en mayúscula ("NUEVA MISIóN") | Esos textos usan la otra fuente pixelada |
 
-**Uso de IA:** *"Chequeá que se cumpla todo lo que pide la consigna y la rúbrica. Quiero sumar una comunidad […], CRUD de tareas, eventos y grupos; el administrador es el único rol que puede asignar tareas."* **Decisión propia:** en lugar de "amigos" sueltos, la comunidad se organiza en **clubes**, que permiten roles claros.
+**Mis decisiones e IA:** los requisitos de esta versión los definí yo, tomando lo trabajado en clase (casos de uso, roles y CRUD): *"Chequeá que se cumpla todo lo que pide la consigna y la rúbrica. Quiero sumar una comunidad […], CRUD de tareas, eventos y grupos, tareas de distintos tipos; el administrador es el único rol que puede asignar tareas […], distintos tipos de iteraciones ágiles."* También decidí que, en lugar de "amigos" sueltos, la comunidad se organice en **clubes**, que permiten roles claros. Con eso se armó la especificación (`especificacion.md`) con requisitos, criterios de aceptación y el diagrama de casos de uso.
 
 ---
 
@@ -197,6 +207,8 @@ Le pedí a la IA ideas que mezclaran mis gustos (Minecraft, League of Legends, m
 ![Nana IA](capturas/v0.4.1-04-nana-ia.png)
 *Nana IA explicando paso a paso cómo plantar y qué significa el girasol.*
 
+**Mis decisiones e IA:** pedí cada uno de estos agregados: *"Me gustaría que los avatares sean distintos tipos de flores, una leyenda de cómo crece la flor, una abeja revoloteando y una asistente Nana IA […] que tenga información de la aplicación y el sitio únicamente."* Que Nana IA no use claves privadas fue una decisión tomada a partir de la consigna.
+
 **Dificultad:** a "¿Cuál es la capital de Francia?" respondía sobre la **API**, porque "c**api**tal" contiene "api". Ahora las palabras clave solo coinciden con el **comienzo** de una palabra.
 
 ---
@@ -217,6 +229,8 @@ Le pedí a la IA ideas que mezclaran mis gustos (Minecraft, League of Legends, m
 ![Herbario](capturas/v1.0-04-herbario.png)
 *El herbario con las 9 flores y su significado.*
 
+**Mis decisiones:** para la versión final pedí filtros, el significado de cada flor y sonidos, y una consigna clara: *"Si ves algo que no cumple la consigna, eliminalo."* Se revisó todo y no hubo que sacar nada.
+
 **Dificultad:** el **aviso flotante tapaba los botones** que quedaban debajo, y tocar "Regar" no hacía nada. Lo detectó una **prueba de regresión** de la v0.3. Se corrigió haciendo que el aviso deje pasar los clics (`pointer-events: none`).
 
 ![Aviso que tapaba botones](capturas/v1.0-01a-aviso-tapaba-botones.png)
@@ -227,6 +241,8 @@ Le pedí a la IA ideas que mezclaran mis gustos (Minecraft, League of Legends, m
 ## Versión 1.1 — Pulido de diseño kawaii (10/11/2026)
 
 **Objetivo:** los textos estaban "apelmazados". Había que darle aire y hacerla más **kawaii**, **sin cambiar la paleta**.
+
+**Mis decisiones:** noté que los textos estaban apretados y busqué nuevas referencias kawaii: enredaderas de cerezo pixeladas, un planificador rosa y crema, macetas y una baldosa de pasto con margaritas. Pedí darle aire **sin cambiar la paleta** de colores.
 
 **Qué cambió** (todo en un archivo nuevo, `Diseno.css`)
 - Una **escala de espacios** (4, 8, 12, 16, 24 y 32 px) usada en toda la app, y más interlineado.
@@ -293,7 +309,12 @@ Le pedí a la IA ideas que mezclaran mis gustos (Minecraft, League of Legends, m
 | Con 4 pestañas, en el celular "Herbario" quedaba **cortada**, aunque la prueba decía "sin scroll horizontal" | Pestañas en 4 columnas iguales. La prueba ahora también mide que ninguna se corte |
 | Los botones del Diario se veían pegados (la sombra pixelada ocupaba el espacio) | Se pasó de 8 a 16 px de separación |
 
-**Uso de IA:** *"Se me ocurre agregar favoritos […] o puntuarlos como una especie de Letterboxd, pero no me gustaría saturar el sitio […]. Cada acción debe seguir el CRUD y la metodología ágil."* La IA notó que "quiero leer" ya era el estado Pendiente. Después: *"Me gustaría que queden guardadas las puntuaciones y los mangas que leí […] y una canción kawaii de fondo."*
+**Mis decisiones e IA:** la idea de esta versión y sus condiciones fueron mías: *"puntuarlos como una especie de Letterboxd, pero tampoco me gustaría saturar el sitio web con demasiadas acciones"*. Además: *"cada acción debe poder agregarse, eliminarse y seguir el CRUD […] y además tener la metodología Agile."* Al probar la versión publicada detecté y pedí corregir:
+- el texto pegado al botón "Crear club";
+- los botones del Diario demasiado juntos;
+- la extensión de la bitácora.
+
+También definí la prioridad de diseño: *"una de las cosas que más nos importa del sitio web es cómo se ve en desktop"*. La IA aportó el dato de que "quiero leer" ya existía como estado Pendiente, y escribió el código y las pruebas.
 
 **Integración final:** todo lo de este sprint quedó en **una sola versión final, la v1.2**. La etiqueta de GitHub se movió al último commit.
 
@@ -304,6 +325,19 @@ Le pedí a la IA ideas que mezclaran mis gustos (Minecraft, League of Legends, m
 Todas las versiones siguieron el mismo ciclo, que es el sprint ágil visto en clase:
 
 **planificar → construir → probar en local → revisar capturas → publicar las reglas (si cambiaban) → subir a GitHub con una etiqueta → Vercel publica solo → repetir las pruebas sobre la URL pública**
+
+**Los comandos de cada publicación**, en la terminal de Visual Studio Code:
+```
+npm run dev                  # probar en local (http://localhost:5173)
+npm run build                # confirmar que compila sin errores
+git status                   # revisar qué se sube: sin .env y sin archivos borrados
+git add .
+git commit -m "v1.2: ..."    # guardar el cambio en el historial
+git tag v1.2                 # marcar la versión
+git push origin main         # subir el código: Vercel lo detecta y publica solo
+git push origin v1.2         # subir la etiqueta
+```
+Después, en **Vercel → Deployments** se espera el estado *Ready* y se prueba la URL pública. Si cambió la forma de los datos, **antes** de todo esto se publica `firestore.rules` en **Firebase → Firestore → Reglas**.
 
 - **Antes de cada commit** se revisó `git status`: sin archivos borrados, sin `.env` y sin llaves en el código.
 - **Las reglas se publican en Firebase antes que el código**, porque desplegar en Vercel no las actualiza.

@@ -7,7 +7,7 @@ Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026 · Ver
 |---|---|
 | App publicada (Vercel) | https://jardin-de-manga.vercel.app |
 | Repositorio (GitHub) | https://github.com/serenaretrive02/jardin-de-manga |
-| Bitácora del proceso (8 versiones, con capturas) | [bitacora.md](bitacora.md) |
+| Bitácora del proceso (8 versiones publicadas, con capturas) | [bitacora.md](bitacora.md) |
 | Especificación (requisitos, casos de uso, sprints) | [especificacion.md](especificacion.md) |
 | Guía para el oral (dónde está cada tema en el código) | [guia-oral.md](guia-oral.md) |
 | Video de demostración | _pendiente: agregar el enlace_ |
@@ -74,26 +74,52 @@ Prof. Joaquín Cerviño · Viernes, turno noche · 2.º cuatrimestre 2026 · Ver
 ## 4. Herramientas utilizadas
 Visual Studio Code · Node.js + npm · React + Vite · Firebase (Authentication y Cloud Firestore) · Git + GitHub · Vercel · API pública de **Kitsu** (búsqueda de obras, sin clave) · **Claude Code** (asistente de IA de Anthropic) · Google Chrome con navegador automático (para pruebas y capturas).
 
-## 5. Uso de inteligencia artificial
-Se usó **Claude Code**, que trabaja directamente sobre la carpeta del proyecto, para:
-- pensar y comparar ideas;
-- generar código siguiendo las guías de clase;
-- revisar la consigna y la rúbrica;
-- configurar Firebase y Vercel desde el navegador;
-- probar la app con un navegador automático;
-- redactar la documentación.
+## 5. Mi trabajo y el uso de la inteligencia artificial
 
-**Cómo se verificó lo que hizo la IA:** cada versión se probó con **pruebas automáticas** (de 7 a 26 pasos por versión, incluida una con dos usuarias a la vez; 152 en total en la versión final v1.2), se revisaron las **capturas** en compu y en celular, se comprobaron los datos en la **consola de Firestore** y se repitieron las pruebas **sobre la URL de Vercel**. Gracias a eso se encontraron y corrigieron más de 25 problemas (ver la bitácora). Los pasos que implicaban cargar llaves los hizo la autora, y los que publicaban algo (por ejemplo, las reglas de la v1.2) se hicieron con su autorización.
+### Cómo trabajé
+La IA (**Claude Code**, que trabaja sobre la carpeta del proyecto en Visual Studio Code) fue una **herramienta**: escribió gran parte del código, las pruebas automáticas y los borradores de la documentación. **La dirección del proyecto fue mía:** qué hacer, en qué orden, con qué reglas y cuándo algo estaba bien o había que corregirlo.
 
-**Ejemplos representativos de instrucciones dadas a la IA:**
-1. *"Antes de crear cualquier aplicación, pensá ideas sumamente creativas y originales según las cosas que me gustan (Minecraft, LoL, manga, anime, flores), que permitan hacer cada acción que pide la consigna, pero que no sea una típica."*
-2. *"Todo lo que hagamos tiene que ser lo que vimos en clase (Visual Studio Code, GitHub y lo de los PDF)."*
-3. *"Vayamos con la 0.2. Me gustaría que el diseño sea tipo pixel art"*, con tres imágenes de referencia.
-4. *"Cambiemos el título a Nana."* (v0.3: la IA investigó por qué la API planeada no respondía y propuso otra).
-5. *"Chequeá que se cumpla todo lo que pide la consigna y la rúbrica […]. Quiero sumar una comunidad, grupos de lectura, CRUD de tareas, eventos y grupos […]. El administrador es el único rol que puede asignar tareas."*
-6. *"Me gustaría que los avatares sean distintos tipos de flores, una leyenda de cómo crece la flor, una abeja revoloteando y una asistente Nana IA […]. Para la versión final: filtros, significado de cada flor, sonidos […]. Si ves algo que no cumple la consigna, eliminalo."*
-7. *"Se me ocurre agregar favoritos para anotar los mangas que quiero ver, o puntuarlos como una especie de Letterboxd, pero no me gustaría saturar el sitio […]. Recordá que cada acción debe poder agregarse, eliminarse y seguir el CRUD, y tener la metodología ágil."* (v1.2: la IA notó que "quiero leer" ya existía como estado Pendiente y se eligió la puntuación con sakuras).
-8. *"Me gustaría que en algún lado queden guardadas las puntuaciones que hice y los mangas que leí […] como en Letterboxd. […] Aumentá el padding del texto en crear clubes […]. Agregá una canción kawaii de fondo que se pueda mutear con el botón de sonido. […] Hacé una revisión general para que todo cumpla con la consigna."* (v1.2: el Diario reutiliza los mismos datos en lugar de duplicarlos; la canción es original y generada con código).
+**Decisiones que tomé yo**
+| Decisión | Por qué |
+|---|---|
+| Elegir **Jardín de Manga** entre cinco ideas y convertir el CRUD en jardinería (plantar, regar, compostar) | Une mis gustos y le da una "vuelta de tuerca" al registro de libros que propone la consigna |
+| Trabajar **por versiones**, como el ciclo *MVP → mejoras → producto* visto en clase | La consigna pide al menos 3 versiones y cada una tenía que poder probarse y publicarse |
+| El estilo **pixel art** y después el toque **kawaii**, a partir de imágenes de referencia que busqué yo | Conecta con el público gamer y otaku, y la paleta lima y rosa se mantuvo en todas las versiones |
+| El nombre **Nana** (de *hana*, "flor") | Une el manga con las flores |
+| Que la comunidad tenga **CRUD de clubes, tareas y eventos**, y que **solo la administradora asigne tareas** | Son los requisitos que se trabajaron en clase con casos de uso y roles |
+| Que **cada acción respete el CRUD** (crear, consultar, modificar y eliminar) y siga la **metodología ágil** | Es lo que evalúa la materia |
+| Que Nana IA **no use claves privadas** | La consigna prohíbe claves privadas en el navegador |
+| **No duplicar** una lista de favoritos: "quiero leer" ya era el estado Pendiente; sumar la puntuación y el Diario | No saturar el sitio y mantener la coherencia |
+| Priorizar la **vista de compu (desktop)** sin descuidar el celular | Es como se va a mostrar y evaluar el trabajo |
+
+**Lo que hice yo directamente**
+- Ejecuté los comandos del proyecto en la terminal de VS Code (`npm install`, `npm run dev`) y apliqué el permiso de Windows que indicó el profesor (`Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`).
+- Cargué las **llaves de Firebase** en el `.env` y en **Vercel → Environment Variables**, y cuidé que el `.env` **nunca** se subiera a GitHub.
+- Publiqué reglas de Firestore en la consola de Firebase y moví la etiqueta final `v1.2` en GitHub con `git tag` y `git push`.
+- **Revisé cada versión en el navegador** y detecté problemas que después se corrigieron: el texto pegado al botón "Crear club", los botones del Diario demasiado juntos, la pestaña cortada en el celular, los cambios que no se veían por la caché del navegador.
+- Busqué y elegí las **referencias visuales** (pixel art, ventanas retro, enredaderas de cerezo, planificadores kawaii, gatitos pixelados).
+- La grabación del mini video de demostración, siguiendo el guion que armé (`docs/guion-video.md`).
+
+**Cómo verifiqué lo que hizo la IA**
+- Cada versión se probó con **pruebas automáticas**: 152 en total en la versión final, incluida una con dos usuarias a la vez.
+- Revisé las **capturas** en compu y en celular.
+- Comprobé los datos en la **consola de Firestore**.
+- Repetí las pruebas **sobre la URL de Vercel**.
+
+Así se encontraron y corrigieron más de 25 problemas (ver la bitácora). Los pasos que publicaban algo o tocaban las llaves se hicieron con mi autorización o los hice yo.
+
+### Instrucciones representativas que di
+Estas instrucciones muestran que el trabajo siguió lo visto en clase:
+1. **Herramientas de clase:** *"Todo lo que hagamos tiene que ser lo que vimos en clase (Visual Studio Code, GitHub y lo de los PDF)."*
+2. **Seguridad de las llaves:** *"[El `.env` con las llaves] evitar que se publique en GitHub, si no baja puntos."* (paso 6 de la consigna).
+3. **Idea original:** *"Antes de crear cualquier aplicación, pensá ideas sumamente creativas y originales según las cosas que me gustan (Minecraft, LoL, manga, anime, flores), que permitan hacer cada acción que pide la consigna, pero que no sea una típica."*
+4. **Diseño propio:** *"Vayamos con la 0.2. Me gustaría que el diseño sea tipo pixel art"*, con tres imágenes de referencia que elegí.
+5. **CRUD, roles y ágil:** *"Chequeá que se cumpla todo lo que pide la consigna y la rúbrica […]. Quiero sumar una comunidad, grupos de lectura, CRUD de tareas, eventos y grupos, tareas de distintos tipos […]. El administrador es el único rol que puede asignar tareas. […] Distintos tipos de iteraciones ágiles."*
+6. **Ayuda dentro de la app:** *"Una asistente Nana IA […] que tenga información de la aplicación y el sitio únicamente. […] Si ves algo que no cumple la consigna, eliminalo."*
+7. **CRUD en cada acción:** *"Recuerda que cada acción debe poder agregarse, eliminarse y seguir el CRUD, que es create, delete, update y todo lo que significa CRUD, por lo que cada acción debe respetar esto y además tener la metodología Agile."*
+8. **Sin saturar el sitio:** *"Se me ocurre […] agregar a favoritos […] o también incluso lograr puntuarlos como una especie de Letterboxd, pero tampoco me gustaría saturar el sitio web con demasiadas acciones, ya que lo principal es que pueda anotar cómo va leyendo su manga."*
+9. **Revisión con criterio de diseño:** *"En la sección de crear clubes, quiero que aumentes el padding del texto, ya que siento que está demasiado pegado al CTA, por lo que quiero que revises cómo está de padding y espaciado todo el trabajo."* y *"Una de las cosas que más nos importa del sitio web es cómo se ve en desktop."*
+10. **Documentar todo:** *"Recordá siempre anotar todo en la bitácora y en el informe que también se debe entregar."*
 
 **Decisión sobre Nana IA:** conectar un modelo de IA externo exige una clave privada, y la consigna prohíbe incluir claves privadas en el código del navegador. Por eso Nana IA responde con una **base de conocimiento propia** de la app (`src/data/conocimiento.js`). No expone claves, no tiene costo y responde solo sobre Nana.
 
@@ -113,7 +139,50 @@ Se usó **Claude Code**, que trabaja directamente sobre la carpeta del proyecto,
 - Con 4 pestañas, en el celular "Herbario" quedaba **cortada**, aunque la prueba automática daba "sin scroll horizontal" (la página recorta lo que sobra). Se vio en la captura, se corrigió y se mejoró la prueba.
 - Los navegadores **bloquean el sonido automático**: la música empieza con el primer toque de la persona en la página.
 
-## 7. Capturas
+## 7. Las versiones y cómo se publicó cada cambio
+
+### 8 versiones en total
+La consigna pide **al menos tres** (una funcional, una con mejoras y una final). El proyecto tuvo una etapa de idea y **8 versiones publicadas**, cada una con su etiqueta en GitHub y probada en Vercel:
+
+| # | Versión | Qué aportó |
+|---|---|---|
+| 1 | **v0.1** | MVP: CRUD con Firestore, reglas, GitHub y Vercel (diseño básico a propósito) |
+| 2 | **v0.2** | Identidad pixel art, validaciones, avisos y confirmación al borrar |
+| 3 | **v0.3** | Nombre "Nana", búsqueda con la API de Kitsu, edición y estados coherentes |
+| 4 | **v0.4** | Comunidad: clubes, misiones con rol de administradora, eventos |
+| 5 | **v0.4.1** | 9 flores con forma propia, guía, abeja, Nana IA, CRUD del perfil |
+| 6 | **v1.0** | Mi ramo, filtros, herbario y sonidos |
+| 7 | **v1.1** | Pulido kawaii: más espacio, esquinas pixeladas y adornos |
+| 8 | **v1.2 (final)** | Puntuación con sakuras, reseña, Diario de lecturas, música, gatito y revisión final |
+
+### Paso a paso de cada cambio (VS Code → GitHub → Vercel → Firebase)
+Cada versión siguió el mismo recorrido:
+
+1. **Visual Studio Code:** se modifica el código (componentes en `src/components`, datos en `src/data`, operaciones con Firebase en `src/services`).
+2. **Probar en local:** `npm run dev` abre la app en `http://localhost:5173`. Se prueban las acciones nuevas y las viejas, y con `npm run build` se confirma que compila sin errores.
+3. **Reglas de Firebase (solo si cambia la forma de los datos):** se actualiza `firestore.rules` y se publica en *Firebase → Firestore → Reglas → Publicar*. **Se hace antes de subir el código**, porque Vercel no actualiza las reglas.
+4. **Revisar antes de subir:** `git status` muestra qué archivos cambian. Se controla que no haya archivos borrados por error y que **no aparezca el `.env`**.
+5. **Guardar la versión:** `git add .` y `git commit -m "v1.2: …"` crean el punto en el historial, y `git tag v1.2` le pone la etiqueta de la versión.
+6. **Subir a GitHub:** `git push origin main` y `git push origin v1.2`.
+7. **Vercel publica solo:** está conectado al repositorio, así que cada `push` a `main` dispara un despliegue nuevo. En *Deployments* se espera el estado **Ready**.
+8. **Probar la versión publicada:** en https://jardin-de-manga.vercel.app se repiten las pruebas de agregar, consultar, modificar, eliminar y recargar, en compu y en celular. Si la página muestra la versión vieja, se recarga con `Ctrl + F5`.
+9. **Documentar:** se anota en la bitácora qué cambió, cómo se probó, qué dificultades hubo y se suman las capturas.
+
+## 8. Conceptos de la materia aplicados
+| Guía o tema de clase | Dónde se aplicó en Nana |
+|---|---|
+| **Introducción a React** (componentes y JSX) | 34 componentes: cada parte de la pantalla es una función que devuelve JSX (`TarjetaPlanta`, `Diario`, `Ventana`…) |
+| **Instalación y ejecución con npm** | `npm create vite@latest`, `npm install`, `npm run dev` y `npm run build` |
+| **Módulos e importaciones** | Un archivo por responsabilidad, con `import` / `export`: `firebase.js`, `services/`, `data/`, `components/` |
+| **Props y Hooks** | Props para pasar datos y funciones (`planta`, `onActualizar`). `useState` para el estado y `useEffect` con **limpieza** (sesión anónima, temporizador del aviso, tecla Escape, música) |
+| **APIs en JavaScript** | `fetch` a Kitsu, revisión de `respuesta.ok`, lectura del JSON, estados de carga, error y "sin resultados", y aviso del error 429 |
+| **Arrays, map y filter** | `map` dibuja las flores píxel por píxel y las listas. `filter` y `sort` arman los filtros. `reduce` calcula "Mi ramo", el promedio y agrupa el Diario por mes. `find` elige la flor |
+| **Firebase y serverless** | Authentication anónimo y CRUD en Cloud Firestore con `addDoc`, `getDocs`, `updateDoc`, `deleteDoc` y `deleteField`, sin servidor propio |
+| **Variables de entorno** | `.env` con `VITE_FIREBASE_…`, leído con `import.meta.env`. `.env.example` sin valores y las mismas variables en Vercel |
+| **Reglas de seguridad** | Jardín privado por usuaria, solo la administradora asigna misiones y cada campo se valida (probado con respuestas 403) |
+| **Especificación, casos de uso y metodología ágil** | Requisitos con criterios de aceptación, historias de usuario, diagrama de casos de uso y una iteración (sprint) por versión (`especificacion.md`) |
+
+## 9. Capturas
 
 ### Evolución del diseño (de la v0.1 a la versión final)
 La interfaz no es el primer resultado de la IA: se refinó en ocho versiones. Estas son cuatro etapas clave (el detalle de cada cambio está en la bitácora).
